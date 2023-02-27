@@ -17,4 +17,6 @@ public class Customer
     public string ContactPerson { get; set; } = null!;
 
     public string Email { get; set; } = null!;
+
+    public virtual ICollection<Campaign> Campaigns { get; set; } = new List<Campaign>();
 }

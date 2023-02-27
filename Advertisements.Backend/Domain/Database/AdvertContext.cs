@@ -1,7 +1,10 @@
+using Domain.Database.Configurations;
+using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Domain.Database;
 
@@ -13,6 +16,22 @@ public class AdvertContext : IdentityDbContext<User>
         : base(options)
     {
         _dateProvider = dateProvider;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AdvertObjectConfiguration).Assembly);
+    }
+
+    private static ValueConverter GetEnumConverter<T>()
+        where T : Enum
+    {
+        var converter = new ValueConverter<T, string>(
+            value => value.ToString(),
+            value => (T)Enum.Parse(typeof(T), value));
+
+        return converter;
     }
     
     public override int SaveChanges()

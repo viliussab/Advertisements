@@ -9,6 +9,8 @@ namespace Domain.Models
 {
     public class AdvertObject : IModelMetadata
     {
+        public Guid Id { get; set; }
+        
         public string SerialCode { get; set; } = string.Empty;
 
         public virtual ICollection<AdvertPlane> Planes { get; set; } = new List<AdvertPlane>();

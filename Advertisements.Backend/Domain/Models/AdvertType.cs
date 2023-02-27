@@ -6,7 +6,5 @@ public class AdvertType
 
     public string Name { get; set; } = string.Empty;
     
-    public ICollection<AdvertObject> Object { get; set; } = new List<AdvertObject>();
-    
-    public string[] Side { get; set; } = null!;
+    public ICollection<AdvertObject> Objects { get; set; } = new List<AdvertObject>();
 }

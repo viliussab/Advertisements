@@ -10,10 +10,12 @@ namespace Domain.Models
     {
         public Guid Id { get; set; }
 
-        public virtual Guid LocationId { get; set; }
+        public virtual Guid ObjectId { get; set; }
 
         public virtual AdvertObject Object { get; set; } = null!;
-        
+
+        public virtual ICollection<CampaignPlane> PlaneCampaigns { get; set; } = null!;
+
         public string PartialName { get; set; } = string.Empty;
 
         public bool Illuminated { get; set; }
