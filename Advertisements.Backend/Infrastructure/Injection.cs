@@ -1,6 +1,7 @@
 using Domain.Database;
 using Domain.Interfaces;
 using Domain.Models;
+using FluentValidation;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ public static class Injection
 		services.AddPostgresProvider(configuration);
 		services.AddInfrastructureInterfaces();
 		services.AddAuthentication();
+		services.AddValidatorsFromAssembly(typeof(Injection).Assembly);
 	}
 	
 	private static void AddInfrastructureInterfaces(this IServiceCollection services)
@@ -29,7 +31,7 @@ public static class Injection
 		services.AddDbContext<AdvertContext>(options => 
 				options.UseNpgsql(
 					configuration.GetConnectionString("Database"),
-					b => b.MigrationsAssembly("Infrastructure")));
+					b => b.MigrationsAssembly("Domain")));
 	}
 	
 	private static void AddAuthentication(this IServiceCollection services)

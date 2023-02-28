@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -7,6 +8,9 @@ namespace API.Controllers;
 [Route("api")]
 public class BasedController : ControllerBase
 {
+    protected IMediator Mediator => HttpContext.RequestServices.GetService<IMediator>() ??
+                                    throw new InvalidOperationException("Mediator was not found");
+    
     protected Guid CurrentUserId
     {
         get

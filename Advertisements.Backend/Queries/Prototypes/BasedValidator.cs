@@ -1,4 +1,5 @@
 using Domain.Errors;
+using Domain.Successes;
 using FluentValidation;
 using MediatR;
 using OneOf;
@@ -8,13 +9,13 @@ namespace Queries.Prototypes;
 
 public class BasedValidator<TRequest> : AbstractValidator<TRequest>
 {
-    public async Task<OneOf<Success, IEnumerable<ValidationError>>> ValidateRequestAsync(TRequest request)
+    public async Task<OneOf<List<ValidationError>, ValidationSuccess>> ValidatorRequestAsync(TRequest request)
     {
-        var validationResult = await this.ValidateAsync(request);
+        var validationResult = await ValidateAsync(request);
 
         if (validationResult.IsValid)
         {
-            return new Success();
+            return new ValidationSuccess();
         }
 
         var errors = validationResult.Errors.Select(validationFailure => new ValidationError(

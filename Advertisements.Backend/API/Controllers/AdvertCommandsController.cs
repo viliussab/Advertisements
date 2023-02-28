@@ -1,4 +1,8 @@
+using Commands.Handlers.Adverts.CreateObject;
+using Commands.ResponseDto;
+using Domain.Errors;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
 
 namespace API.Controllers;
 
@@ -6,41 +10,23 @@ namespace API.Controllers;
 public class AdvertCommandsController : BasedController
 {
     [HttpPost("object")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> CreateLocation()
+    [ProducesResponseType(typeof(CreateGuidSuccess), 200)]
+    [ProducesResponseType(typeof(List<NotFoundError>), 404)]
+    [ProducesResponseType(typeof(List<ValidationError>), 400)]
+    public IActionResult CreateObject([FromBody] CreateObjectCommand command)
     {
-        return Ok("yes");
+        var response = Mediator.Send(command).Result;
+
+        return response.Match<IActionResult>(
+            BadRequest,
+            NotFound,
+            Ok);
     }
-    
-    [HttpPost("type")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> CreateType()
-    {
-        return Ok("yes");
-    }
-    
-    [HttpPut("type")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateLocation()
-    {
-        return Ok("yes");
-    }
-    
+
     [HttpPut("object/{id:guid}")]
     [ProducesResponseType(typeof(Guid), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateLocation([FromRoute] Guid id)
-    {
-        return Ok("yes");
-    }
-
-    [HttpPut("plane/{id:guid}")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdatePlane([FromRoute] Guid id)
+    public async Task<IActionResult> UpdateObject([FromRoute] Guid id)
     {
         return Ok("yes");
     }

@@ -9,11 +9,11 @@ public abstract class BasedHandler<TRequest, TResponse, TValidator> : IRequestHa
     where TRequest : IRequest<TResponse>
     where TValidator : BasedValidator<TRequest>
 {
-    private readonly TValidator _validator;
+    protected readonly TValidator Validator;
 
     protected BasedHandler(TValidator validator)
     {
-        _validator = validator;
+        Validator = validator;
     }
 
     public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);

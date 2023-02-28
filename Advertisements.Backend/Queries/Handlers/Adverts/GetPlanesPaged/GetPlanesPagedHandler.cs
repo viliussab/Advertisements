@@ -1,9 +1,9 @@
 using Domain.Database;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Queries.Dtos.Prototypes;
 using Queries.Handlers.Extensions;
 using Queries.Prototypes;
+using Queries.ResponseDto.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 

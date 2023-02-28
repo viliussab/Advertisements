@@ -10,7 +10,7 @@ namespace Domain.Models
     {
         public Guid Id { get; set; }
 
-        public virtual Guid ObjectId { get; set; }
+        public Guid ObjectId { get; set; }
 
         public virtual AdvertObject Object { get; set; } = null!;
 
@@ -18,9 +18,9 @@ namespace Domain.Models
 
         public string PartialName { get; set; } = string.Empty;
 
-        public bool Illuminated { get; set; }
+        public bool Permitted { get; set; }
         
-        public DateOnly ExpirationDate { get; set; }
+        public DateOnly? PermittedExpiryDate { get; set; }
         
         public DateTime CreationDate { get; set; }
         

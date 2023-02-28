@@ -1,7 +1,7 @@
 using Domain.Models;
 using MediatR;
-using Queries.Dtos.Prototypes;
 using Queries.Prototypes;
+using Queries.ResponseDto.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 

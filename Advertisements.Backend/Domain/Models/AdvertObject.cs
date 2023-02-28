@@ -15,7 +15,11 @@ namespace Domain.Models
 
         public virtual ICollection<AdvertPlane> Planes { get; set; } = new List<AdvertPlane>();
         
-        public virtual Guid TypeId { get; set; }
+        public Guid AreaId { get; set; }
+
+        public virtual Area Area { get; set; } = null!;
+        
+        public Guid TypeId { get; set; }
 
         public virtual AdvertType Type { get; set; } = null!;
 
@@ -24,6 +28,8 @@ namespace Domain.Models
         public string Address { get; set; } = string.Empty;
 
         public string Region { get; set; } = string.Empty;
+        
+        public bool Illuminated { get; set; }
         
         [Range(-180, 180)]
         public decimal Longitude { get; set; }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Queries.Dtos.Prototypes;
 using Queries.Prototypes;
+using Queries.ResponseDto.Prototypes;
 
 namespace Queries.Handlers.Extensions;
 

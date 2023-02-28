@@ -1,3 +1,4 @@
+using Domain.Database.Converters;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +13,10 @@ public class AdvertPlaneConfiguration : IEntityTypeConfiguration<AdvertPlane>
 
         builder.HasOne(x => x.Object)
             .WithMany(x => x.Planes)
-            .HasForeignKey(x => x.Object)
+            .HasForeignKey(x => x.ObjectId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(x => x.PermittedExpiryDate)
+            .HasConversion<DateOnlyConversion.Converter, DateOnlyConversion.Comparer>();
     }
 }
