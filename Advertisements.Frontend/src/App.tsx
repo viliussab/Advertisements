@@ -1,8 +1,16 @@
 import PagesProvider from './providers/PagesProvider';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <PagesProvider />
+    <QueryClientProvider client={queryClient}>
+      <PagesProvider />
+    </QueryClientProvider>
   )
 }
 

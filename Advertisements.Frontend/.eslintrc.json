@@ -14,5 +14,5 @@
   "extends": [
     "eslint:recommended"
   ],
-  "rules": {},
+  "rules": {}
 }
