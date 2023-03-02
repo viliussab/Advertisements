@@ -1,3 +1,3 @@
-import * as Mui from "@mui/material";
+import * as Mui from '@mui/material';
 
 export default Mui;

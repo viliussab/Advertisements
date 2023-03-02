@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { useQuery } from 'react-query';
 
 function CreateObjectPage() {
-
   const query = useQuery({
     queryKey: ['Repo'],
     queryFn: () =>
@@ -13,9 +12,7 @@ function CreateObjectPage() {
 
   console.log('query', query);
 
-  return (
-    <div>CreateObjectPage</div>
-  )
+  return <div>CreateObjectPage</div>;
 }
 
-export default CreateObjectPage
+export default CreateObjectPage;
