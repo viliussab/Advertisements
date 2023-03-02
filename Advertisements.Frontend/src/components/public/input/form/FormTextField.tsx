@@ -9,13 +9,14 @@ type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {
 
 const FormTextField = <T extends RHF.FieldValues>(props: Props<T>) => {
   const { fieldName, form, label, muiProps, rules } = props;
-  const error = form.formState.errors[fieldName];
 
-  const { field } = RHF.useController({
+  const { field, formState } = RHF.useController({
     name: fieldName,
     control: form.control,
     rules,
   });
+
+  const error = formState.errors[fieldName];
 
   return (
     <Mui.TextField
