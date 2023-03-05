@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Models
 {
@@ -32,9 +33,11 @@ namespace Core.Models
         public bool Illuminated { get; set; }
         
         [Range(-180, 180)]
+        [Precision(7)]
         public decimal Longitude { get; set; }
 
         [Range(-90, 90)]
+        [Precision(7)]
         public decimal Latitude { get; set; }
         
         public DateTime CreationDate { get; set; }

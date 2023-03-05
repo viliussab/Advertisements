@@ -1,7 +1,7 @@
 using Queries.Prototypes;
 
-namespace Queries.Handlers.Adverts.GetAreas;
+namespace Queries.Handlers.Adverts.GetTypes;
 
-public class GetAreasValidator : BasedValidator<GetAreasQuery>
+public class GetTypesValidator : BasedValidator<GetTypesQuery>
 {
 }

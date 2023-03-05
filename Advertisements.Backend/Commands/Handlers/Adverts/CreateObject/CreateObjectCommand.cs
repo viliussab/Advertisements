@@ -1,5 +1,5 @@
 using Commands.ResponseDto;
-using Domain.Errors;
+using Core.Errors;
 using MediatR;
 using OneOf;
 
@@ -34,5 +34,5 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, List<No
     
     public bool Illuminated { get; set; }
 
-    public List<CreatePlane> PlanesToCreate { get; set; } = new ();
+    public List<CreatePlane> Planes { get; set; } = new ();
 }

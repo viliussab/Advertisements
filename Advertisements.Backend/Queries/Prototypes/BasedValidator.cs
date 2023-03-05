@@ -1,5 +1,5 @@
-using Domain.Errors;
-using Domain.Successes;
+using Core.Errors;
+using Core.Successes;
 using FluentValidation;
 using MediatR;
 using OneOf;

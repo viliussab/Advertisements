@@ -3,19 +3,19 @@ using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
 
-namespace Queries.Handlers.Adverts.GetAreas;
+namespace Queries.Handlers.Adverts.GetTypes;
 
-public class GetAreasHandler : BasedHandler<GetAreasQuery, IEnumerable<Area>, GetAreasValidator>
+public class GetTypesHandler : BasedHandler<GetTypesQuery, IEnumerable<AdvertType>, GetTypesValidator>
 {
     private readonly AdvertContext _context;
-
-    public GetAreasHandler(GetAreasValidator validator, AdvertContext context) : base(validator)
+    
+    public GetTypesHandler(GetTypesValidator validator, AdvertContext context) : base(validator)
     {
         _context = context;
     }
 
-    public override async Task<IEnumerable<Area>> Handle(GetAreasQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<AdvertType>> Handle(GetTypesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Set<Area>().ToListAsync(cancellationToken: cancellationToken);
+        return await _context.Set<AdvertType>().ToListAsync(cancellationToken: cancellationToken);
     }
 }

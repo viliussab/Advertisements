@@ -1,4 +1,4 @@
-using Domain.Interfaces;
+using Core.Interfaces;
 
 namespace Infrastructure.Services;
 

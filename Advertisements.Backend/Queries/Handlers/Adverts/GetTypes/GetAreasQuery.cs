@@ -1,8 +1,8 @@
 using Core.Models;
 using MediatR;
 
-namespace Queries.Handlers.Adverts.GetAreas;
+namespace Queries.Handlers.Adverts.GetTypes;
 
-public class GetAreasQuery : IRequest<IEnumerable<Area>>
+public class GetTypesQuery : IRequest<IEnumerable<AdvertType>>
 {
 }

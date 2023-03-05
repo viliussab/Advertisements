@@ -1,8 +1,8 @@
 using Commands.ResponseDto;
-using Domain.Database;
-using Domain.Errors;
-using Domain.Models;
-using Domain.Successes;
+using Core.Database;
+using Core.Errors;
+using Core.Models;
+using Core.Successes;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
@@ -51,7 +51,7 @@ public class CreateObjectHandler : BasedHandler<
             Illuminated = request.Illuminated,
             Longitude = request.Longitude,
             Latitude = request.Latitude,
-            Planes = request.PlanesToCreate.Select(planeRequest => new AdvertPlane
+            Planes = request.Planes.Select(planeRequest => new AdvertPlane
             {
                 PartialName = planeRequest.PartialName,
                 Permitted = planeRequest.Permitted,

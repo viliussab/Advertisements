@@ -1,6 +1,7 @@
+using Queries.Prototypes;
+
 namespace Queries.Handlers.Adverts.GetAreas;
 
-public class GetAreasValidator
+public class GetAreasValidator : BasedValidator<GetAreasQuery>
 {
-    
 }

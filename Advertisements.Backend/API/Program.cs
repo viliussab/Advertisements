@@ -1,7 +1,10 @@
 using System.Text.Json.Serialization;
+using Core.Database;
 using Infrastructure;
+using Infrastructure.Seeding;
 using Infrastructure.Services;
 using Microsoft.OpenApi.Models;
+using Queries.Handlers.Adverts.GetAreas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAreasQuery>());
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -58,5 +61,11 @@ app.UseEndpoints(endpoints =>
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Advertisements.API v1"));
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetService<AdvertContext>()!;
+    await Seeder.Seed(context);
+}
 
 app.Run();

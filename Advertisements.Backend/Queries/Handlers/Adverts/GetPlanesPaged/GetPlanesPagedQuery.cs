@@ -1,4 +1,4 @@
-using Domain.Models;
+using Core.Models;
 using MediatR;
 using Queries.Prototypes;
 using Queries.ResponseDto.Prototypes;

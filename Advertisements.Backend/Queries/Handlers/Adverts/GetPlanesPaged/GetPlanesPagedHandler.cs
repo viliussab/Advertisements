@@ -1,5 +1,5 @@
-using Domain.Database;
-using Domain.Models;
+using Core.Database;
+using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Queries.Handlers.Extensions;
 using Queries.Prototypes;

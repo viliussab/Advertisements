@@ -1,9 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Domain.Components;
-using Domain.Interfaces;
-using Domain.Models;
+using Core.Components;
+using Core.Interfaces;
+using Core.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

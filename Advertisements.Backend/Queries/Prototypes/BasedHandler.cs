@@ -1,4 +1,4 @@
-using Domain.Errors;
+using Core.Errors;
 using MediatR;
 using OneOf;
 using OneOf.Types;
