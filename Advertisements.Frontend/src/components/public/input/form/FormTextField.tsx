@@ -1,5 +1,5 @@
-import RHF from '../../../../imports/RHF';
-import Mui from '../../../../imports/Mui';
+import RHF from '../../../../config/imports/RHF';
+import Mui from '../../../../config/imports/Mui';
 import { FormFieldProps } from '.';
 
 type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {

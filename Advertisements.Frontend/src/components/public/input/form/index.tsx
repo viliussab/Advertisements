@@ -1,4 +1,6 @@
-import RHF from '../../../../imports/RHF';
+import RHF from '../../../../config/imports/RHF';
+import FormCheckbox from './FormCheckbox';
+import FormDatePicker from './FormDatepicker';
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 
@@ -14,6 +16,8 @@ export type FormFieldProps<T extends RHF.FieldValues> = {
 const FormInput = {
   TextField: FormTextField,
   Select: FormSelect,
+  Checkbox: FormCheckbox,
+  DatePicker: FormDatePicker,
 };
 
 export default FormInput;

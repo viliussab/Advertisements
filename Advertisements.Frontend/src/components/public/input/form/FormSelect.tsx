@@ -1,15 +1,16 @@
-import RHF from '../../../../imports/RHF';
-import Mui from '../../../../imports/Mui';
+import RHF from '../../../../config/imports/RHF';
+import Mui from '../../../../config/imports/Mui';
 import { FormFieldProps } from '.';
 import { SelectOption } from '../type.SelectOption';
 
 type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {
   label: string;
   options: SelectOption[];
+  muiProps?: Mui.SelectProps;
 };
 
 const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
-  const { fieldName, form, options, rules, label } = props;
+  const { fieldName, form, options, rules, label, muiProps } = props;
 
   const { field, formState } = RHF.useController({
     name: fieldName,
@@ -22,13 +23,13 @@ const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
   return (
     <Mui.FormControl variant="filled" fullWidth error={!!error}>
       <Mui.InputLabel>{label}</Mui.InputLabel>
-      <Mui.Select fullWidth required {...field}>
+      <Mui.Select fullWidth required {...field} {...muiProps}>
         <Mui.MenuItem value={''}>
           <em>Nepasirinkta</em>
         </Mui.MenuItem>
         {options.map((option) => (
           <Mui.MenuItem key={option.key} value={option.key}>
-            {option.displayValue}
+            {option.display}
           </Mui.MenuItem>
         ))}
       </Mui.Select>

@@ -1,4 +1,4 @@
 export type SelectOption = {
   key: string;
-  displayValue: string | number;
+  display: string | number | React.ReactNode;
 };

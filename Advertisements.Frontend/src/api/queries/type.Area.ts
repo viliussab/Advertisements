@@ -1,5 +1,6 @@
 type Area = {
   id: string;
+  name: string;
   longitudeEast: number;
   longitudeWest: number;
   latitudeSouth: number;

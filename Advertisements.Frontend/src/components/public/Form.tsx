@@ -1,4 +1,4 @@
-import RHF from '../../imports/RHF';
+import RHF from '../../config/imports/RHF';
 
 type Props<T extends RHF.FieldValues> = {
   form: RHF.UseFormReturn<T>;

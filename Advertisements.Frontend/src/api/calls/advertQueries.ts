@@ -1,5 +1,5 @@
-import AdvertType from '../types/type.AdvertType';
-import Area from '../types/type.Area';
+import AdvertType from '../queries/type.AdvertType';
+import Area from '../queries/type.Area';
 import api from './api';
 
 const getTypesAsync = async () => {

@@ -1,8 +1,9 @@
 import React from 'react';
-import RHF from './../../imports/RHF';
+import RHF from '../../config/imports/RHF';
 import Form from './../../components/public/Form';
 import FormInput from '../../components/public/input/form';
-import Mui from './../../imports/Mui';
+import Mui from '../../config/imports/Mui';
+import Private from './private';
 
 type Type = {
   textfield: string;
@@ -29,11 +30,11 @@ function CampaignsViewPage() {
           options={[
             {
               key: '1',
-              displayValue: 'test',
+              display: 'test',
             },
             {
               key: '2',
-              displayValue: 'test2',
+              display: 'test2',
             },
           ]}
         />

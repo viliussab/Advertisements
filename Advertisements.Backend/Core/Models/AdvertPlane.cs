@@ -18,9 +18,13 @@ namespace Core.Models
 
         public string PartialName { get; set; } = string.Empty;
 
-        public bool Permitted { get; set; }
+        public bool IsPermitted { get; set; }
         
-        public DateOnly? PermittedExpiryDate { get; set; }
+        public DateOnly? PermissionExpiryDate { get; set; }
+        
+        public bool IsPremium { get; set; }
+        
+        // TODO: Save plane picture
         
         public DateTime CreationDate { get; set; }
         

@@ -54,8 +54,8 @@ public class CreateObjectHandler : BasedHandler<
             Planes = request.Planes.Select(planeRequest => new AdvertPlane
             {
                 PartialName = planeRequest.PartialName,
-                Permitted = planeRequest.Permitted,
-                PermittedExpiryDate = planeRequest.PermittedExpiryDate
+                IsPermitted = planeRequest.Permitted,
+                PermissionExpiryDate = planeRequest.PermittedExpiryDate
             }).ToList()
         };
 
