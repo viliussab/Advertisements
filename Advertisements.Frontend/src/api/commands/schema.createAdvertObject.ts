@@ -1,5 +1,10 @@
 import zod from 'zod';
 
+const imageSchema = zod.object({
+  mime: zod.string(),
+  base64: zod.string(),
+});
+
 const planeSchema = zod.object({
   partialName: zod.string(),
 
@@ -8,6 +13,8 @@ const planeSchema = zod.object({
   permissionExpiryDate: zod.date().nullable(),
 
   isPremium: zod.boolean(),
+
+  image: imageSchema.nullish(),
 });
 
 export const createAdvertObjectSchema = zod.object({

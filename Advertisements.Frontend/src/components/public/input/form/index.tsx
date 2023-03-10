@@ -1,6 +1,6 @@
 import RHF from '../../../../config/imports/RHF';
 import FormCheckbox from './FormCheckbox';
-import FormDatePicker from './FormDatepicker';
+import FormDatePicker from './FormDatePicker';
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 

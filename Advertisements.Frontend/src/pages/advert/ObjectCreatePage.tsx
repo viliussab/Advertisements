@@ -86,7 +86,7 @@ function CreateObjectPage() {
                   label="Tipas"
                   fieldName="typeId"
                   options={[]}
-                  muiProps={{ disabled: true }}
+                  muiProps={{ required: true, disabled: true }}
                 />
               ) : (
                 <FormInput.Select
@@ -98,7 +98,7 @@ function CreateObjectPage() {
                     keySelector: (value) => value.id,
                     displaySelector: (value) => value.name,
                   })}
-                  muiProps={{ disabled: true }}
+                  muiProps={{ required: true }}
                 />
               )}
               <FormInput.TextField

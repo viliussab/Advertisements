@@ -4,7 +4,7 @@ import {
   DatePickerProps,
   DatePicker,
 } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import RHF from '../../../../config/imports/RHF';
 import Mui from '../../../../config/imports/Mui';
 
@@ -30,24 +30,9 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
     textFieldProps,
   } = props;
 
-  const currentValue = form.watch(fieldName);
-
-  const onChange = (value: Date | null) => {
-    if (!value) {
-      return;
-    }
-
-    // @ts-ignore
-    form.setValue(fieldName, value);
-
-    if (onChangeSuccess) {
-      onChangeSuccess(value);
-    }
-  };
-
   return (
     // TODO: move to datefns adapter
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <RHF.Controller
         name={fieldName}
         control={form.control}
