@@ -12,10 +12,10 @@ public static class Seeder
             context.Add(new Area
             {
                 Name = "Kaunas",
-                LatitudeNorth = 54.936803M,
-                LatitudeSouth = 54.857355M,
-                LongitudeEast = 23.971769M,
-                LongitudeWest = 23.829046M,
+                LatitudeNorth = 54.936803,
+                LatitudeSouth = 54.857355,
+                LongitudeEast = 23.971769,
+                LongitudeWest = 23.829046,
                 Regions = new [] { 
                     "Šilainiai",
                     "Centras",

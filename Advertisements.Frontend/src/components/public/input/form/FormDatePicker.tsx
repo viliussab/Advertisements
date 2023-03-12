@@ -31,7 +31,6 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
   } = props;
 
   return (
-    // TODO: move to datefns adapter
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <RHF.Controller
         name={fieldName}

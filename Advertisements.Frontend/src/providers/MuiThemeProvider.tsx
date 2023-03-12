@@ -11,6 +11,15 @@ const theme = createTheme({
       main: '#1e3a8a', // tailwind blue-900
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontWeight: 600,
+        },
+      },
+    },
+  },
 });
 
 function MuiThemeProvider({ children }: Props) {

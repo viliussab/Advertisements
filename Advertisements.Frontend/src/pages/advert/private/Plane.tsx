@@ -2,6 +2,7 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { CreateAdvertObject } from '../../../api/commands/schema.createAdvertObject';
 import FormInput from '../../../components/public/input/form';
+import FormReadonly from '../../../components/public/input/form/FormReadOnly';
 import sides_enum from '../../../config/enums/sides';
 import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
@@ -38,14 +39,18 @@ function Plane({ form, field, remove, index, name }: Props) {
   return (
     <div className="m-4 rounded-lg border border-blue-700 border-opacity-50 p-6 shadow-md">
       <div className="flex justify-between align-middle">
-        {!!name && !!partialName ? (
-          <Mui.Typography variant="h6">{`${name} ${partialName}`}</Mui.Typography>
-        ) : (
-          <div />
-        )}
-        <Mui.IconButton onClick={() => remove(index)}>
-          <Icons.Remove />
-        </Mui.IconButton>
+        <div className="w-64">
+          <FormInput.ReadOnly
+            value={`${name} ${partialName}`}
+            label="Pilnas pavadinimas"
+          />
+        </div>
+        <div className="flex items-start">
+          <Mui.Button color="error" onClick={() => remove(index)}>
+            <Icons.Remove />
+            Ištrinti stotelę
+          </Mui.Button>
+        </div>
       </div>
       <div className="flex justify-between">
         <div className="mt-2 flex w-64 flex-col space-y-3">
@@ -80,16 +85,18 @@ function Plane({ form, field, remove, index, name }: Props) {
           />
         </div>
         <div
-          className={`m-2 ml-4 flex h-60 w-60 cursor-pointer items-center justify-center ${
-            !image && 'bg-gray-100'
-          }`}
+          className={`m-2 ml-4 flex h-60 w-80 cursor-pointer items-center justify-center
+          bg-gray-100`}
           {...f.getRootProps()}
         >
           <input hidden {...f.getInputProps} />
           {image ? (
-            <img src={`data:${image.mime};base64, ${image.base64}`}></img>
+            <img
+              className="bg-gray-100"
+              src={`data:${image.mime};base64, ${image.base64}`}
+            ></img>
           ) : (
-            <>Pridėti stotelęs nuotrauką</>
+            <>Nutempkite nuotrauką arba paspauskite</>
           )}
         </div>
       </div>

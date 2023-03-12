@@ -34,11 +34,11 @@ namespace Core.Models
         
         [Range(-180, 180)]
         [Precision(7)]
-        public decimal Longitude { get; set; }
+        public double Longitude { get; set; }
 
         [Range(-90, 90)]
         [Precision(7)]
-        public decimal Latitude { get; set; }
+        public double Latitude { get; set; }
         
         public DateTime CreationDate { get; set; }
         

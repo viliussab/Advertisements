@@ -28,9 +28,9 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, List<No
 
     public string Region { get; set; } = string.Empty;
     
-    public decimal Longitude { get; set; }
+    public double Longitude { get; set; }
     
-    public decimal Latitude { get; set; }
+    public double Latitude { get; set; }
     
     public bool Illuminated { get; set; }
 

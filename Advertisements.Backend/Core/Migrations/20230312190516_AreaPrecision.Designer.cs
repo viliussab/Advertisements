@@ -3,6 +3,7 @@ using System;
 using Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Core.Migrations
 {
     [DbContext(typeof(AdvertContext))]
-    partial class AdvertContextModelSnapshot : ModelSnapshot
+    [Migration("20230312190516_AreaPrecision")]
+    partial class AreaPrecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,13 +44,13 @@ namespace Core.Migrations
                     b.Property<bool>("Illuminated")
                         .HasColumnType("boolean");
 
-                    b.Property<double>("Latitude")
+                    b.Property<decimal>("Latitude")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
-                    b.Property<double>("Longitude")
+                    b.Property<decimal>("Longitude")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
                     b.Property<DateTime>("ModificationDate")
                         .HasColumnType("timestamp with time zone");
@@ -132,21 +135,21 @@ namespace Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<double>("LatitudeNorth")
+                    b.Property<decimal>("LatitudeNorth")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
-                    b.Property<double>("LatitudeSouth")
+                    b.Property<decimal>("LatitudeSouth")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
-                    b.Property<double>("LongitudeEast")
+                    b.Property<decimal>("LongitudeEast")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
-                    b.Property<double>("LongitudeWest")
+                    b.Property<decimal>("LongitudeWest")
                         .HasPrecision(7)
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric(7)");
 
                     b.Property<string>("Name")
                         .IsRequired()

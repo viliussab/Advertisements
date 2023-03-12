@@ -7,10 +7,27 @@ type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {
   label: string;
   options: SelectOption[];
   muiProps?: Mui.SelectProps;
+  emptyOption?: SelectOption;
+  showDefaultOption?: boolean;
 };
 
 const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
-  const { fieldName, form, options, rules, label, muiProps } = props;
+  const {
+    fieldName,
+    form,
+    options,
+    rules,
+    label,
+    muiProps,
+    showDefaultOption,
+  } = props;
+
+  const emptyOption =
+    props.emptyOption ||
+    (showDefaultOption && {
+      key: '',
+      display: 'Nepasirinkta',
+    });
 
   const { field, formState } = RHF.useController({
     name: fieldName,
@@ -24,9 +41,11 @@ const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
     <Mui.FormControl variant="filled" fullWidth error={!!error}>
       <Mui.InputLabel>{label}</Mui.InputLabel>
       <Mui.Select fullWidth required {...field} {...muiProps}>
-        <Mui.MenuItem value={''}>
-          <em>Nepasirinkta</em>
-        </Mui.MenuItem>
+        {emptyOption && (
+          <Mui.MenuItem value={emptyOption.key}>
+            <em>{emptyOption.display}</em>
+          </Mui.MenuItem>
+        )}
         {options.map((option) => (
           <Mui.MenuItem key={option.key} value={option.key}>
             {option.display}

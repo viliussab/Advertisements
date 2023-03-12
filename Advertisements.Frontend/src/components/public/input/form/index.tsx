@@ -1,6 +1,7 @@
 import RHF from '../../../../config/imports/RHF';
 import FormCheckbox from './FormCheckbox';
 import FormDatePicker from './FormDatePicker';
+import FormReadOnly from './FormReadOnly';
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 
@@ -18,6 +19,7 @@ const FormInput = {
   Select: FormSelect,
   Checkbox: FormCheckbox,
   DatePicker: FormDatePicker,
+  ReadOnly: FormReadOnly,
 };
 
 export default FormInput;
