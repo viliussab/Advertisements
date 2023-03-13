@@ -15,7 +15,7 @@ const planeSchema = zod.object({
 
   isPremium: zod.boolean(),
 
-  image: imageSchema.nullish(),
+  images: zod.array(imageSchema),
 });
 
 export const createAdvertObjectSchema = zod.object({
@@ -39,5 +39,7 @@ export const createAdvertObjectSchema = zod.object({
 
   planes: zod.array(planeSchema),
 });
+
+export type CreateAdvertObjectImage = zod.TypeOf<typeof imageSchema>;
 
 export type CreateAdvertObject = zod.TypeOf<typeof createAdvertObjectSchema>;
