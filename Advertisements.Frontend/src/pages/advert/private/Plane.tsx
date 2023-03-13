@@ -2,7 +2,6 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { CreateAdvertObject } from '../../../api/commands/schema.createAdvertObject';
 import FormInput from '../../../components/public/input/form';
-import FormReadonly from '../../../components/public/input/form/FormReadOnly';
 import sides_enum from '../../../config/enums/sides';
 import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
@@ -26,10 +25,11 @@ function Plane({ form, field, remove, index, name }: Props) {
     accept: { 'image/*': [] },
     onDrop: async (acceptedFiles: File[]) => {
       const imageBlob = acceptedFiles[0];
-      console.log('imageblob', imageBlob);
+
       const base64 = await fileFunctions.toBase64Async(imageBlob);
       form.setValue(`planes.${index}.image`, {
         mime: imageBlob.type,
+        name: imageBlob.name,
         base64,
       });
     },
@@ -48,7 +48,7 @@ function Plane({ form, field, remove, index, name }: Props) {
         <div className="flex items-start">
           <Mui.Button color="error" onClick={() => remove(index)}>
             <Icons.Remove />
-            Ištrinti stotelę
+            Ištrinti plokštumą
           </Mui.Button>
         </div>
       </div>

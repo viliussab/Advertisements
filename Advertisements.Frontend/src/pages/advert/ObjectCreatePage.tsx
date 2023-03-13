@@ -67,8 +67,6 @@ function CreateObjectPage() {
     }
   }, [area, setCoordinates]);
 
-  console.log('latlong', { lat: lat, long: long });
-
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
@@ -151,6 +149,9 @@ function CreateObjectPage() {
                     muiProps={{
                       type: 'number',
                     }}
+                    rules={{
+                      valueAsNumber: true,
+                    }}
                   />
                 </div>
                 <div>
@@ -158,6 +159,9 @@ function CreateObjectPage() {
                     label="Ilguma"
                     form={form}
                     fieldName="longitude"
+                    rules={{
+                      valueAsNumber: true,
+                    }}
                     muiProps={{
                       type: 'number',
                     }}

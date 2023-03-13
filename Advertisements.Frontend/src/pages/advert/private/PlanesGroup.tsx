@@ -35,11 +35,14 @@ function PlanesGroup({ form }: Props) {
             })
           }
         >
-          <Icons.Add /> Pridėti stotelę
+          <Icons.Add /> Pridėti reklaminę plokštumą
         </Mui.Button>
         {fields.length > 0 && (
           <div className="flex flex-grow justify-end">
-            <Mui.Button variant="contained">Kurti Objektą</Mui.Button>
+            <FormInput.SubmitButton isSubmitting={true}>
+              Kurti Objektą
+            </FormInput.SubmitButton>
+            {/* <Mui.Button variant="contained"></Mui.Button> */}
           </div>
         )}
       </div>

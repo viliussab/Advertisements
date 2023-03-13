@@ -3,6 +3,7 @@ import zod from 'zod';
 const imageSchema = zod.object({
   mime: zod.string(),
   base64: zod.string(),
+  name: zod.string(),
 });
 
 const planeSchema = zod.object({
@@ -26,9 +27,9 @@ export const createAdvertObjectSchema = zod.object({
 
   name: zod.string(),
 
-  latitude: zod.number().gte(-90).lte(90),
+  latitude: zod.coerce.number().gte(-90).lte(90),
 
-  longitude: zod.number().gte(-180).lte(180),
+  longitude: zod.coerce.number().gte(-180).lte(180),
 
   address: zod.string(),
 

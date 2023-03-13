@@ -24,7 +24,7 @@ namespace Core.Models
         
         public bool IsPremium { get; set; }
         
-        // TODO: Save plane picture
+        public virtual ICollection<PlanePhoto> Photos { get; set; }
         
         public DateTime CreationDate { get; set; }
         
