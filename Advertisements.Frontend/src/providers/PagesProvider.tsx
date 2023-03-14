@@ -1,5 +1,6 @@
 import routes, { Route } from '../config/routes';
 import { Route as RRD_Router, BrowserRouter, Routes } from 'react-router-dom';
+import Layout from '../components/private/layout/Layout';
 
 function PagesProvider() {
   return (
@@ -9,20 +10,12 @@ function PagesProvider() {
           <RRD_Router
             key={route.path}
             path={route.path}
-            element={<route.Page />}
+            element={<Layout route={route} />}
           />
         ))}
       </Routes>
     </BrowserRouter>
   );
-}
-
-function Layout(route: Route) {
-  if (!route.layout) {
-    return <route.Page />;
-  }
-
-  return;
 }
 
 export default PagesProvider;

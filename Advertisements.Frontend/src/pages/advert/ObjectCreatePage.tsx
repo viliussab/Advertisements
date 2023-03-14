@@ -59,8 +59,6 @@ function CreateObjectPage() {
     onSuccess,
   });
 
-  navigate(website_paths.objects.main);
-
   const selectedAreaId = form.watch('areaId');
 
   const area = areasQuery.data?.find((x) => x.id === selectedAreaId);
@@ -69,8 +67,6 @@ function CreateObjectPage() {
 
   const setCoordinates = React.useCallback(
     (lat: number, long: number) => {
-      console.log('what', precisionFunctions.toNumCoordinate(lat));
-
       form.setValue('latitude', precisionFunctions.toNumCoordinate(lat));
       form.setValue('longitude', precisionFunctions.toNumCoordinate(long));
     },

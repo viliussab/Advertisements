@@ -10,6 +10,12 @@ const theme = createTheme({
     primary: {
       main: '#1e3a8a', // tailwind blue-900
     },
+    secondary: {
+      main: '#fff',
+    },
+    info: {
+      main: '#374151', // tailwind gray-700
+    },
   },
   components: {
     MuiButton: {

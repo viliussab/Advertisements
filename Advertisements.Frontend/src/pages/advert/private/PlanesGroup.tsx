@@ -20,8 +20,6 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
     name: 'planes',
   });
 
-  console.log('isSubbmiting', isSubbmiting);
-
   const name = form.watch('name');
   const [listRef] = useAutoAnimate<HTMLDivElement>();
 
