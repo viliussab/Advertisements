@@ -1,4 +1,4 @@
-namespace Queries.ResponseDto.Prototypes;
+namespace Queries.Responses.Prototypes;
 
 public class AdvertObjectFields
 {
@@ -15,6 +15,8 @@ public class AdvertObjectFields
     public string Address { get; set; } = string.Empty;
 
     public string Region { get; set; } = string.Empty;
+    
+    public bool Illuminated { get; set; }
         
     public decimal Longitude { get; set; }
 

@@ -1,4 +1,4 @@
-namespace Queries.ResponseDto.Prototypes;
+namespace Queries.Responses.Prototypes;
 
 public class AdvertPlaneFields
 {

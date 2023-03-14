@@ -18,6 +18,7 @@ import advertMutations from '../../api/calls/advertMutations';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import website_paths from '../../config/website_paths';
+import Icons from '../../config/imports/Icons';
 
 function CreateObjectPage() {
   const navigate = useNavigate();
@@ -212,7 +213,7 @@ function CreateObjectPage() {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gray-100">
-                    Pasirinkite miestą
+                    <Icons.Map />
                   </div>
                 )}
               </div>

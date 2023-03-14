@@ -6,6 +6,7 @@ type AdvertObject = {
   name: string;
   address: string;
   region: string;
+  illuminated: boolean;
   longitude: number;
   latitude: number;
 };

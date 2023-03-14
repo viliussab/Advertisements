@@ -2,7 +2,7 @@ using Core.Models;
 using MediatR;
 using Queries.Handlers.Adverts.GetAreas;
 using Queries.Prototypes;
-using Queries.ResponseDto.Prototypes;
+using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 

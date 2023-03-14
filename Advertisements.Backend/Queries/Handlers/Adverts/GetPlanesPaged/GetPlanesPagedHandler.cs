@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Queries.Handlers.Adverts.GetAreas;
 using Queries.Handlers.Extensions;
 using Queries.Prototypes;
-using Queries.ResponseDto.Prototypes;
+using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
@@ -28,12 +28,13 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
                             || plane.Object.InArea(area))
             .Where(plane => request.TypeId == null
                             || plane.Object.TypeId == request.TypeId)
-            .OrderBy(x => x.IsPermitted == false)
+            .OrderBy(x => x.IsPermitted == true)
             .ThenBy(x => x.ModificationDate);
  
         var pagedPlanes = await queryable
             .Include(x => x.Object)
             .Include(x => x.Object.Type)
+            .Include(x => x.Object.Area)
             .ToPageAsync(request, cancellationToken);
 
         var dto = pagedPlanes.Adapt<PageResponse<GetPlanesPagedResponse>>();
