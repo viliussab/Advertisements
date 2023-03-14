@@ -1,4 +1,4 @@
-using Commands.ResponseDto;
+using Commands.Responses;
 using Core.Database;
 using Core.Errors;
 using Core.Models;
@@ -11,7 +11,7 @@ namespace Commands.Handlers.Adverts.CreateObject;
 
 public class CreateObjectHandler : BasedHandler<
     CreateObjectCommand,
-    OneOf<List<ValidationError>, List<NotFoundError>, CreateGuidSuccess>,
+    OneOf<List<ValidationError>, CreateGuidSuccess>,
     CreateObjectValidator>
 {
     private readonly AdvertContext _context;
@@ -24,15 +24,14 @@ public class CreateObjectHandler : BasedHandler<
         _context = context;
     }
     
-    public override async Task<OneOf<List<ValidationError>, List<NotFoundError>, CreateGuidSuccess>> Handle(
+    public override async Task<OneOf<List<ValidationError>, CreateGuidSuccess>> Handle(
         CreateObjectCommand request,
         CancellationToken cancellationToken)
     {
         var result = await ValidateAsync(request, cancellationToken);
 
-        return result.Match<OneOf<List<ValidationError>, List<NotFoundError>, CreateGuidSuccess>>(
+        return result.Match<OneOf<List<ValidationError>, CreateGuidSuccess>>(
             validationErrors => validationErrors,
-            notFoundErrors => notFoundErrors,
             success => CreateAsync(request, cancellationToken).Result);
     }
 
@@ -55,7 +54,13 @@ public class CreateObjectHandler : BasedHandler<
             {
                 PartialName = planeRequest.PartialName,
                 IsPermitted = planeRequest.Permitted,
-                PermissionExpiryDate = planeRequest.PermittedExpiryDate
+                PermissionExpiryDate = planeRequest.PermittedExpiryDate,
+                Photos = planeRequest.Images.Select(file => new PlanePhoto
+                {
+                    Content = Convert.FromBase64String(file.Base64),
+                    Mime = file.Mime,
+                    Name = file.Name,
+                }).ToList(),
             }).ToList()
         };
 
@@ -65,51 +70,36 @@ public class CreateObjectHandler : BasedHandler<
         return new CreateGuidSuccess(advertObject.Id);
     }
 
-    private async Task<OneOf<List<ValidationError>, List<NotFoundError>, GenericSuccess>> ValidateAsync(CreateObjectCommand request, CancellationToken cancellationToken)
+    private async Task<OneOf<List<ValidationError>, GenericSuccess>> ValidateAsync(CreateObjectCommand request, CancellationToken cancellationToken)
     {
         var validationErrors = new List<ValidationError>();
-        var notFoundErrors = new List<NotFoundError>();
 
+        var area = await _context.Set<Area>().FirstOrDefaultAsync(x => x.Id == request.AreaId, cancellationToken);
+        if (area is null)
         {
-            var area = await _context.Set<Area>().FirstOrDefaultAsync(x => x.Id == request.AreaId, cancellationToken);
-            if (area is null)
-            {
-                notFoundErrors.Add(new NotFoundError(request.AreaId, typeof(Area)));
-            }
-            else if (!area.Regions.Contains(request.Region))
-            {
-                validationErrors.Add(new ValidationError(
-                    nameof(request.Region),
-                    "region does not belong to an area"));
-            }
+            validationErrors.Add(new ValidationError(typeof(Area).ToString(), $"{typeof(Area)} does not exist"));
+        }
+        else if (!area.Regions.Contains(request.Region))
+        {
+            validationErrors.Add(new ValidationError(
+                nameof(request.Region),
+                "region does not belong to an area"));
         }
 
+        var type = await _context.Set<AdvertType>()
+            .FirstOrDefaultAsync(x => x.Id == request.TypeId, cancellationToken);
+    
+        if (type is null)
         {
-            var type = await _context.Set<AdvertType>()
-                .FirstOrDefaultAsync(x => x.Id == request.AreaId, cancellationToken);
-        
-            if (type is null)
-            {
-                notFoundErrors.Add(new NotFoundError(request.TypeId, typeof(AdvertType)));
-            }
+            validationErrors.Add(new ValidationError(typeof(AdvertType).ToString(), $"{typeof(AdvertType)} does not exist"));
         }
 
-        {
-            var validationResponse = await Validator.ValidatorRequestAsync(request);
-        
-            validationResponse.Switch(
-                errors => validationErrors = validationErrors.Concat(errors).ToList(),
-                success => { });
-        }
+        var validatorErrors = await Validator.ValidatorRequestAsync(request);
+        validationErrors = validationErrors.Concat(validatorErrors).ToList();
 
         if (validationErrors.Any())
         {
             return validationErrors;
-        }
-
-        if (notFoundErrors.Any())
-        {
-            return notFoundErrors;
         }
 
         return new GenericSuccess();

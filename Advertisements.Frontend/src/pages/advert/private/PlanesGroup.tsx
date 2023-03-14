@@ -11,13 +11,16 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 type Props = {
   form: RHF.UseFormReturn<CreateAdvertObject>;
+  isSubbmiting: boolean;
 };
 
-function PlanesGroup({ form }: Props) {
+function PlanesGroup({ form, isSubbmiting }: Props) {
   const { fields, append, remove } = RHF.useFieldArray({
     control: form.control,
     name: 'planes',
   });
+
+  console.log('isSubbmiting', isSubbmiting);
 
   const name = form.watch('name');
   const [listRef] = useAutoAnimate<HTMLDivElement>();
@@ -40,10 +43,9 @@ function PlanesGroup({ form }: Props) {
         </Mui.Button>
         {fields.length > 0 && (
           <div className="flex flex-grow justify-end">
-            <FormInput.SubmitButton isSubmitting={true}>
+            <FormInput.SubmitButton isSubmitting={isSubbmiting}>
               Kurti Objektą
             </FormInput.SubmitButton>
-            {/* <Mui.Button variant="contained"></Mui.Button> */}
           </div>
         )}
       </div>

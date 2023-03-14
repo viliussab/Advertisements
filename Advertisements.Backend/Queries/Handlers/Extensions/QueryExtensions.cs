@@ -18,15 +18,23 @@ public static class QueryExtensions
             .Take(pageQuery.PageSize)
             .ToListAsync(cancellationToken);
 
-        int GetPageCount (int pageSize, int totalSize) => ((totalSize - 1) / pageSize) + 1;
-
         return new PageResponse<T>
         {
             Items = itemsPage,
             PageNumber = pageQuery.PageNumber,
             PageSize = pageQuery.PageSize,
             TotalCount = totalCount,
-            TotalPages = GetPageCount(pageQuery.PageNumber, totalCount),
+            TotalPages = GetPageCount(pageQuery.PageSize, totalCount),
         };
+    }
+
+    private static int GetPageCount(int pageSize, int totalSize)
+    {
+        if (totalSize == 0)
+        {
+            return 1;
+        }
+        
+        return ((totalSize - 1) / pageSize) + 1;
     }
 }

@@ -1,5 +1,7 @@
-import AdvertType from '../queries/type.AdvertType';
-import Area from '../queries/type.Area';
+import { AdvertPlaneWithObjects } from '../responses/type.AdvertPlane';
+import AdvertType from '../responses/type.AdvertType';
+import Area from '../responses/type.Area';
+import PageResponse from '../responses/type.PageResponse';
 import api from './api';
 
 const getTypesAsync = async () => {
@@ -14,6 +16,12 @@ const getAreasAsync = async () => {
   return response.data as Area[];
 };
 
+const getPagedPlanesAsync = async () => {
+  const response = await api.queryAsync(api.endpoints.query.advert.planes);
+
+  return response.data as PageResponse<AdvertPlaneWithObjects>;
+};
+
 const advertQueries = {
   types: {
     fn: getTypesAsync,
@@ -22,6 +30,10 @@ const advertQueries = {
   areas: {
     fn: getAreasAsync,
     key: 'areas',
+  },
+  pagedPlanes: {
+    fn: getPagedPlanesAsync,
+    key: 'pagedPlanes',
   },
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Area from '../../../api/queries/type.Area';
+import Area from '../../../api/responses/type.Area';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import Mui from '../../../config/imports/Mui';
 

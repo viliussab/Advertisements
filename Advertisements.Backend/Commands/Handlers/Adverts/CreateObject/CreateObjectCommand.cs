@@ -1,11 +1,12 @@
-using Commands.ResponseDto;
+using Commands.Requests;
+using Commands.Responses;
 using Core.Errors;
 using MediatR;
 using OneOf;
 
 namespace Commands.Handlers.Adverts.CreateObject;
 
-public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, List<NotFoundError>, CreateGuidSuccess>>
+public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, CreateGuidSuccess>>
 {
     public class CreatePlane
     {
@@ -14,6 +15,8 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, List<No
         public bool Permitted { get; set; }
         
         public DateOnly? PermittedExpiryDate { get; set; }
+
+        public List<CreateFileRequest> Images { get; set; } = new();
     }
     
     public string SerialCode { get; set; } = string.Empty;

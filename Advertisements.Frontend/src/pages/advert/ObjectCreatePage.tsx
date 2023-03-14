@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import advertQueries from '../../api/calls/advertQueries';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,8 +14,14 @@ import FormInput from '../../components/public/input/form';
 import optionsFunctions from '../../functions/optionsFunctions';
 import Private from './private';
 import precisionFunctions from '../../functions/precisionFunctions';
+import advertMutations from '../../api/calls/advertMutations';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import website_paths from '../../config/website_paths';
 
 function CreateObjectPage() {
+  const navigate = useNavigate();
+
   const form = RHF.useForm<CreateAdvertObject>({
     resolver: zodResolver(createAdvertObjectSchema),
     defaultValues: {
@@ -41,6 +47,19 @@ function CreateObjectPage() {
     queryKey: advertQueries.types.key,
     queryFn: advertQueries.types.fn,
   });
+
+  const onSuccess = () => {
+    toast.success('Objektas sukurtas');
+    navigate(website_paths.objects.main);
+  };
+
+  const createMutation = useMutation({
+    mutationKey: advertMutations.objectCreate.key,
+    mutationFn: advertMutations.objectCreate.fn,
+    onSuccess,
+  });
+
+  navigate(website_paths.objects.main);
 
   const selectedAreaId = form.watch('areaId');
 
@@ -70,7 +89,12 @@ function CreateObjectPage() {
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
-        <Form form={form}>
+        <Form
+          form={form}
+          onSubmit={(values: CreateAdvertObject) => {
+            createMutation.mutateAsync(values);
+          }}
+        >
           <div className="m-4 flex justify-center">
             <div className=" w-64 space-y-3 pt-0">
               <FormInput.TextField
@@ -106,6 +130,17 @@ function CreateObjectPage() {
                   muiProps={{ required: true }}
                 />
               )}
+              <FormInput.Select
+                form={form}
+                label="Regionas"
+                fieldName="region"
+                options={optionsFunctions.convert({
+                  data: area?.regions || [],
+                  keySelector: (region) => region,
+                  displaySelector: (region) => region,
+                })}
+                muiProps={{ required: true, disabled: !area }}
+              />
               {typesQuery.isLoading || !typesQuery.data ? (
                 <FormInput.Select
                   form={form}
@@ -187,7 +222,10 @@ function CreateObjectPage() {
               </div>
             </div>
           </div>
-          <Private.PlanesGroup form={form} />
+          <Private.PlanesGroup
+            form={form}
+            isSubbmiting={createMutation.isLoading}
+          />
         </Form>
       </Mui.Paper>
     </div>

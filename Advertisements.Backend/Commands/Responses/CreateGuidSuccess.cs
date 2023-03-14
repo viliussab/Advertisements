@@ -1,3 +1,3 @@
-namespace Commands.ResponseDto;
+namespace Commands.Responses;
 
 public record CreateGuidSuccess(Guid Id);

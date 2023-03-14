@@ -1,6 +1,7 @@
 using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Adverts.GetAreas;
+using Queries.Handlers.Adverts.GetPlanesPaged;
 using Queries.Handlers.Adverts.GetTypes;
 
 namespace API.Controllers;
@@ -58,10 +59,11 @@ public class AdvertQueriesController : BasedController
     }
     
     [HttpGet("plane")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetPlanesPaged([FromRoute] Guid id)
+    [ProducesResponseType(typeof(List<AdvertPlane>), 200)]
+    public async Task<IActionResult> GetPlanesPaged()
     {
-        return Ok("yes");
+        var response = await Mediator.Send(new GetPlanesPagedQuery());
+        
+        return Ok(response);
     }
 }

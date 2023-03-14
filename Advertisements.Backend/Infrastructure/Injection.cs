@@ -1,3 +1,4 @@
+using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
 using Core.Interfaces;
 using Core.Models;
@@ -19,6 +20,7 @@ public static class Injection
 		services.AddInfrastructureInterfaces();
 		services.AddAuthentication();
 		services.AddValidatorsFromAssembly(typeof(GetAreasQuery).Assembly);
+		services.AddValidatorsFromAssembly(typeof(CreateObjectCommand).Assembly);
 	}
 	
 	private static void AddInfrastructureInterfaces(this IServiceCollection services)

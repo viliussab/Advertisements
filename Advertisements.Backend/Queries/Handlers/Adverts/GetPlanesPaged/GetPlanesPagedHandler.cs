@@ -1,44 +1,43 @@
 using Core.Database;
 using Core.Models;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Queries.Handlers.Adverts.GetAreas;
 using Queries.Handlers.Extensions;
 using Queries.Prototypes;
 using Queries.ResponseDto.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
-public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageResponse<AdvertPlane>, GetObjectsPagedValidator>
+public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageResponse<GetPlanesPagedResponse>, GetPlanesPagedValidator>
 {
     private readonly AdvertContext _context;
 
-    public GetPlanesPagedHandler(GetObjectsPagedValidator validator, AdvertContext context)
+    public GetPlanesPagedHandler(GetPlanesPagedValidator validator, AdvertContext context)
         : base(validator)
     {
         _context = context;
     }
     
-    public override async Task<PageResponse<AdvertPlane>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
+    public override async Task<PageResponse<GetPlanesPagedResponse>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
     {
         var area = _context.Set<Area>().FirstOrDefault(x => x.Id == request.AreaId);
-
-        var searchPoints = request.Search.Split("");
-
+        
         var queryable = _context.Set<AdvertPlane>()
             .Where(plane => area == null
                             || plane.Object.InArea(area))
             .Where(plane => request.TypeId == null
                             || plane.Object.TypeId == request.TypeId)
-            .Where(plane => string.IsNullOrEmpty(request.Search) ||
-                            searchPoints.Any(search =>
-                                EF.Functions.ILike(plane.Object.Name + " " + plane.PartialName, search)
-                                || EF.Functions.ILike(plane.Object.Address, search)
-                                || EF.Functions.ILike(plane.Object.SerialCode, search)));
-
-        var planes = await queryable
+            .OrderBy(x => x.IsPermitted == false)
+            .ThenBy(x => x.ModificationDate);
+ 
+        var pagedPlanes = await queryable
             .Include(x => x.Object)
             .Include(x => x.Object.Type)
             .ToPageAsync(request, cancellationToken);
 
-        return planes;
+        var dto = pagedPlanes.Adapt<PageResponse<GetPlanesPagedResponse>>();
+
+        return dto;
     }
 }

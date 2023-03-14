@@ -9,13 +9,13 @@ namespace Queries.Prototypes;
 
 public class BasedValidator<TRequest> : AbstractValidator<TRequest>
 {
-    public async Task<OneOf<List<ValidationError>, ValidationSuccess>> ValidatorRequestAsync(TRequest request)
+    public async Task<List<ValidationError>> ValidatorRequestAsync(TRequest request)
     {
         var validationResult = await ValidateAsync(request);
 
         if (validationResult.IsValid)
         {
-            return new ValidationSuccess();
+            return new List<ValidationError>();
         }
 
         var errors = validationResult.Errors.Select(validationFailure => new ValidationError(

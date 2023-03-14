@@ -1,5 +1,5 @@
 using Commands.Handlers.Adverts.CreateObject;
-using Commands.ResponseDto;
+using Commands.Responses;
 using Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +9,6 @@ public class AdvertCommandsController : BasedController
 {
     [HttpPost("object")]
     [ProducesResponseType(typeof(CreateGuidSuccess), 200)]
-    [ProducesResponseType(typeof(List<NotFoundError>), 404)]
     [ProducesResponseType(typeof(List<ValidationError>), 400)]
     public IActionResult CreateObject([FromBody] CreateObjectCommand command)
     {
@@ -17,7 +16,6 @@ public class AdvertCommandsController : BasedController
 
         return response.Match<IActionResult>(
             BadRequest,
-            NotFound,
             Ok);
     }
 

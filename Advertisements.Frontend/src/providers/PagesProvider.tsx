@@ -1,16 +1,28 @@
-import routes from '../config/routes';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import routes, { Route } from '../config/routes';
+import { Route as RRD_Router, BrowserRouter, Routes } from 'react-router-dom';
 
 function PagesProvider() {
   return (
     <BrowserRouter>
       <Routes>
         {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={<route.Page />} />
+          <RRD_Router
+            key={route.path}
+            path={route.path}
+            element={<route.Page />}
+          />
         ))}
       </Routes>
     </BrowserRouter>
   );
+}
+
+function Layout(route: Route) {
+  if (!route.layout) {
+    return <route.Page />;
+  }
+
+  return;
 }
 
 export default PagesProvider;

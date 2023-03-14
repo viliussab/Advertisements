@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
 using Infrastructure;
 using Infrastructure.Seeding;
@@ -18,6 +19,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAreasQuery>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateObjectCommand>());
 
 builder.Services.AddSwaggerGen(c =>
 {

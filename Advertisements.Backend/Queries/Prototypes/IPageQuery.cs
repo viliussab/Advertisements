@@ -6,5 +6,5 @@ public interface IPageQuery
     
     public int PageSize { get; set; }
 
-    public int Offset => PageNumber * PageSize;
+    public int Offset => (PageNumber - 1) * PageSize;
 }
