@@ -4,9 +4,11 @@ import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
 
-type Props = {};
+type Props = {
+  title: string;
+};
 
-function Navbar({}: Props) {
+function Navbar({ title }: Props) {
   const [objectsAnchor, setObjectsAnchor] = React.useState<null | HTMLElement>(
     null,
   );
@@ -22,6 +24,10 @@ function Navbar({}: Props) {
         <div className="mr-2 h-10">
           <img className="h-full w-full" src="/logo.png" />
         </div>
+        <p className="mr-2 ml-2 text-lg font-medium uppercase">{title}</p>
+
+        <Mui.Divider orientation="vertical" flexItem />
+
         <NavbarRouteButton
           renderCell={() => <>Objektai</>}
           routes={[
@@ -108,7 +114,10 @@ function NavbarRouteButton({ renderCell, routes }: NavbarRoutesButtonProps) {
             <Mui.Button
               key={route.path}
               color="info"
-              onClick={() => navigate(route.path)}
+              onClick={() => {
+                setMenuAnchor(null);
+                navigate(route.path);
+              }}
             >
               <div className="flex w-full justify-between gap-2">
                 {route.title}

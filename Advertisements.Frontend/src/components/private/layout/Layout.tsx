@@ -13,7 +13,7 @@ function Layout({ route }: Props) {
 
   return (
     <>
-      <Navbar />
+      <Navbar title={route.layout.title} />
       <route.Page />
     </>
   );

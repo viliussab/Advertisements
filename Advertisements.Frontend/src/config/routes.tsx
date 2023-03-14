@@ -7,24 +7,32 @@ import website_paths from './website_paths';
 export type Route = {
   path: string;
   Page: () => ReactElement;
-  layout: boolean;
+  layout?: {
+    title: string;
+  };
 };
 
 const routes: Array<Route> = [
   {
     path: website_paths.campaigns.main,
     Page: CampaignsViewPage,
-    layout: true,
+    layout: {
+      title: 'Kampanijų sąrašas',
+    },
   },
   {
     path: website_paths.objects.create,
     Page: ObjectCreatePage,
-    layout: true,
+    layout: {
+      title: 'Kurti objektą',
+    },
   },
   {
     path: website_paths.objects.main,
     Page: ObjectsListPage,
-    layout: true,
+    layout: {
+      title: 'Objektų sąrašas',
+    },
   },
 ];
 
