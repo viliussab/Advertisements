@@ -20,8 +20,5 @@ public class AdvertPlaneConfiguration : IEntityTypeConfiguration<AdvertPlane>
             .WithOne(x => x.Plane)
             .HasForeignKey(x => x.PlaneId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Property(x => x.PermissionExpiryDate)
-            .HasConversion<DateOnlyConversion.Converter, DateOnlyConversion.Comparer>();
     }
 }

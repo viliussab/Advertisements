@@ -17,9 +17,9 @@ public class Campaign : IModelMetadata
 
     public string Name { get; set; } = null!;
     
-    public DateOnly Start { get; set; }
+    public DateTime Start { get; set; }
 
-    public DateOnly End { get; set; }
+    public DateTime End { get; set; }
 
     public int SideCount { get; set; }
     

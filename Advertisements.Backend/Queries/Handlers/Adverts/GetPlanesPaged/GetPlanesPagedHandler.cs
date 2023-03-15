@@ -29,7 +29,7 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
             .Where(plane => request.TypeId == null
                             || plane.Object.TypeId == request.TypeId)
             .OrderBy(x => x.IsPermitted == true)
-            .ThenBy(x => x.ModificationDate);
+            .ThenBy(x => x.PermissionExpiryDate);
  
         var pagedPlanes = await queryable
             .Include(x => x.Object)

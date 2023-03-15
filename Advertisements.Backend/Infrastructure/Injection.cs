@@ -35,6 +35,8 @@ public static class Injection
 				options.UseNpgsql(
 					configuration.GetConnectionString("Database"),
 					b => b.MigrationsAssembly("Core")));
+		
+		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 	}
 	
 	private static void AddAuthentication(this IServiceCollection services)

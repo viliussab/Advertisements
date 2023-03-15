@@ -8,10 +8,10 @@
 
     <ItemGroup>
       <Folder Include="Extensions" />
-      <Folder Include="Handlers\Adverts" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="ClosedXML" Version="0.100.3" />
       <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
     </ItemGroup>
 

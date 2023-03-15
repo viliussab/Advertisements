@@ -1,6 +1,8 @@
 using Commands.Handlers.Adverts.CreateObject;
+using Commands.Handlers.Adverts.UploadObejcts;
 using Commands.Responses;
 using Core.Errors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -25,5 +27,18 @@ public class AdvertCommandsController : BasedController
     public async Task<IActionResult> UpdateObject([FromRoute] Guid id)
     {
         return Ok("yes");
+    }
+
+    [HttpPost("object/upload")]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> UploadObjects(IFormFile file)
+    {
+        var command = new UploadObjectsCommand
+        {
+            File = file.OpenReadStream(),
+        };
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
 }

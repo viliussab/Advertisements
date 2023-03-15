@@ -19,11 +19,5 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
 
         builder.Property(x => x.ConfirmationStatus)
             .HasConversion(EnumConversion.Get<CampaignConfirmationStatus>());
-        
-        builder.Property(x => x.Start)
-            .HasConversion<DateOnlyConversion.Converter, DateOnlyConversion.Comparer>();
-        
-        builder.Property(x => x.End)
-            .HasConversion<DateOnlyConversion.Converter, DateOnlyConversion.Comparer>();
     }
 }

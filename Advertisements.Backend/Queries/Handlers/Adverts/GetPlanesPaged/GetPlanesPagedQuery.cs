@@ -12,7 +12,7 @@ public class GetPlanesPagedQuery : IRequest<PageResponse<GetPlanesPagedResponse>
 
     public Guid? TypeId { get; set; } = null;
 
-    public int PageNumber { get; set; } = Constants.Paging.InitialPageNumber;
+    public int PageNumber { get; set; }
 
-    public int PageSize { get; set; } = Constants.Paging.DefaultPageSize;
+    public int PageSize { get; set; }
 }

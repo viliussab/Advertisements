@@ -53,8 +53,8 @@ public class CreateObjectHandler : BasedHandler<
             Planes = request.Planes.Select(planeRequest => new AdvertPlane
             {
                 PartialName = planeRequest.PartialName,
-                IsPermitted = planeRequest.Permitted,
-                PermissionExpiryDate = planeRequest.PermittedExpiryDate,
+                IsPermitted = planeRequest.IsPermitted,
+                PermissionExpiryDate = planeRequest.PermissionExpiryDate,
                 Photos = planeRequest.Images.Select(file => new PlanePhoto
                 {
                     Content = Convert.FromBase64String(file.Base64),

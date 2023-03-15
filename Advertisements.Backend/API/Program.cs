@@ -83,4 +83,6 @@ using (var scope = app.Services.CreateScope())
     await Seeder.Seed(context);
 }
 
+
+
 app.Run();

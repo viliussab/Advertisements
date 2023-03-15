@@ -10,7 +10,7 @@ public class AdvertPlaneFields
 
     public bool IsPermitted { get; set; }
         
-    public DateOnly? PermissionExpiryDate { get; set; }
+    public DateTime? PermissionExpiryDate { get; set; }
         
     public bool IsPremium { get; set; }
 }

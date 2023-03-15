@@ -60,9 +60,9 @@ public class AdvertQueriesController : BasedController
     
     [HttpGet("plane")]
     [ProducesResponseType(typeof(List<AdvertPlane>), 200)]
-    public async Task<IActionResult> GetPlanesPaged()
+    public async Task<IActionResult> GetPlanesPaged([FromQuery] GetPlanesPagedQuery query)
     {
-        var response = await Mediator.Send(new GetPlanesPagedQuery());
+        var response = await Mediator.Send(query);
         
         return Ok(response);
     }

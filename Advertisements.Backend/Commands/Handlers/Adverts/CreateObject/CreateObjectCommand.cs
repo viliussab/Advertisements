@@ -12,9 +12,9 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, CreateG
     {
         public string PartialName { get; set; } = string.Empty;
         
-        public bool Permitted { get; set; }
+        public bool IsPermitted { get; set; }
         
-        public DateOnly? PermittedExpiryDate { get; set; }
+        public DateTime? PermissionExpiryDate { get; set; }
 
         public List<CreateFileRequest> Images { get; set; } = new();
     }

@@ -2,7 +2,13 @@ import axios from 'axios';
 
 const apiUrl = `${import.meta.env.VITE_ADVERT_API_URL}`;
 
-const queryAsync = async <TRequest>(url: string, query?: TRequest) => {
+type queryProps<TRequest> = {
+  url: string;
+  query?: TRequest;
+};
+
+const queryAsync = async <TRequest>({ url, query }: queryProps<TRequest>) => {
+  console.log('query', query);
   var response = await axios.get(url, {
     withCredentials: true,
     params: query,

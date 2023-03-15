@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../api/calls/advertQueries';
+import PageQuery from '../../api/queries/type.PageQuery';
 import AdvertPlane, {
   AdvertPlaneWithObjectsHasAreaAndType,
 } from '../../api/responses/type.AdvertPlane';
@@ -11,9 +12,14 @@ import Mui from '../../config/imports/Mui';
 import dateFunctions from '../../functions/dateFunctions';
 
 function ObjectsListPage() {
+  const [query, setQuery] = React.useState<PageQuery>({
+    pageNumber: 1,
+    pageSize: 25,
+  });
+
   const planesQuery = useQuery({
-    queryKey: advertQueries.pagedPlanes.key,
-    queryFn: advertQueries.pagedPlanes.fn,
+    queryKey: [advertQueries.pagedPlanes.key, query],
+    queryFn: () => advertQueries.pagedPlanes.fn(query),
   });
 
   if (planesQuery.isLoading) {
@@ -89,6 +95,22 @@ function ObjectsListPage() {
   return (
     <div className="flex justify-center pt-2">
       <Table
+        paging={{
+          pageSize: query.pageSize,
+          pageNumber: query.pageNumber,
+          totalCount: planesQuery.data?.totalCount!,
+          setPageNumber: (pageNumber) =>
+            setQuery((prev) => ({
+              ...prev,
+              pageNumber,
+            })),
+          setPageSize(pageSize) {
+            setQuery((prev) => ({
+              ...prev,
+              pageSize,
+            }));
+          },
+        }}
         columns={columns}
         data={planesQuery.data?.items || []}
         keySelector={(plane) => plane.id}
