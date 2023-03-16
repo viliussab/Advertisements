@@ -1,10 +1,16 @@
 import React from 'react';
-import Mui from '../../config/imports/Mui';
+import Icons from '../../../config/imports/Icons';
+import Mui from '../../../config/imports/Mui';
 
 export type ColumnConfig<T> = {
   title: string;
   renderCell: (elem: T) => React.ReactNode;
   key: string;
+  filter?: {
+    renderFilter: () => React.ReactNode;
+    onFilterRemove: () => void;
+    isActive: boolean;
+  };
 };
 
 type TableProps<T> = {
@@ -46,14 +52,15 @@ export default function Table<T>(props: TableProps<T>) {
       <table className="text-left text-sm text-gray-500">
         <thead className="bg-gray-100 text-xs uppercase text-gray-700">
           <tr>
-            {headers.map((columnName) => (
+            {columns.map((c) => (
               <th
                 scope="col"
-                key={columnName}
+                key={c.title}
                 className={`sticky bg-gray-100 py-3 px-6`}
               >
                 <div className="flex justify-center text-center align-middle text-sm">
-                  {columnName}
+                  {c.title}
+                  {c.filter && <TableHeaderFilter {...c.filter} />}
                 </div>
               </th>
             ))}
@@ -79,5 +86,39 @@ export default function Table<T>(props: TableProps<T>) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+type PropsTwo = {
+  renderFilter: () => React.ReactNode;
+  isActive: boolean;
+  onFilterRemove: () => void;
+};
+
+function TableHeaderFilter({
+  renderFilter,
+  isActive,
+  onFilterRemove,
+}: PropsTwo) {
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+
+  return (
+    <>
+      <Icons.FilterAlt
+        className={`${isActive ? 'text-green-700' : 'text-gray-200'}`}
+      />
+      <Mui.Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={() => {
+          setMenuAnchor(null);
+        }}
+      >
+        <div>{renderFilter()}</div>
+        <div>
+          <Icons.Remove onClick={() => onFilterRemove()} />
+        </div>
+      </Mui.Menu>
+    </>
   );
 }

@@ -9,13 +9,6 @@ type Props = {
 };
 
 function Navbar({ title }: Props) {
-  const [objectsAnchor, setObjectsAnchor] = React.useState<null | HTMLElement>(
-    null,
-  );
-  const [ordersAnchor, setOrdersAnchor] = React.useState<null | HTMLElement>(
-    null,
-  );
-
   const navigate = useNavigate();
 
   return (

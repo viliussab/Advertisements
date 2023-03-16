@@ -5,7 +5,7 @@ import PageQuery from '../../api/queries/type.PageQuery';
 import AdvertPlane, {
   AdvertPlaneWithObjectsHasAreaAndType,
 } from '../../api/responses/type.AdvertPlane';
-import Table, { ColumnConfig } from '../../components/public/Table';
+import Table, { ColumnConfig } from '../../components/public/table/Table';
 import dateFns from '../../config/imports/dateFns';
 import Icons from '../../config/imports/Icons';
 import Mui from '../../config/imports/Mui';
