@@ -22,7 +22,6 @@ const getAreasAsync = async () => {
 };
 
 const getPagedPlanesAsync = async (query: PageQuery) => {
-  console.log('queryin', query);
   const response = await api.queryAsync({
     url: api.endpoints.query.advert.planes,
     query,
