@@ -8,9 +8,17 @@ namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
 public class GetPlanesPagedQuery : IRequest<PageResponse<GetPlanesPagedResponse>>, IPageQuery
 {
-    public Guid? AreaId { get; set; } = null;
-
-    public Guid? TypeId { get; set; } = null;
+    public string? Name { get; set; }
+    
+    public string? Address { get; set; }
+    
+    public string? Side { get; set; }
+    
+    public string? Region { get; set; }
+    
+    public bool? Illuminated { get; set; }
+    
+    public bool? Premium { get; set; }
 
     public int PageNumber { get; set; }
 

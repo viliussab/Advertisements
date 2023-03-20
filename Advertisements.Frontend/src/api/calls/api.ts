@@ -8,8 +8,7 @@ type queryProps<TRequest> = {
 };
 
 const queryAsync = async <TRequest>({ url, query }: queryProps<TRequest>) => {
-  console.log('query', query);
-  var response = await axios.get(url, {
+  const response = await axios.get(url, {
     withCredentials: true,
     params: query,
   });

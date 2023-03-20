@@ -5,7 +5,7 @@ type SelectProps = {
   onChange: (key: string | undefined) => void;
   value?: string;
   label: string;
-  emptyOptionDisplay: string;
+  emptyOptionDisplay?: string;
   options: SelectOption[];
   muiProps?: Mui.SelectProps;
 };

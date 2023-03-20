@@ -100,12 +100,15 @@ function TableHeaderFilter({
   isActive,
   onFilterRemove,
 }: PropsTwo) {
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+  const [menuAnchor, setMenuAnchor] = React.useState<null | SVGSVGElement>(
+    null,
+  );
 
   return (
     <>
       <Icons.FilterAlt
-        className={`${isActive ? 'text-green-700' : 'text-gray-200'}`}
+        onClick={(event) => setMenuAnchor(event.currentTarget)}
+        className={`${isActive ? 'text-green-600' : 'text-gray-700'}`}
       />
       <Mui.Menu
         anchorEl={menuAnchor}
@@ -114,9 +117,16 @@ function TableHeaderFilter({
           setMenuAnchor(null);
         }}
       >
-        <div>{renderFilter()}</div>
-        <div>
-          <Icons.Remove onClick={() => onFilterRemove()} />
+        <div className="flex items-center gap-2 px-2">
+          <div className="w-40">{renderFilter()}</div>
+          <div className="cursor-pointer">
+            <Icons.Clear
+              onClick={() => {
+                onFilterRemove();
+                setMenuAnchor(null);
+              }}
+            />
+          </div>
         </div>
       </Mui.Menu>
     </>

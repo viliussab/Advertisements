@@ -21,13 +21,19 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
     
     public override async Task<PageResponse<GetPlanesPagedResponse>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
     {
-        var area = _context.Set<Area>().FirstOrDefault(x => x.Id == request.AreaId);
-        
         var queryable = _context.Set<AdvertPlane>()
-            .Where(plane => area == null
-                            || plane.Object.InArea(area))
-            .Where(plane => request.TypeId == null
-                            || plane.Object.TypeId == request.TypeId)
+            .Where(plane => request.Name == null
+                            || EF.Functions.ILike( plane.Object.Name + " " + plane.PartialName, $"%{request.Name}%"))
+            .Where(plane => request.Address == null
+                            || EF.Functions.ILike( plane.Object.Address, $"%{request.Address}%"))
+            .Where(plane => request.Side == null
+                            || EF.Functions.ILike( plane.PartialName, $"%{request.Side}%"))
+            .Where(plane => request.Region == null
+                            || plane.Object.Region == request.Region)
+            .Where(plane => request.Illuminated == null
+                            || plane.Object.Illuminated == request.Illuminated)
+            .Where(plane => request.Premium == null
+                            || plane.IsPremium == request.Premium)
             .OrderBy(x => x.IsPermitted == true)
             .ThenBy(x => x.PermissionExpiryDate);
  

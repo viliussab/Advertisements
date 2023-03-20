@@ -1,18 +1,22 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../api/calls/advertQueries';
-import PageQuery from '../../api/queries/type.PageQuery';
+import filterOptions from '../../api/filterOptions/filterOptions';
+import objectOptions from '../../api/filterOptions/objectOptions';
+import ObjectsQuery from '../../api/queries/type.ObjectsQuery';
 import AdvertPlane, {
   AdvertPlaneWithObjectsHasAreaAndType,
 } from '../../api/responses/type.AdvertPlane';
+import Filters from '../../components/public/input/filter';
 import Table, { ColumnConfig } from '../../components/public/table/Table';
 import dateFns from '../../config/imports/dateFns';
 import Icons from '../../config/imports/Icons';
 import Mui from '../../config/imports/Mui';
 import dateFunctions from '../../functions/dateFunctions';
+import optionsFunctions from '../../functions/optionsFunctions';
 
 function ObjectsListPage() {
-  const [query, setQuery] = React.useState<PageQuery>({
+  const [query, setQuery] = React.useState<ObjectsQuery>({
     pageNumber: 1,
     pageSize: 25,
   });
@@ -22,11 +26,18 @@ function ObjectsListPage() {
     queryFn: () => advertQueries.pagedPlanes.fn(query),
   });
 
-  if (planesQuery.isLoading) {
+  const areasQuery = useQuery({
+    queryKey: advertQueries.areas.key,
+    queryFn: advertQueries.areas.fn,
+  });
+
+  if (planesQuery.isLoading && areasQuery.isLoading) {
     <div className="flex w-full justify-center pt-2">
       <Mui.CircularProgress />
     </div>;
   }
+
+  const regions = areasQuery.data?.flatMap((a) => a.regions) || [];
 
   const columns: ColumnConfig<AdvertPlaneWithObjectsHasAreaAndType>[] = [
     {
@@ -38,16 +49,58 @@ function ObjectsListPage() {
       title: 'Pavadinimas',
       renderCell: (plane) => <>{`${plane.object.name} ${plane.partialName}`}</>,
       key: 'name',
+      filter: {
+        isActive: !!query.name,
+        renderFilter: () => (
+          <Filters.Search
+            label="Pavadinimas"
+            value={query.name}
+            onChange={(value) => setQuery((prev) => ({ ...prev, name: value }))}
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, name: undefined }));
+        },
+      },
     },
     {
       title: 'Adresas',
       renderCell: (plane) => <>{plane.object.address}</>,
       key: 'address',
+      filter: {
+        isActive: !!query.address,
+        renderFilter: () => (
+          <Filters.Search
+            label="Adresas"
+            value={query.address}
+            onChange={(value) =>
+              setQuery((prev) => ({ ...prev, address: value }))
+            }
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, address: undefined }));
+        },
+      },
     },
     {
       title: 'Pusė',
       renderCell: (plane) => <>{plane.partialName}</>,
       key: 'side',
+      filter: {
+        isActive: !!query.side,
+        renderFilter: () => (
+          <Filters.Select
+            options={objectOptions.sideOptions}
+            label="Pusė"
+            value={query.side}
+            onChange={(value) => setQuery((prev) => ({ ...prev, side: value }))}
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, side: undefined }));
+        },
+      },
     },
     {
       title: 'Tipas',
@@ -58,6 +111,22 @@ function ObjectsListPage() {
       title: 'Rajonas',
       renderCell: (plane) => <>{plane.object.region}</>,
       key: 'region',
+      filter: {
+        isActive: !!query.region,
+        renderFilter: () => (
+          <Filters.Select
+            options={optionsFunctions.getArrayOptions(regions)}
+            label="Rajonas"
+            value={query.region}
+            onChange={(value) =>
+              setQuery((prev) => ({ ...prev, region: value }))
+            }
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, region: undefined }));
+        },
+      },
     },
     {
       title: 'Apšvietimas',
@@ -71,6 +140,26 @@ function ObjectsListPage() {
         </>
       ),
       key: 'illumination',
+      filter: {
+        isActive: !!query.illuminated?.toString(),
+        renderFilter: () => (
+          <Filters.Select
+            emptyOptionDisplay="Visi"
+            options={objectOptions.illuminationOptions}
+            label="Apšvietimas"
+            value={query.illuminated?.toString()}
+            onChange={(value) =>
+              setQuery((prev) => ({
+                ...prev,
+                illuminated: filterOptions.toBoolean(value),
+              }))
+            }
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, illuminated: undefined }));
+        },
+      },
     },
     {
       title: 'Leidimas',
@@ -89,6 +178,26 @@ function ObjectsListPage() {
         </>
       ),
       key: 'premium',
+      filter: {
+        isActive: !!query.premium?.toString(),
+        renderFilter: () => (
+          <Filters.Select
+            emptyOptionDisplay="Visi"
+            options={objectOptions.premiumOptions}
+            label="Premium"
+            value={query.premium?.toString()}
+            onChange={(value) =>
+              setQuery((prev) => ({
+                ...prev,
+                premium: filterOptions.toBoolean(value),
+              }))
+            }
+          />
+        ),
+        onFilterRemove: () => {
+          setQuery((prev) => ({ ...prev, premium: undefined }));
+        },
+      },
     },
   ];
 
@@ -98,6 +207,7 @@ function ObjectsListPage() {
         paging={{
           pageSize: query.pageSize,
           pageNumber: query.pageNumber,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           totalCount: planesQuery.data?.totalCount!,
           setPageNumber: (pageNumber) =>
             setQuery((prev) => ({
@@ -134,8 +244,6 @@ function PermissionCell({ plane }: PermittedCellProps) {
   }
 
   const expiryDate = new Date(plane.permissionExpiryDate!);
-
-  console.log('expiryDate', expiryDate);
 
   const daysLeft = dateFns.differenceInDays(expiryDate, Date.now());
 

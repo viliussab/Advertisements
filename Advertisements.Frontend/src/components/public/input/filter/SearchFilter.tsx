@@ -14,33 +14,26 @@ type SearchFilterProps = {
 export default function SearchFilter(props: SearchFilterProps) {
   const { label, value, onChange, muiProps } = props;
 
-  const [searchTerm, setSearchTerm] = React.useState<string | undefined>(value);
+  const onChangeOverride = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
 
-  React.useEffect(
-    () => setSearchTerm(value === '' ? undefined : value),
-    [value],
-  );
-
-  React.useEffect(() => {
-    const delayChange = setTimeout(() => {
-      if (value == searchTerm) {
-        return;
-      }
-
-      onChange(searchTerm);
-    }, REFRESH_TIME_MS);
-
-    return () => clearTimeout(delayChange);
-  }, [onChange, searchTerm, value]);
+    if (!value) {
+      onChange(undefined);
+    } else {
+      onChange(value);
+    }
+  };
 
   return (
     <Mui.TextField
       fullWidth
       variant="standard"
       label={label}
-      value={searchTerm || ''}
+      value={value || ''}
       InputProps={{ endAdornment: <Icons.Search /> }}
-      onChange={(event) => setSearchTerm(event.target.value)}
+      onChange={onChangeOverride}
       {...muiProps}
     />
   );
