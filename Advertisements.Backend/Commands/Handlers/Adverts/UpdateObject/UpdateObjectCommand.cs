@@ -1,22 +1,25 @@
 using Commands.Requests;
 using Commands.Responses;
+using Core.EnumsRequest;
 using Core.Errors;
 using MediatR;
 using OneOf;
 
-namespace Commands.Handlers.Adverts.CreateObject;
+namespace Commands.Handlers.Adverts.UpdateObject;
 
-public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuccess>>
+public class UpdateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuccess>>
 {
-    public class CreatePlane
+    public class UpdatePlane
     {
         public string PartialName { get; set; } = string.Empty;
         
         public bool IsPermitted { get; set; }
         
         public DateTime? PermissionExpiryDate { get; set; }
+        
+        public UpdateStatus UpdateStatus { get; set; }
 
-        public List<CreateFileRequest> Images { get; set; } = new();
+        public List<UpdateFileRequest> Images { get; set; } = new();
     }
     
     public string SerialCode { get; set; } = string.Empty;
@@ -37,5 +40,5 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
     
     public bool Illuminated { get; set; }
 
-    public List<CreatePlane> Planes { get; set; } = new ();
+    public List<UpdatePlane> Planes { get; set; } = new ();
 }

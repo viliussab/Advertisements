@@ -1,5 +1,5 @@
 using Commands.Handlers.Adverts.CreateObject;
-using Commands.Handlers.Adverts.UploadObejcts;
+using Commands.Handlers.Adverts.UploadObjects;
 using Commands.Responses;
 using Core.Errors;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -10,7 +10,7 @@ namespace API.Controllers;
 public class AdvertCommandsController : BasedController
 {
     [HttpPost("object")]
-    [ProducesResponseType(typeof(CreateGuidSuccess), 200)]
+    [ProducesResponseType(typeof(GuidSuccess), 200)]
     [ProducesResponseType(typeof(List<ValidationError>), 400)]
     public IActionResult CreateObject([FromBody] CreateObjectCommand command)
     {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from 'react-query';
+import { generatePath, useNavigate } from 'react-router-dom';
 import advertQueries from '../../api/calls/advertQueries';
 import filterOptions from '../../api/filterOptions/filterOptions';
 import objectOptions from '../../api/filterOptions/objectOptions';
@@ -12,10 +13,13 @@ import Table, { ColumnConfig } from '../../components/public/table/Table';
 import dateFns from '../../config/imports/dateFns';
 import Icons from '../../config/imports/Icons';
 import Mui from '../../config/imports/Mui';
+import website_paths from '../../config/website_paths';
 import dateFunctions from '../../functions/dateFunctions';
 import optionsFunctions from '../../functions/optionsFunctions';
 
 function ObjectsListPage() {
+  const navigate = useNavigate();
+
   const [query, setQuery] = React.useState<ObjectsQuery>({
     pageNumber: 1,
     pageSize: 25,
@@ -207,8 +211,7 @@ function ObjectsListPage() {
         paging={{
           pageSize: query.pageSize,
           pageNumber: query.pageNumber,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          totalCount: planesQuery.data?.totalCount!,
+          totalCount: planesQuery.data?.totalCount || 0,
           setPageNumber: (pageNumber) =>
             setQuery((prev) => ({
               ...prev,
@@ -220,6 +223,11 @@ function ObjectsListPage() {
               pageSize,
             }));
           },
+        }}
+        onClick={(plane) => {
+          navigate(
+            generatePath(website_paths.objects.edit, { id: plane.objectId }),
+          );
         }}
         columns={columns}
         data={planesQuery.data?.items || []}

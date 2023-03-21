@@ -1,12 +1,11 @@
-import { maxWidth } from '@mui/system';
 import React from 'react';
-import { CreateAdvertObjectImage } from '../../../api/commands/schema.createAdvertObject';
-import Icons from '../../../config/imports/Icons';
-import Mui from '../../../config/imports/Mui';
-import RHF from '../../../config/imports/RHF';
+import { FileCreate } from '../../../../api/commands/primitives/schema.file';
+import Icons from '../../../../config/imports/Icons';
+import Mui from '../../../../config/imports/Mui';
+import RHF from '../../../../config/imports/RHF';
 
 type Props = {
-  image: CreateAdvertObjectImage;
+  image: FileCreate;
   remove: RHF.UseFieldArrayRemove;
   index: number;
 };

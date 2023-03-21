@@ -1,6 +1,6 @@
 import React from 'react';
-import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
+import TableHeaderFilter from './TableHeaderFilter';
 
 export type ColumnConfig<T> = {
   title: string;
@@ -29,7 +29,6 @@ type TableProps<T> = {
 
 export default function Table<T>(props: TableProps<T>) {
   const { columns, data, onClick, keySelector, paging } = props;
-  const headers = columns.map((c) => c.title);
 
   return (
     <div>
@@ -72,7 +71,7 @@ export default function Table<T>(props: TableProps<T>) {
               key={keySelector(elem)}
               onClick={() => onClick && onClick(elem)}
               className={`nth border-b
-                ${onClick && 'hover:cursor-pointer'}`}
+                ${onClick && 'hover:cursor-pointer hover:bg-blue-100'}`}
             >
               {columns.map((c) => (
                 <td key={c.key} className="py-1 px-1">
@@ -86,49 +85,5 @@ export default function Table<T>(props: TableProps<T>) {
         </tbody>
       </table>
     </div>
-  );
-}
-
-type PropsTwo = {
-  renderFilter: () => React.ReactNode;
-  isActive: boolean;
-  onFilterRemove: () => void;
-};
-
-function TableHeaderFilter({
-  renderFilter,
-  isActive,
-  onFilterRemove,
-}: PropsTwo) {
-  const [menuAnchor, setMenuAnchor] = React.useState<null | SVGSVGElement>(
-    null,
-  );
-
-  return (
-    <>
-      <Icons.FilterAlt
-        onClick={(event) => setMenuAnchor(event.currentTarget)}
-        className={`${isActive ? 'text-green-600' : 'text-gray-700'}`}
-      />
-      <Mui.Menu
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
-        onClose={() => {
-          setMenuAnchor(null);
-        }}
-      >
-        <div className="flex items-center gap-2 px-2">
-          <div className="w-40">{renderFilter()}</div>
-          <div className="cursor-pointer">
-            <Icons.Clear
-              onClick={() => {
-                onFilterRemove();
-                setMenuAnchor(null);
-              }}
-            />
-          </div>
-        </div>
-      </Mui.Menu>
-    </>
   );
 }

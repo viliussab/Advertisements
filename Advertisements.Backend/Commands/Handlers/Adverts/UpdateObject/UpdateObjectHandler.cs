@@ -1,3 +1,4 @@
+using Commands.Handlers.Adverts.CreateObject;
 using Commands.Responses;
 using Core.Database;
 using Core.Errors;
@@ -7,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
 
-namespace Commands.Handlers.Adverts.CreateObject;
+namespace Commands.Handlers.Adverts.UpdateObject;
 
-public class CreateObjectHandler : BasedHandler<
-    CreateObjectCommand,
+public class UpdateObjectHandler : BasedHandler<
+    UpdateObjectCommand,
     OneOf<List<ValidationError>, GuidSuccess>,
-    CreateObjectValidator>
+    UpdateObjectValidator>
 {
     private readonly AdvertContext _context;
 
-    public CreateObjectHandler(
-        CreateObjectValidator validator,
+    public UpdateObjectHandler(
+        UpdateObjectValidator validator,
         AdvertContext context)
         : base(validator)
     {
@@ -25,20 +26,22 @@ public class CreateObjectHandler : BasedHandler<
     }
     
     public override async Task<OneOf<List<ValidationError>, GuidSuccess>> Handle(
-        CreateObjectCommand request,
+        UpdateObjectCommand request,
         CancellationToken cancellationToken)
     {
         var result = await ValidateAsync(request, cancellationToken);
 
         return result.Match<OneOf<List<ValidationError>, GuidSuccess>>(
             validationErrors => validationErrors,
-            success => CreateAsync(request, cancellationToken).Result);
+            success => UpdateAsync(request, cancellationToken).Result);
     }
 
-    private async Task<GuidSuccess> CreateAsync(
-        CreateObjectCommand request,
+    private async Task<GuidSuccess> UpdateAsync(
+        UpdateObjectCommand request,
         CancellationToken cancellationToken)
     {
+        throw new NotImplementedException();
+        
         var advertObject = new AdvertObject
         {
             SerialCode = request.SerialCode,
@@ -70,7 +73,7 @@ public class CreateObjectHandler : BasedHandler<
         return new GuidSuccess(advertObject.Id);
     }
 
-    private async Task<OneOf<List<ValidationError>, GenericSuccess>> ValidateAsync(CreateObjectCommand request, CancellationToken cancellationToken)
+    private async Task<OneOf<List<ValidationError>, GenericSuccess>> ValidateAsync(UpdateObjectCommand request, CancellationToken cancellationToken)
     {
         var validationErrors = new List<ValidationError>();
 

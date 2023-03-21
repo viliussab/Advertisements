@@ -27,7 +27,7 @@ const mutateAsync = async <TRequest>({
   body,
   httpMethod,
 }: mutateProps<TRequest>) => {
-  var response = await axios(url, {
+  const response = await axios(url, {
     method: httpMethod,
     data: body,
   });

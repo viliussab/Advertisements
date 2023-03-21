@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateAdvertObject } from '../../../api/commands/schema.createAdvertObject';
-import FormInput from '../../../components/public/input/form';
-import sides_enum from '../../../config/enums/sides';
-import Icons from '../../../config/imports/Icons';
-import Mui from '../../../config/imports/Mui';
-import RHF from '../../../config/imports/RHF';
-import optionsFunctions from '../../../functions/optionsFunctions';
-import fileFunctions from './../../../functions/fileFunctions';
+import { CreateAdvertObject } from '../../../../api/commands/schema.createAdvertObject';
+import FormInput from '../../../../components/public/input/form';
+import sides_enum from '../../../../config/enums/sides';
+import Icons from '../../../../config/imports/Icons';
+import Mui from '../../../../config/imports/Mui';
+import RHF from '../../../../config/imports/RHF';
+import optionsFunctions from '../../../../functions/optionsFunctions';
+import fileFunctions from '../../../../functions/fileFunctions';
 import PhotosUpload from './PhotosUpload';
 
 type Props = {

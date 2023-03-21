@@ -1,11 +1,11 @@
-using MediatR;
-using Queries.Prototypes;
 using ClosedXML.Excel;
 using Core.Database;
 using Core.Models;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Queries.Prototypes;
 
-namespace Commands.Handlers.Adverts.UploadObejcts;
+namespace Commands.Handlers.Adverts.UploadObjects;
 
 public class UploadObjectsHandler : BasedHandler<
     UploadObjectsCommand,

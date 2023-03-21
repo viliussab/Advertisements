@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
-import ObjectCreatePage from '../pages/advert/ObjectCreatePage';
+import ObjectCreatePage from '../pages/advert/objectCreatePage/ObjectCreatePage';
 import ObjectsListPage from '../pages/advert/ObjectsListPage';
+import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage';
 import CampaignsViewPage from '../pages/campaigns/CampaignsViewPage';
 import website_paths from './website_paths';
 
@@ -25,6 +26,13 @@ const routes: Array<Route> = [
     Page: ObjectCreatePage,
     layout: {
       title: 'Kurti objektą',
+    },
+  },
+  {
+    path: website_paths.objects.edit,
+    Page: ObjectUpdatePage,
+    layout: {
+      title: 'Redaguoti objektą',
     },
   },
   {

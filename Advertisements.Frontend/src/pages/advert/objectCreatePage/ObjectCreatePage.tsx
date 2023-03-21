@@ -1,24 +1,23 @@
 import React from 'react';
 import { useMutation, useQuery } from 'react-query';
-import advertQueries from '../../api/calls/advertQueries';
-
+import advertQueries from '../../../api/calls/advertQueries';
 import { zodResolver } from '@hookform/resolvers/zod';
-import RHF from '../../config/imports/RHF';
+import RHF from '../../../config/imports/RHF';
 import {
   CreateAdvertObject,
   createAdvertObjectSchema,
-} from '../../api/commands/schema.createAdvertObject';
-import Mui from '../../config/imports/Mui';
-import Form from '../../components/public/Form';
-import FormInput from '../../components/public/input/form';
-import optionsFunctions from '../../functions/optionsFunctions';
+} from '../../../api/commands/schema.createAdvertObject';
+import Mui from '../../../config/imports/Mui';
+import Form from '../../../components/public/Form';
+import FormInput from '../../../components/public/input/form';
+import optionsFunctions from '../../../functions/optionsFunctions';
 import Private from './private';
-import precisionFunctions from '../../functions/precisionFunctions';
-import advertMutations from '../../api/calls/advertMutations';
+import precisionFunctions from '../../../functions/precisionFunctions';
+import advertMutations from '../../../api/calls/advertMutations';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import website_paths from '../../config/website_paths';
-import Icons from '../../config/imports/Icons';
+import website_paths from '../../../config/website_paths';
+import Icons from '../../../config/imports/Icons';
 
 function CreateObjectPage() {
   const navigate = useNavigate();

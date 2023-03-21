@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateAdvertObject } from '../../../api/commands/schema.createAdvertObject';
-import Icons from '../../../config/imports/Icons';
-import RHF from '../../../config/imports/RHF';
-import fileFunctions from '../../../functions/fileFunctions';
+import { CreateAdvertObject } from '../../../../api/commands/schema.createAdvertObject';
+import Icons from '../../../../config/imports/Icons';
+import RHF from '../../../../config/imports/RHF';
+import fileFunctions from '../../../../functions/fileFunctions';
 import Photo from './Photo';
 
 type Props = {

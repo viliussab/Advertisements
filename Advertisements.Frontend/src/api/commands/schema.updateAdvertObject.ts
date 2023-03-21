@@ -1,15 +1,18 @@
 import zod from 'zod';
-import { fileCreateSchema } from './primitives/schema.file';
+import { fileUpdateSchema } from './primitives/schema.file';
+import { updateStatusSchema } from './primitives/schema.updateStatus';
 
 const planeSchema = zod.object({
   partialName: zod.string(),
   isPermitted: zod.boolean(),
   permissionExpiryDate: zod.date().nullable(),
   isPremium: zod.boolean(),
-  images: zod.array(fileCreateSchema),
+  updateStatus: updateStatusSchema,
+  images: zod.array(fileUpdateSchema),
 });
 
-export const createAdvertObjectSchema = zod.object({
+export const updateAdvertObjectSchema = zod.object({
+  id: zod.string().nullish(),
   serialCode: zod.string(),
   areaId: zod.string(),
   typeId: zod.string(),
@@ -22,4 +25,4 @@ export const createAdvertObjectSchema = zod.object({
   planes: zod.array(planeSchema),
 });
 
-export type CreateAdvertObject = zod.TypeOf<typeof createAdvertObjectSchema>;
+export type UpdateAdvertObject = zod.TypeOf<typeof updateAdvertObjectSchema>;

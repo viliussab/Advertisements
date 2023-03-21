@@ -2,8 +2,6 @@ import React from 'react';
 import * as Mui from '@mui/material';
 import Icons from '../../../../config/imports/Icons';
 
-const REFRESH_TIME_MS = 1000;
-
 type SearchFilterProps = {
   label: string;
   value?: string;

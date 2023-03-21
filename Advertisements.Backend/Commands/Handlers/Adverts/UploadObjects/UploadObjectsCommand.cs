@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Commands.Handlers.Adverts.UploadObejcts;
+namespace Commands.Handlers.Adverts.UploadObjects;
 
 public class UploadObjectsCommand : IRequest<Unit>
 {

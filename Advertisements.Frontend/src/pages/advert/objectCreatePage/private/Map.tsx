@@ -1,7 +1,7 @@
 import React from 'react';
-import Area from '../../../api/responses/type.Area';
+import Area from '../../../../api/responses/type.Area';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
-import Mui from '../../../config/imports/Mui';
+import Mui from '../../../../config/imports/Mui';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type bound = google.maps.LatLngBounds;
