@@ -18,6 +18,7 @@ import {
 import advertMutations from '../../../api/calls/advertMutations';
 import Icons from '../../../config/imports/Icons';
 import CreatePrivate from '../objectCreatePage/private';
+import Private from './private';
 
 function ObjectUpdatePage() {
   const navigate = useNavigate();

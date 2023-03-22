@@ -9,7 +9,7 @@ using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
-public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageResponse<GetPlanesPagedResponse>, GetPlanesPagedValidator>
+public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageResponse<GetPlanesPagedPlane>, GetPlanesPagedValidator>
 {
     private readonly AdvertContext _context;
 
@@ -19,7 +19,7 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
         _context = context;
     }
     
-    public override async Task<PageResponse<GetPlanesPagedResponse>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
+    public override async Task<PageResponse<GetPlanesPagedPlane>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
     {
         var queryable = _context.Set<AdvertPlane>()
             .Where(plane => request.Name == null
@@ -43,7 +43,7 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
             .Include(x => x.Object.Area)
             .ToPageAsync(request, cancellationToken);
 
-        var dto = pagedPlanes.Adapt<PageResponse<GetPlanesPagedResponse>>();
+        var dto = pagedPlanes.Adapt<PageResponse<GetPlanesPagedPlane>>();
 
         return dto;
     }

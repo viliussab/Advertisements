@@ -3,7 +3,7 @@ using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
-public class GetPlanesPagedResponse : AdvertPlaneFields
+public class GetPlanesPagedPlane : AdvertPlaneFields
 {
     public AdvertObjectWithAreaAndType Object { get; set; }
 }

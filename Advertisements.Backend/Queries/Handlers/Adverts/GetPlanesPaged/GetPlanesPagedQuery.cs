@@ -6,7 +6,7 @@ using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
-public class GetPlanesPagedQuery : IRequest<PageResponse<GetPlanesPagedResponse>>, IPageQuery
+public class GetPlanesPagedQuery : IRequest<PageResponse<GetPlanesPagedPlane>>, IPageQuery
 {
     public string? Name { get; set; }
     

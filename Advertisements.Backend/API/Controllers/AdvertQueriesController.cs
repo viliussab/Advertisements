@@ -1,3 +1,4 @@
+using Core.Errors;
 using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Adverts.GetAreas;
@@ -33,31 +34,19 @@ public class AdvertQueriesController : BasedController
     {
         return Ok("yes");
     }
-    
+
     [HttpGet("object/{id:guid}")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetObject([FromRoute] Guid id)
+    [ProducesResponseType(typeof(GetObjectByIdObject), 200)]
+    [ProducesResponseType(typeof(NotFoundError), 404)]
+    public async Task<IActionResult> GetObjectById([FromRoute] Guid id)
     {
-        return Ok("yes");
+        var response = await Mediator.Send(new GetObjectByIdQuery {Id = id});
+        
+        return response.Match<IActionResult>(
+            Ok,
+            NotFound);
     }
-    
-    [HttpGet("plane/{id:guid}")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetPlanes([FromRoute] Guid id)
-    {
-        return Ok("yes");
-    }
-    
-    [HttpGet("object")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetObjectsPaged([FromRoute] Guid id)
-    {
-        return Ok("yes");
-    }
-    
+
     [HttpGet("plane")]
     [ProducesResponseType(typeof(List<AdvertPlane>), 200)]
     public async Task<IActionResult> GetPlanesPaged([FromQuery] GetPlanesPagedQuery query)
