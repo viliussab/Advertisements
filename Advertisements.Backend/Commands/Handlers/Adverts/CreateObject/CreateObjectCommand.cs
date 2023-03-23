@@ -18,7 +18,7 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
 
         public bool IsPremium { get; set; }
 
-        public List<CreateFileRequest> Images { get; set; } = new();
+        public List<CreateFileRequest> Photos { get; set; } = new();
     }
     
     public string SerialCode { get; set; } = string.Empty;

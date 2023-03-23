@@ -42,11 +42,6 @@ const endpoints = {
       object: `${apiUrl}/object`,
     },
   },
-  mutate: {
-    advert: {
-      object: `${apiUrl}/object`,
-    },
-  },
 };
 
 const api = {

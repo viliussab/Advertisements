@@ -6,7 +6,7 @@ const planeSchema = zod.object({
   isPermitted: zod.boolean(),
   permissionExpiryDate: zod.date().nullable(),
   isPremium: zod.boolean(),
-  images: zod.array(fileCreateSchema),
+  photos: zod.array(fileCreateSchema),
 });
 
 export const createAdvertObjectSchema = zod.object({

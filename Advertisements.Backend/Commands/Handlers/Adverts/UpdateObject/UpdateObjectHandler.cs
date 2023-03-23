@@ -99,7 +99,7 @@ public class UpdateObjectHandler : BasedHandler<
                 PartialName = request.PartialName,
                 IsPermitted = request.IsPermitted,
                 PermissionExpiryDate = request.PermissionExpiryDate,
-                Photos = request.Images.Select(file => new PlanePhoto
+                Photos = request.Photos.Select(file => new PlanePhoto
                 {
                     Content = Convert.FromBase64String(file.Base64),
                     Mime = file.Mime,
@@ -120,7 +120,7 @@ public class UpdateObjectHandler : BasedHandler<
         async Task UpdatePlaneAsync()
         {
             await UpdatePlaneFieldsAsync(request, cancellationToken);
-            foreach (var image in request.Images)
+            foreach (var image in request.Photos)
             {
                 await HandleImageMutateAsync(image, request.Id, cancellationToken);
             }

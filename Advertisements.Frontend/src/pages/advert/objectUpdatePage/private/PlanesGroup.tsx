@@ -19,9 +19,11 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
   const { fields, append, remove } = RHF.useFieldArray({
     control: form.control,
     name: 'planes',
+    keyName: 'rhfId',
   });
 
   const name = form.watch('name');
+  const planes = form.watch('planes');
   const [listRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
@@ -34,14 +36,15 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
               isPremium: false,
               permissionExpiryDate: new Date(),
               partialName: '',
-              images: [],
+              photos: [],
               updateStatus: 'New',
             })
           }
         >
           <Icons.Add /> Pridėti reklaminę plokštumą
         </Mui.Button>
-        {fields.length > 0 && (
+        {fields.length >
+          planes?.filter((x) => x.updateStatus === 'Deleted').length && (
           <div className="flex flex-grow justify-end">
             <FormInput.SubmitButton isSubmitting={isSubbmiting}>
               Kurti Objektą
@@ -53,7 +56,7 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
       <div ref={listRef}>
         {fields.map((field, index) => (
           <Plane
-            key={field.id}
+            key={field.rhfId}
             name={name}
             form={form}
             field={field}

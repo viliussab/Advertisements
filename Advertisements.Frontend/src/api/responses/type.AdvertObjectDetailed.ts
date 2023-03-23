@@ -3,10 +3,11 @@ import AdvertPlane from './type.AdvertPlane';
 import FileResponse from './type.FileResponse';
 
 type AdvertObjectDetailed = AdvertObject & {
-  planes: AdvertPlane &
-    {
-      photos: FileResponse[];
-    }[];
+  planes: AdvertPlaneWPhotos[];
+};
+
+type AdvertPlaneWPhotos = AdvertPlane & {
+  photos: FileResponse[];
 };
 
 export default AdvertObjectDetailed;

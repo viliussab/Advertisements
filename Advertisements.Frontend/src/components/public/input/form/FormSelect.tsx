@@ -9,6 +9,7 @@ type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {
   muiProps?: Mui.SelectProps;
   emptyOption?: SelectOption;
   showDefaultOption?: boolean;
+  isLoading?: boolean;
 };
 
 const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
@@ -19,6 +20,7 @@ const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
     rules,
     label,
     muiProps,
+    isLoading,
     showDefaultOption,
   } = props;
 
@@ -29,29 +31,40 @@ const FormSelect = <T extends RHF.FieldValues>(props: Props<T>) => {
       display: 'Nepasirinkta',
     });
 
-  const { field, formState } = RHF.useController({
-    name: fieldName,
-    control: form.control,
-    rules,
-  });
+  const error = form.formState.errors[fieldName];
 
-  const error = formState.errors[fieldName];
+  if (isLoading) {
+    return (
+      <Mui.FormControl variant="filled" fullWidth error={!!error}>
+        <Mui.InputLabel>{label}</Mui.InputLabel>
+        <Mui.Select fullWidth required disabled></Mui.Select>
+      </Mui.FormControl>
+    );
+  }
 
   return (
     <Mui.FormControl variant="filled" fullWidth error={!!error}>
       <Mui.InputLabel>{label}</Mui.InputLabel>
-      <Mui.Select fullWidth required {...field} {...muiProps}>
-        {emptyOption && (
-          <Mui.MenuItem value={emptyOption.key}>
-            <em>{emptyOption.display}</em>
-          </Mui.MenuItem>
+      <RHF.Controller
+        name={fieldName}
+        control={form.control}
+        rules={rules}
+        defaultValue="" // Avoid error "A component is changing the uncontrolled value state to be controlled."
+        render={({ field }) => (
+          <Mui.Select fullWidth required {...field} {...muiProps}>
+            {emptyOption && (
+              <Mui.MenuItem value={emptyOption.key}>
+                <em>{emptyOption.display}</em>
+              </Mui.MenuItem>
+            )}
+            {options.map((option) => (
+              <Mui.MenuItem key={option.key} value={option.key}>
+                {option.display}
+              </Mui.MenuItem>
+            ))}
+          </Mui.Select>
         )}
-        {options.map((option) => (
-          <Mui.MenuItem key={option.key} value={option.key}>
-            {option.display}
-          </Mui.MenuItem>
-        ))}
-      </Mui.Select>
+      />
       {error && (
         <Mui.FormHelperText>{error.message?.toString()}</Mui.FormHelperText>
       )}

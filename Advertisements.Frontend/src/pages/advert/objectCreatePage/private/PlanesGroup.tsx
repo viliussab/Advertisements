@@ -33,7 +33,7 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
               isPremium: false,
               permissionExpiryDate: new Date(),
               partialName: '',
-              images: [],
+              photos: [],
             })
           }
         >

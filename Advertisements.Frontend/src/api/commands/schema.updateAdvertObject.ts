@@ -8,7 +8,7 @@ const planeSchema = zod.object({
   permissionExpiryDate: zod.date().nullable(),
   isPremium: zod.boolean(),
   updateStatus: updateStatusSchema,
-  images: zod.array(fileUpdateSchema),
+  photos: zod.array(fileUpdateSchema),
 });
 
 export const updateAdvertObjectSchema = zod.object({
@@ -21,7 +21,7 @@ export const updateAdvertObjectSchema = zod.object({
   longitude: zod.coerce.number().gte(-180).lte(180),
   address: zod.string(),
   region: zod.string(),
-  isIlluminated: zod.boolean(),
+  illuminated: zod.boolean(),
   planes: zod.array(planeSchema),
 });
 

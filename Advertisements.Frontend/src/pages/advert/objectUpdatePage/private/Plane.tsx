@@ -10,7 +10,7 @@ import { UpdateAdvertObject } from '../../../../api/commands/schema.updateAdvert
 
 type Props = {
   remove: RHF.UseFieldArrayRemove;
-  field: RHF.FieldArrayWithId<UpdateAdvertObject, 'planes', 'id'>;
+  field: RHF.FieldArrayWithId<UpdateAdvertObject, 'planes', 'rhfId'>;
   form: RHF.UseFormReturn<UpdateAdvertObject>;
   index: number;
   name: string;
@@ -21,8 +21,9 @@ function Plane({ form, field, remove, index, name }: Props) {
   const updateStatus = form.watch(`planes.${index}.updateStatus`);
 
   const onPlaneRemove = () => {
-    if (updateStatus == 'New') {
-      remove();
+    if (updateStatus === 'New') {
+      remove(index);
+      return;
     }
 
     form.setValue(`planes.${index}.updateStatus`, 'Deleted');
@@ -38,7 +39,7 @@ function Plane({ form, field, remove, index, name }: Props) {
       <div className="flex justify-between align-middle">
         <div className="w-64">
           <FormInput.ReadOnly
-            value={`${name} ${partialName}`}
+            value={`${name} ${partialName || ''}`}
             label="Pilnas pavadinimas"
           />
         </div>

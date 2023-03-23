@@ -23,7 +23,7 @@ public class UpdateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
         
         public UpdateStatus UpdateStatus { get; set; }
 
-        public List<UpdateFileRequest> Images { get; set; } = new();
+        public List<UpdateFileRequest> Photos { get; set; } = new();
     }
     
     public Guid Id { get; set; }

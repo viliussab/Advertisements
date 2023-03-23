@@ -32,10 +32,9 @@ const getPagedPlanesAsync = async (query: PageQuery) => {
   return response.data as PageResponse<AdvertPlaneOverview>;
 };
 
-const getObjectAsync = async (query: GetByIdQuery) => {
+const getObjectAsync = async (id: string) => {
   const response = await api.queryAsync({
-    url: api.endpoints.common.advert.object,
-    query,
+    url: `${api.endpoints.common.advert.object}/${id}`,
   });
 
   return response.data as AdvertObjectDetailed;

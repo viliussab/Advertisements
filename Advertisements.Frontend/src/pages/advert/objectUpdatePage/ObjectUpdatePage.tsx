@@ -19,6 +19,8 @@ import advertMutations from '../../../api/calls/advertMutations';
 import Icons from '../../../config/imports/Icons';
 import CreatePrivate from '../objectCreatePage/private';
 import Private from './private';
+import AdvertObjectDetailed from '../../../api/responses/type.AdvertObjectDetailed';
+import { UpdateStatus } from '../../../api/commands/primitives/schema.updateStatus';
 
 function ObjectUpdatePage() {
   const navigate = useNavigate();
@@ -26,12 +28,27 @@ function ObjectUpdatePage() {
 
   const objectQuery = useQuery({
     queryKey: advertQueries.object.key,
-    queryFn: () => advertQueries.object.fn({ id }),
+    queryFn: () => advertQueries.object.fn(id as string),
   });
 
   const form = RHF.useForm<UpdateAdvertObject>({
     resolver: zodResolver(updateAdvertObjectSchema),
-    values: objectQuery.data,
+    values: objectQuery.data
+      ? {
+          ...objectQuery.data,
+          planes: objectQuery.data.planes.map((plane) => ({
+            ...plane,
+            permissionExpiryDate: plane.permissionExpiryDate
+              ? new Date(plane.permissionExpiryDate)
+              : null,
+            updateStatus: 'Existing' as UpdateStatus,
+            photos: plane.photos.map((photo) => ({
+              ...photo,
+              updateStatus: 'Existing' as UpdateStatus,
+            })),
+          })),
+        }
+      : undefined,
   });
 
   const areasQuery = useQuery({
@@ -78,6 +95,13 @@ function ObjectUpdatePage() {
     }
   }, [area, setCoordinates]);
 
+  const isLoading =
+    !areasQuery.isSuccess && !typesQuery.isSuccess && !objectQuery.isSuccess;
+
+  if (isLoading) {
+    return <></>;
+  }
+
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
@@ -101,31 +125,23 @@ function ObjectUpdatePage() {
                 fieldName="name"
                 muiProps={{ required: true }}
               />
-              {areasQuery.isLoading || !areasQuery.data ? (
-                <FormInput.Select
-                  form={form}
-                  label="Miestas"
-                  fieldName="areaId"
-                  options={[]}
-                  muiProps={{ disabled: true, required: true }}
-                />
-              ) : (
-                <FormInput.Select
-                  form={form}
-                  label="Miestas"
-                  fieldName="areaId"
-                  options={optionsFunctions.convert({
-                    data: areasQuery.data,
-                    keySelector: (value) => value.id,
-                    displaySelector: (value) => value.name,
-                  })}
-                  muiProps={{ required: true }}
-                />
-              )}
+              <FormInput.Select
+                form={form}
+                label="Miestas"
+                fieldName="areaId"
+                isLoading={isLoading}
+                options={optionsFunctions.convert({
+                  data: areasQuery.data || [],
+                  keySelector: (value) => value.id,
+                  displaySelector: (value) => value.name,
+                })}
+                muiProps={{ required: true }}
+              />
               <FormInput.Select
                 form={form}
                 label="Regionas"
                 fieldName="region"
+                isLoading={!area}
                 options={optionsFunctions.convert({
                   data: area?.regions || [],
                   keySelector: (region) => region,
@@ -133,27 +149,19 @@ function ObjectUpdatePage() {
                 })}
                 muiProps={{ required: true, disabled: !area }}
               />
-              {typesQuery.isLoading || !typesQuery.data ? (
-                <FormInput.Select
-                  form={form}
-                  label="Tipas"
-                  fieldName="typeId"
-                  options={[]}
-                  muiProps={{ required: true, disabled: true }}
-                />
-              ) : (
-                <FormInput.Select
-                  form={form}
-                  label="Tipas"
-                  fieldName="typeId"
-                  options={optionsFunctions.convert({
-                    data: typesQuery.data,
-                    keySelector: (value) => value.id,
-                    displaySelector: (value) => value.name,
-                  })}
-                  muiProps={{ required: true }}
-                />
-              )}
+
+              <FormInput.Select
+                form={form}
+                label="Tipas"
+                fieldName="typeId"
+                isLoading={isLoading}
+                options={optionsFunctions.convert({
+                  data: typesQuery.data || [],
+                  keySelector: (value) => value.id,
+                  displaySelector: (value) => value.name,
+                })}
+                muiProps={{ required: true }}
+              />
               <FormInput.TextField
                 label="Adresas"
                 form={form}
@@ -162,7 +170,7 @@ function ObjectUpdatePage() {
               />
               <FormInput.Checkbox
                 form={form}
-                fieldName="isIlluminated"
+                fieldName="illuminated"
                 label="Apšvietimas"
               />
             </div>

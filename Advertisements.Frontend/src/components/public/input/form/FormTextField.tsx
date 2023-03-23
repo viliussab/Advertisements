@@ -10,23 +10,25 @@ type Props<T extends RHF.FieldValues> = FormFieldProps<T> & {
 const FormTextField = <T extends RHF.FieldValues>(props: Props<T>) => {
   const { fieldName, form, label, muiProps, rules } = props;
 
-  const { field, formState } = RHF.useController({
-    name: fieldName,
-    control: form.control,
-    rules,
-  });
-
-  const error = formState.errors[fieldName];
+  const error = form.formState.errors[fieldName];
 
   return (
-    <Mui.TextField
-      label={label}
-      error={!!error}
-      helperText={error ? error.message?.toString() : ''}
-      fullWidth
-      variant="filled"
-      {...field}
-      {...muiProps}
+    <RHF.Controller
+      name={fieldName}
+      control={form.control}
+      rules={rules}
+      defaultValue="" // Avoid error "A component is changing the uncontrolled value state to be controlled."
+      render={({ field }) => (
+        <Mui.TextField
+          label={label}
+          error={!!error}
+          helperText={error ? error.message?.toString() : ''}
+          fullWidth
+          variant="filled"
+          {...field}
+          {...muiProps}
+        />
+      )}
     />
   );
 };

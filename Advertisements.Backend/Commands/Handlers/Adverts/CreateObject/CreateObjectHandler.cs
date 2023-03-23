@@ -56,7 +56,7 @@ public class CreateObjectHandler : BasedHandler<
                 IsPermitted = planeRequest.IsPermitted,
                 PermissionExpiryDate = planeRequest.PermissionExpiryDate,
                 IsPremium = planeRequest.IsPremium,
-                Photos = planeRequest.Images.Select(file => new PlanePhoto
+                Photos = planeRequest.Photos.Select(file => new PlanePhoto
                 {
                     Content = Convert.FromBase64String(file.Base64),
                     Mime = file.Mime,
