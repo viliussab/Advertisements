@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RHF from '../../../config/imports/RHF';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from 'react-query';
@@ -22,21 +22,16 @@ import Private from './private';
 
 function ObjectUpdatePage() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const objectQuery = useQuery({
+    queryKey: advertQueries.object.key,
+    queryFn: () => advertQueries.object.fn({ id }),
+  });
 
   const form = RHF.useForm<UpdateAdvertObject>({
     resolver: zodResolver(updateAdvertObjectSchema),
-    defaultValues: {
-      isIlluminated: false,
-      latitude: 0,
-      longitude: 0,
-      serialCode: '',
-      typeId: '',
-      areaId: '',
-      name: '',
-      address: '',
-      region: '',
-      planes: [],
-    },
+    values: objectQuery.data,
   });
 
   const areasQuery = useQuery({

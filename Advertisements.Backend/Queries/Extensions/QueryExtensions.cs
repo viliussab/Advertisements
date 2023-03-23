@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
 using Queries.Responses.Prototypes;
 
-namespace Queries.Handlers.Extensions;
+namespace Queries.Extensions;
 
 public static class QueryExtensions
 {

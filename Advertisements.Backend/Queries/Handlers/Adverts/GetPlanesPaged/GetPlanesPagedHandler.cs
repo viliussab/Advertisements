@@ -2,8 +2,8 @@ using Core.Database;
 using Core.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Queries.Extensions;
 using Queries.Handlers.Adverts.GetAreas;
-using Queries.Handlers.Extensions;
 using Queries.Prototypes;
 using Queries.Responses.Prototypes;
 

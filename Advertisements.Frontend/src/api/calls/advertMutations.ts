@@ -1,7 +1,8 @@
 import { CreateAdvertObject } from '../commands/schema.createAdvertObject';
+import { UpdateAdvertObject } from '../commands/schema.updateAdvertObject';
 import api from './api';
 
-const createAdvert = async (values: CreateAdvertObject) => {
+const createAdvertAsync = async (values: CreateAdvertObject) => {
   const response = await api.mutateAsync({
     url: api.endpoints.mutate.advert.object,
     body: values,
@@ -11,9 +12,19 @@ const createAdvert = async (values: CreateAdvertObject) => {
   return response;
 };
 
+const updateAdvertAsync = async (values: UpdateAdvertObject) => {
+  const response = await api.mutateAsync({
+    url: api.endpoints.mutate.advert.object,
+    body: values,
+    httpMethod: 'put',
+  });
+
+  return response;
+};
+
 const advertMutations = {
   objectCreate: {
-    fn: createAdvert,
+    fn: createAdvertAsync,
     key: 'advert_create',
   },
 };

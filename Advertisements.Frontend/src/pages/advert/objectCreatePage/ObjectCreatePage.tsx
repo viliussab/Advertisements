@@ -25,7 +25,7 @@ function CreateObjectPage() {
   const form = RHF.useForm<CreateAdvertObject>({
     resolver: zodResolver(createAdvertObjectSchema),
     defaultValues: {
-      isIlluminated: false,
+      illuminated: false,
       latitude: 0,
       longitude: 0,
       serialCode: '',

@@ -18,7 +18,7 @@ export const createAdvertObjectSchema = zod.object({
   longitude: zod.coerce.number().gte(-180).lte(180),
   address: zod.string(),
   region: zod.string(),
-  isIlluminated: zod.boolean(),
+  illuminated: zod.boolean(),
   planes: zod.array(planeSchema),
 });
 

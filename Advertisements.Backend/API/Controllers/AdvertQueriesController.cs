@@ -2,6 +2,7 @@ using Core.Errors;
 using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Adverts.GetAreas;
+using Queries.Handlers.Adverts.GetObjectById;
 using Queries.Handlers.Adverts.GetPlanesPaged;
 using Queries.Handlers.Adverts.GetTypes;
 

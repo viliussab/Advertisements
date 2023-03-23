@@ -1,5 +1,7 @@
+import GetByIdQuery from '../queries/type.GetByIdQuery';
 import PageQuery from '../queries/type.PageQuery';
-import { AdvertPlaneWithObjectsHasAreaAndType } from '../responses/type.AdvertPlane';
+import AdvertObjectDetailed from '../responses/type.AdvertObjectDetailed';
+import AdvertPlaneOverview from '../responses/type.AdvertPlaneOverview';
 import AdvertType from '../responses/type.AdvertType';
 import Area from '../responses/type.Area';
 import PageResponse from '../responses/type.PageResponse';
@@ -7,7 +9,7 @@ import api from './api';
 
 const getTypesAsync = async () => {
   const response = await api.queryAsync({
-    url: api.endpoints.query.advert.types,
+    url: api.endpoints.common.advert.types,
   });
 
   return response.data as AdvertType[];
@@ -15,7 +17,7 @@ const getTypesAsync = async () => {
 
 const getAreasAsync = async () => {
   const response = await api.queryAsync({
-    url: api.endpoints.query.advert.areas,
+    url: api.endpoints.common.advert.areas,
   });
 
   return response.data as Area[];
@@ -23,11 +25,20 @@ const getAreasAsync = async () => {
 
 const getPagedPlanesAsync = async (query: PageQuery) => {
   const response = await api.queryAsync({
-    url: api.endpoints.query.advert.planes,
+    url: api.endpoints.common.advert.planes,
     query,
   });
 
-  return response.data as PageResponse<AdvertPlaneWithObjectsHasAreaAndType>;
+  return response.data as PageResponse<AdvertPlaneOverview>;
+};
+
+const getObjectAsync = async (query: GetByIdQuery) => {
+  const response = await api.queryAsync({
+    url: api.endpoints.common.advert.object,
+    query,
+  });
+
+  return response.data as AdvertObjectDetailed;
 };
 
 const advertQueries = {
@@ -42,6 +53,10 @@ const advertQueries = {
   pagedPlanes: {
     fn: getPagedPlanesAsync,
     key: 'pagedPlanes',
+  },
+  object: {
+    fn: getObjectAsync,
+    key: 'object',
   },
 };
 

@@ -20,6 +20,14 @@ function Plane({ form, field, remove, index, name }: Props) {
   const partialName = form.watch(`planes.${index}.partialName`);
   const updateStatus = form.watch(`planes.${index}.updateStatus`);
 
+  const onPlaneRemove = () => {
+    if (updateStatus == 'New') {
+      remove();
+    }
+
+    form.setValue(`planes.${index}.updateStatus`, 'Deleted');
+  };
+
   return (
     <div
       className={`m-4 rounded-lg border  border-opacity-50 p-6 shadow-md
@@ -35,7 +43,7 @@ function Plane({ form, field, remove, index, name }: Props) {
           />
         </div>
         <div className="flex items-start">
-          <Mui.Button color="error" onClick={() => remove(index)}>
+          <Mui.Button color="error" onClick={onPlaneRemove}>
             <Icons.Remove />
             Ištrinti plokštumą
           </Mui.Button>

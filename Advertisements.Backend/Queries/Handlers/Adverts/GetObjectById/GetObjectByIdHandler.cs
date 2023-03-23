@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
 
-namespace Queries.Handlers.Adverts.GetPlanesPaged;
+namespace Queries.Handlers.Adverts.GetObjectById;
 
 public class GetObjectByIdHandler : BasedHandler<GetObjectByIdQuery, OneOf<GetObjectByIdObject, NotFoundError>, GetObjectByIdValidator>
 {

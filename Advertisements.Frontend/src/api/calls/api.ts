@@ -34,11 +34,12 @@ const mutateAsync = async <TRequest>({
 };
 
 const endpoints = {
-  query: {
+  common: {
     advert: {
       types: `${apiUrl}/type`,
       areas: `${apiUrl}/area`,
       planes: `${apiUrl}/plane`,
+      object: `${apiUrl}/object`,
     },
   },
   mutate: {
