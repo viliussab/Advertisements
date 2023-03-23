@@ -11,9 +11,13 @@ public class UpdateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
 {
     public class UpdatePlane
     {
+        public Guid? Id { get; set; }
+        
         public string PartialName { get; set; } = string.Empty;
         
         public bool IsPermitted { get; set; }
+        
+        public bool IsPremium { get; set; }
         
         public DateTime? PermissionExpiryDate { get; set; }
         
@@ -21,6 +25,8 @@ public class UpdateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
 
         public List<UpdateFileRequest> Images { get; set; } = new();
     }
+    
+    public Guid Id { get; set; }
     
     public string SerialCode { get; set; } = string.Empty;
 

@@ -1,6 +1,7 @@
-using Commands.Handlers.Adverts.CreateObject;
+using Commands.Requests;
 using Commands.Responses;
 using Core.Database;
+using Core.EnumsRequest;
 using Core.Errors;
 using Core.Models;
 using Core.Successes;
@@ -40,37 +41,145 @@ public class UpdateObjectHandler : BasedHandler<
         UpdateObjectCommand request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        
-        var advertObject = new AdvertObject
+        await UpdateObjectFieldsAsync(request, cancellationToken);
+        foreach (var plane in request.Planes)
         {
-            SerialCode = request.SerialCode,
-            AreaId = request.AreaId,
-            TypeId = request.TypeId,
-            Name = request.Name,
-            Address = request.Address,
-            Region = request.Region,
-            Illuminated = request.Illuminated,
-            Longitude = request.Longitude,
-            Latitude = request.Latitude,
-            Planes = request.Planes.Select(planeRequest => new AdvertPlane
+            await HandlePlaneMutateAsync(plane, request.Id, cancellationToken);
+        }
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return new GuidSuccess(request.Id);
+    }
+    
+    private async Task UpdateObjectFieldsAsync(
+        UpdateObjectCommand request,
+        CancellationToken cancellationToken)
+    {
+        var currentObject = await _context.Set<AdvertObject>()
+            .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+
+        currentObject.SerialCode = request.SerialCode;
+        currentObject.AreaId = request.AreaId;
+        currentObject.TypeId = request.TypeId;
+        currentObject.Name = request.Name;
+        currentObject.Address = request.Address;
+        currentObject.Region = request.Region;
+        currentObject.Illuminated = request.Illuminated;
+        currentObject.Longitude = request.Longitude;
+        currentObject.Latitude = request.Latitude;
+
+        _context.Update(currentObject);
+    }
+
+    private async Task HandlePlaneMutateAsync(
+        UpdateObjectCommand.UpdatePlane request,
+        Guid objectId,
+        CancellationToken cancellationToken)
+    {
+        switch (request.UpdateStatus)
+        {
+            case UpdateStatus.Existing:
+                await UpdatePlaneAsync();
+                return;
+            case UpdateStatus.Deleted:
+                await DeletePlaneAsync();
+                return;
+            case UpdateStatus.New:
+                await CreatePlaneAsync();
+                return;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        async Task CreatePlaneAsync()
+        {
+            var plane = new AdvertPlane
             {
-                PartialName = planeRequest.PartialName,
-                IsPermitted = planeRequest.IsPermitted,
-                PermissionExpiryDate = planeRequest.PermissionExpiryDate,
-                Photos = planeRequest.Images.Select(file => new PlanePhoto
+                ObjectId = objectId,
+                PartialName = request.PartialName,
+                IsPermitted = request.IsPermitted,
+                PermissionExpiryDate = request.PermissionExpiryDate,
+                Photos = request.Images.Select(file => new PlanePhoto
                 {
                     Content = Convert.FromBase64String(file.Base64),
                     Mime = file.Mime,
                     Name = file.Name,
                 }).ToList(),
-            }).ToList()
-        };
+            };
+    
+            await _context.AddAsync(plane, cancellationToken);
+        }
 
-        await _context.Set<AdvertObject>().AddAsync(advertObject, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        async Task DeletePlaneAsync()
+        {
+            var plane = await _context.Set<AdvertPlane>()
+                .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+            _context.Remove(plane);
+        }
 
-        return new GuidSuccess(advertObject.Id);
+        async Task UpdatePlaneAsync()
+        {
+            await UpdatePlaneFieldsAsync(request, cancellationToken);
+            foreach (var image in request.Images)
+            {
+                await HandleImageMutateAsync(image, request.Id, cancellationToken);
+            }
+        }
+    }
+
+    private async Task UpdatePlaneFieldsAsync(
+        UpdateObjectCommand.UpdatePlane request,
+        CancellationToken cancellationToken)
+    {
+        var plane = await _context.Set<AdvertPlane>()
+            .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+
+        plane.PartialName = request.PartialName;
+        plane.IsPermitted = request.IsPermitted;
+        plane.IsPremium = request.IsPremium;
+        plane.PermissionExpiryDate = request.PermissionExpiryDate;
+
+        _context.Update(plane);
+    }
+    
+    private async Task HandleImageMutateAsync(
+        UpdateFileRequest request,
+        Guid? planeId,
+        CancellationToken cancellationToken)
+    {
+        switch (request.UpdateStatus)
+        {
+            case FileUpdateStatus.Deleted:
+                await DeletePhotoAsync();
+                return;
+            case FileUpdateStatus.New:
+                await CreatePhotoAsync();
+                return;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        async Task CreatePhotoAsync()
+        {
+            var photo = new PlanePhoto
+            {
+                Content = Convert.FromBase64String(request.Base64),
+                Mime = request.Mime,
+                Name = request.Name,
+                PlaneId = planeId!.Value,
+            };
+
+            await _context.AddAsync(photo, cancellationToken);
+        }
+
+        async Task DeletePhotoAsync()
+        {
+            var photo = await _context
+                .Set<PlanePhoto>()
+                .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+
+            _context.Remove(photo);
+        }
     }
 
     private async Task<OneOf<List<ValidationError>, GenericSuccess>> ValidateAsync(UpdateObjectCommand request, CancellationToken cancellationToken)

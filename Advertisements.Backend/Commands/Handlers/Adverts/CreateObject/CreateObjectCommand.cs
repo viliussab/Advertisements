@@ -16,6 +16,8 @@ public class CreateObjectCommand : IRequest<OneOf<List<ValidationError>, GuidSuc
         
         public DateTime? PermissionExpiryDate { get; set; }
 
+        public bool IsPremium { get; set; }
+
         public List<CreateFileRequest> Images { get; set; } = new();
     }
     
