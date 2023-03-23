@@ -14,7 +14,7 @@ type Props = {
 function PhotosUpload({ form, planeIndex }: Props) {
   const { fields, append, remove } = RHF.useFieldArray({
     control: form.control,
-    name: `planes.${planeIndex}.images`,
+    name: `planes.${planeIndex}.photos`,
   });
 
   const f = useDropzone({
