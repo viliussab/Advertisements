@@ -4,11 +4,13 @@ using Core.Interfaces;
 using Core.Models;
 using FluentValidation;
 using Infrastructure.Services;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Queries.Handlers.Adverts.GetAreas;
+using Queries.MapProfile;
 
 namespace Infrastructure;
 
@@ -25,6 +27,7 @@ public static class Injection
 	
 	private static void AddInfrastructureInterfaces(this IServiceCollection services)
 	{
+		TypeAdapterConfig.GlobalSettings.Scan(typeof(StorageFileMapProfile).Assembly);
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IDateProvider, DateProvider>();
 	}
