@@ -31,7 +31,7 @@ function Plane({ form, field, remove, index, name }: Props) {
 
   return (
     <div
-      className={`m-4 rounded-lg border  border-opacity-50 p-6 shadow-md
+      className={`m-4 rounded-lg border-4   border-opacity-50 p-6 shadow-md
         ${updateStatus === 'Existing' && ' border-blue-700'}
         ${updateStatus === 'New' && ' border-green-400'}
         ${updateStatus === 'Deleted' && ' border-red-400'}`}
@@ -53,7 +53,6 @@ function Plane({ form, field, remove, index, name }: Props) {
       <div className="flex justify-between">
         <div className="mt-2 flex w-64 flex-col space-y-3">
           <FormInput.Select
-            key={field.id}
             form={form}
             fieldName={`planes.${index}.partialName`}
             label="Pusė"

@@ -71,7 +71,14 @@ function PhotosUpload({ form, planeIndex }: Props) {
         }}
       >
         {fields.map((image, i) => (
-          <Photo key={image.id} image={image} remove={remove} index={i} />
+          <Photo
+            key={image.id}
+            image={image}
+            remove={remove}
+            index={i}
+            planeIndex={planeIndex}
+            form={form}
+          />
         ))}
       </div>
     </div>
