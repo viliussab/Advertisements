@@ -11,7 +11,7 @@ type Props = {
   planeIndex: number;
 };
 
-function PhotosUpload({ form, planeIndex }: Props) {
+function ObjectUpdatePhotosUpload({ form, planeIndex }: Props) {
   const { fields, append, remove } = RHF.useFieldArray({
     control: form.control,
     name: `planes.${planeIndex}.photos`,
@@ -85,4 +85,4 @@ function PhotosUpload({ form, planeIndex }: Props) {
   );
 }
 
-export default PhotosUpload;
+export default ObjectUpdatePhotosUpload;

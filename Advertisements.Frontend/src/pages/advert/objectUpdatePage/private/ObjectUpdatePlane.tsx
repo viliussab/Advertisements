@@ -5,7 +5,7 @@ import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import RHF from '../../../../config/imports/RHF';
 import optionsFunctions from '../../../../functions/optionsFunctions';
-import PhotosUpload from './PhotosUpload';
+import ObjectUpdatePhotosUpload from './ObjectUpdatePhotosUpload';
 import { UpdateAdvertObject } from '../../../../api/commands/schema.updateAdvertObject';
 
 type Props = {
@@ -94,7 +94,7 @@ function Plane({ form, field, remove, index, name }: Props) {
             }}
           />
         </div>
-        <PhotosUpload form={form} planeIndex={index} />
+        <ObjectUpdatePhotosUpload form={form} planeIndex={index} />
       </div>
     </div>
   );
