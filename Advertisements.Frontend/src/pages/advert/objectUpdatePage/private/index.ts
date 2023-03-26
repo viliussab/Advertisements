@@ -1,7 +1,7 @@
-import PlanesGroup from './PlanesGroup';
+import ObjectUpdatePlanesGroup from './ObjectUpdatePlanesGroup';
 
 const Private = {
-  PlanesGroup,
+  PlanesGroup: ObjectUpdatePlanesGroup,
 };
 
 export default Private;

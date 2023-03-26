@@ -6,7 +6,7 @@ import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import RHF from '../../../../config/imports/RHF';
 import optionsFunctions from '../../../../functions/optionsFunctions';
-import Plane from './Plane';
+import ObjectCreatePlane from './ObjecrCreatePlane';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   isSubbmiting: boolean;
 };
 
-function PlanesGroup({ form, isSubbmiting }: Props) {
+function ObjectCreatePlanesGroup({ form, isSubbmiting }: Props) {
   const { fields, append, remove } = RHF.useFieldArray({
     control: form.control,
     name: 'planes',
@@ -50,7 +50,7 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
 
       <div ref={listRef}>
         {fields.map((field, index) => (
-          <Plane
+          <ObjectCreatePlane
             key={field.id}
             name={name}
             form={form}
@@ -64,4 +64,4 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
   );
 }
 
-export default PlanesGroup;
+export default ObjectCreatePlanesGroup;

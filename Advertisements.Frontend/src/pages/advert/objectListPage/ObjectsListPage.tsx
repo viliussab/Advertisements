@@ -1,21 +1,21 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
-import advertQueries from '../../api/calls/advertQueries';
-import filterOptions from '../../api/filterOptions/filterOptions';
-import objectOptions from '../../api/filterOptions/objectOptions';
-import ObjectsQuery from '../../api/queries/type.ObjectsQuery';
+import advertQueries from '../../../api/calls/advertQueries';
+import filterOptions from '../../../api/filterOptions/filterOptions';
+import objectOptions from '../../../api/filterOptions/objectOptions';
+import ObjectsQuery from '../../../api/queries/type.ObjectsQuery';
 import AdvertPlane, {
   AdvertPlaneWithObjectsHasAreaAndType,
-} from '../../api/responses/type.AdvertPlane';
-import Filters from '../../components/public/input/filter';
-import Table, { ColumnConfig } from '../../components/public/table/Table';
-import dateFns from '../../config/imports/dateFns';
-import Icons from '../../config/imports/Icons';
-import Mui from '../../config/imports/Mui';
-import website_paths from '../../config/website_paths';
-import dateFunctions from '../../functions/dateFunctions';
-import optionsFunctions from '../../functions/optionsFunctions';
+} from '../../../api/responses/type.AdvertPlane';
+import Filters from '../../../components/public/input/filter';
+import Table, { ColumnConfig } from '../../../components/public/table/Table';
+import dateFns from '../../../config/imports/dateFns';
+import Icons from '../../../config/imports/Icons';
+import Mui from '../../../config/imports/Mui';
+import website_paths from '../../../config/website_paths';
+import dateFunctions from '../../../functions/dateFunctions';
+import optionsFunctions from '../../../functions/optionsFunctions';
 
 function ObjectsListPage() {
   const navigate = useNavigate();

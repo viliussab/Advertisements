@@ -2,36 +2,37 @@ import React from 'react';
 import Area from '../../../../api/responses/type.Area';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import Mui from '../../../../config/imports/Mui';
+import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOverview';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type bound = google.maps.LatLngBounds;
 
 type Props = {
-  selectedArea: Area;
+  area: Area;
   marker: LatLngLiteral;
   className: string;
-  setMarker: (latitude: number, longitude: number) => void;
+  objects: AdvertObjectOverview[];
 };
 
 const key = import.meta.env.VITE_GOOGLE_API_KEY;
 
 function Map(props: Props) {
-  const { selectedArea, className, setMarker } = props;
+  const { area, className } = props;
 
   const mapRef = React.useRef<google.maps.Map>();
   const marker = React.useMemo(() => props.marker, [props.marker]);
   const boundaries = React.useMemo(
     () => ({
       sw: {
-        lat: selectedArea.latitudeSouth,
-        lng: selectedArea.longitudeWest,
+        lat: area.latitudeSouth,
+        lng: area.longitudeWest,
       },
       ne: {
-        lat: selectedArea.latitudeNorth,
-        lng: selectedArea.longitudeWest,
+        lat: area.latitudeNorth,
+        lng: area.longitudeWest,
       },
     }),
-    [selectedArea],
+    [area],
   );
 
   const { isLoaded } = useLoadScript({
@@ -45,16 +46,6 @@ function Map(props: Props) {
       4,
     );
     map.panTo(marker);
-  };
-
-  const onMarkerDrag = (e: google.maps.MapMouseEvent) => {
-    const mark = {
-      lat: e.latLng?.lat()!,
-      lng: e.latLng?.lng()!,
-    };
-
-    setMarker(mark.lat, mark.lng);
-    mapRef.current?.panTo(mark);
   };
 
   if (!isLoaded) {
@@ -71,7 +62,7 @@ function Map(props: Props) {
       center={marker}
       mapContainerClassName={className}
     >
-      <MarkerF position={marker} draggable onDragEnd={onMarkerDrag} />
+      <MarkerF position={marker} />
     </GoogleMap>
   );
 }

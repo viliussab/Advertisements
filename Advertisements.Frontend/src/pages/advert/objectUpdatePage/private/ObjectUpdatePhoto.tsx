@@ -13,7 +13,7 @@ type Props = {
   form: RHF.UseFormReturn<UpdateAdvertObject>;
 };
 
-function Photo(props: Props) {
+function ObjectUpdatePhoto(props: Props) {
   const { image, remove, index, form, planeIndex } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -94,4 +94,4 @@ function Photo(props: Props) {
   );
 }
 
-export default Photo;
+export default ObjectUpdatePhoto;

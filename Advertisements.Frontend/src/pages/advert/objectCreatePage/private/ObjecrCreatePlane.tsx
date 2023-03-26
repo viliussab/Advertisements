@@ -8,7 +8,7 @@ import Mui from '../../../../config/imports/Mui';
 import RHF from '../../../../config/imports/RHF';
 import optionsFunctions from '../../../../functions/optionsFunctions';
 import fileFunctions from '../../../../functions/fileFunctions';
-import PhotosUpload from './PhotosUpload';
+import PhotosUpload from './ObjectCreatePhotosUpload';
 
 type Props = {
   remove: RHF.UseFieldArrayRemove;
@@ -18,7 +18,7 @@ type Props = {
   name: string;
 };
 
-function Plane({ form, field, remove, index, name }: Props) {
+function ObjectCreatePlane({ form, field, remove, index, name }: Props) {
   const partialName = form.watch(`planes.${index}.partialName`);
 
   return (
@@ -75,4 +75,4 @@ function Plane({ form, field, remove, index, name }: Props) {
   );
 }
 
-export default Plane;
+export default ObjectCreatePlane;

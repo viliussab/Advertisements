@@ -4,7 +4,7 @@ import { CreateAdvertObject } from '../../../../api/commands/schema.createAdvert
 import Icons from '../../../../config/imports/Icons';
 import RHF from '../../../../config/imports/RHF';
 import fileFunctions from '../../../../functions/fileFunctions';
-import Photo from './Photo';
+import ObjectCreatePhoto from './ObjectCreatePhoto';
 
 type Props = {
   form: RHF.UseFormReturn<CreateAdvertObject>;
@@ -70,7 +70,12 @@ function PhotosUpload({ form, planeIndex }: Props) {
         }}
       >
         {fields.map((image, i) => (
-          <Photo key={image.id} image={image} remove={remove} index={i} />
+          <ObjectCreatePhoto
+            key={image.id}
+            image={image}
+            remove={remove}
+            index={i}
+          />
         ))}
       </div>
     </div>

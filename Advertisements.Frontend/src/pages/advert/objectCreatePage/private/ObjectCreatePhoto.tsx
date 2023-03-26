@@ -10,7 +10,7 @@ type Props = {
   index: number;
 };
 
-function Photo({ image, remove, index }: Props) {
+function ObjectCreatePhoto({ image, remove, index }: Props) {
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
 
@@ -53,4 +53,4 @@ function Photo({ image, remove, index }: Props) {
   );
 }
 
-export default Photo;
+export default ObjectCreatePhoto;

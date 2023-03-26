@@ -1,9 +1,9 @@
-import PlanesGroup from './PlanesGroup';
-import Map from './Map';
+import ObjectCreatePlanesGroup from './ObjectCreatePlanesGroup';
+import ObjectCRUDMap from './ObjectCRUDMap';
 
 const Private = {
-  PlanesGroup,
-  Map,
+  PlanesGroup: ObjectCreatePlanesGroup,
+  Map: ObjectCRUDMap,
 };
 
 export default Private;

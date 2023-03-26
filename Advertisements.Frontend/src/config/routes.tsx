@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import ObjectCreatePage from '../pages/advert/objectCreatePage/ObjectCreatePage';
-import ObjectsListPage from '../pages/advert/ObjectsListPage';
+import ObjectsListPage from '../pages/advert/objectListPage/ObjectsListPage';
+import ObjectMapPage from '../pages/advert/objectMapPage/ObjectMapPage';
 import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage';
 import CampaignsViewPage from '../pages/campaigns/CampaignsViewPage';
 import website_paths from './website_paths';
@@ -30,7 +31,7 @@ const routes: Array<Route> = [
   },
   {
     path: website_paths.objects.map,
-    Page: ObjectCreatePage,
+    Page: ObjectMapPage,
     layout: {
       title: 'Objektų žemėlapis',
     },

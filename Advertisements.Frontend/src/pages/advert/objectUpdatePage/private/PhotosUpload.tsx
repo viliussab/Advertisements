@@ -4,7 +4,7 @@ import { UpdateAdvertObject } from '../../../../api/commands/schema.updateAdvert
 import Icons from '../../../../config/imports/Icons';
 import RHF from '../../../../config/imports/RHF';
 import fileFunctions from '../../../../functions/fileFunctions';
-import Photo from './Photo';
+import ObjectUpdatePhoto from './ObjectUpdatePhoto';
 
 type Props = {
   form: RHF.UseFormReturn<UpdateAdvertObject>;
@@ -71,7 +71,7 @@ function PhotosUpload({ form, planeIndex }: Props) {
         }}
       >
         {fields.map((image, i) => (
-          <Photo
+          <ObjectUpdatePhoto
             key={image.id}
             image={image}
             remove={remove}
