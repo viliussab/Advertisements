@@ -12,9 +12,14 @@ const createAdvertAsync = async (values: CreateAdvertObject) => {
   return response;
 };
 
-const updateAdvertAsync = async (values: UpdateAdvertObject) => {
+type updateAdvertAsyncProps = {
+  id: string;
+  values: UpdateAdvertObject;
+};
+
+const updateAdvertAsync = async ({ id, values }: updateAdvertAsyncProps) => {
   const response = await api.mutateAsync({
-    url: api.endpoints.common.advert.object,
+    url: `${api.endpoints.common.advert.object}/${id}`,
     body: values,
     httpMethod: 'put',
   });
@@ -26,6 +31,10 @@ const advertMutations = {
   objectCreate: {
     fn: createAdvertAsync,
     key: 'advert_create',
+  },
+  objectUpdate: {
+    fn: updateAdvertAsync,
+    key: 'advert_update',
   },
 };
 

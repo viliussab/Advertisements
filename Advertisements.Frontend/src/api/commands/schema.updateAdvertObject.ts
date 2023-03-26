@@ -3,6 +3,7 @@ import { fileUpdateSchema } from './primitives/schema.file';
 import { updateStatusSchema } from './primitives/schema.updateStatus';
 
 const planeSchema = zod.object({
+  id: zod.string().nullish(),
   partialName: zod.string(),
   isPermitted: zod.boolean(),
   permissionExpiryDate: zod.date().nullable(),

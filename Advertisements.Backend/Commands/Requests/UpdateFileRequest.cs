@@ -6,5 +6,5 @@ public class UpdateFileRequest : CreateFileRequest
 {
     public Guid? Id { get; set; }
     
-    public FileUpdateStatus UpdateStatus { get; set; }
+    public UpdateStatus UpdateStatus { get; set; }
 }

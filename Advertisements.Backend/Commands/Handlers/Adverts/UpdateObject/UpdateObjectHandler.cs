@@ -149,11 +149,13 @@ public class UpdateObjectHandler : BasedHandler<
     {
         switch (request.UpdateStatus)
         {
-            case FileUpdateStatus.Deleted:
+            case UpdateStatus.Deleted:
                 await DeletePhotoAsync();
                 return;
-            case FileUpdateStatus.New:
+            case UpdateStatus.New:
                 await CreatePhotoAsync();
+                return;
+            case UpdateStatus.Existing:
                 return;
             default:
                 throw new ArgumentOutOfRangeException();

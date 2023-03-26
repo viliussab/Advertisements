@@ -67,8 +67,8 @@ function ObjectUpdatePage() {
   };
 
   const updateMutation = useMutation({
-    mutationKey: advertMutations.objectCreate.key,
-    mutationFn: advertMutations.objectCreate.fn,
+    mutationKey: advertMutations.objectUpdate.key,
+    mutationFn: advertMutations.objectUpdate.fn,
     onSuccess,
   });
 
@@ -108,7 +108,7 @@ function ObjectUpdatePage() {
         <Form
           form={form}
           onSubmit={(values) => {
-            updateMutation.mutateAsync(values);
+            updateMutation.mutateAsync({ id: id as string, values });
           }}
         >
           <div className="m-4 flex justify-center">

@@ -8,6 +8,7 @@ export const fileCreateSchema = zod.object({
 });
 
 export const fileUpdateSchema = zod.object({
+  id: zod.string().nullish(),
   mime: zod.string(),
   base64: zod.string(),
   name: zod.string(),

@@ -1,4 +1,5 @@
 using Commands.Handlers.Adverts.CreateObject;
+using Commands.Handlers.Adverts.UpdateObject;
 using Commands.Handlers.Adverts.UploadObjects;
 using Commands.Responses;
 using Core.Errors;
@@ -12,9 +13,9 @@ public class AdvertCommandsController : BasedController
     [HttpPost("object")]
     [ProducesResponseType(typeof(GuidSuccess), 200)]
     [ProducesResponseType(typeof(List<ValidationError>), 400)]
-    public IActionResult CreateObject([FromBody] CreateObjectCommand command)
+    public async Task<IActionResult> CreateObject([FromBody] CreateObjectCommand command)
     {
-        var response = Mediator.Send(command).Result;
+        var response = await Mediator.Send(command);
 
         return response.Match<IActionResult>(
             BadRequest,
@@ -24,9 +25,15 @@ public class AdvertCommandsController : BasedController
     [HttpPut("object/{id:guid}")]
     [ProducesResponseType(typeof(Guid), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateObject([FromRoute] Guid id)
+    public async Task<IActionResult> UpdateObject([FromRoute] Guid id, [FromBody] UpdateObjectCommand command)
     {
-        return Ok("yes");
+        command.Id = id;
+        
+        var response = await Mediator.Send(command);
+        
+        return response.Match<IActionResult>(
+            BadRequest,
+            Ok);
     }
 
     [HttpPost("object/upload")]

@@ -29,6 +29,10 @@ function Plane({ form, field, remove, index, name }: Props) {
     form.setValue(`planes.${index}.updateStatus`, 'Deleted');
   };
 
+  const onDeletedRestore = () => {
+    form.setValue(`planes.${index}.updateStatus`, 'Existing');
+  };
+
   return (
     <div
       className={`m-4 rounded-lg border-4   border-opacity-50 p-6 shadow-md
@@ -43,12 +47,21 @@ function Plane({ form, field, remove, index, name }: Props) {
             label="Pilnas pavadinimas"
           />
         </div>
-        <div className="flex items-start">
-          <Mui.Button color="error" onClick={onPlaneRemove}>
-            <Icons.Remove />
-            Ištrinti plokštumą
-          </Mui.Button>
-        </div>
+        {updateStatus === 'Deleted' ? (
+          <div className="flex items-start">
+            <Mui.Button color="info" onClick={onDeletedRestore}>
+              <Icons.Restore />
+              Anuluoti trinimą
+            </Mui.Button>
+          </div>
+        ) : (
+          <div className="flex items-start">
+            <Mui.Button color="error" onClick={onPlaneRemove}>
+              <Icons.Remove />
+              Ištrinti plokštumą
+            </Mui.Button>
+          </div>
+        )}
       </div>
       <div className="flex justify-between">
         <div className="mt-2 flex w-64 flex-col space-y-3">

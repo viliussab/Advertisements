@@ -29,6 +29,13 @@ const routes: Array<Route> = [
     },
   },
   {
+    path: website_paths.objects.map,
+    Page: ObjectCreatePage,
+    layout: {
+      title: 'Objektų žemėlapis',
+    },
+  },
+  {
     path: website_paths.objects.edit,
     Page: ObjectUpdatePage,
     layout: {

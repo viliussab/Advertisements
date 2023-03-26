@@ -47,7 +47,7 @@ function PlanesGroup({ form, isSubbmiting }: Props) {
           planes?.filter((x) => x.updateStatus === 'Deleted').length && (
           <div className="flex flex-grow justify-end">
             <FormInput.SubmitButton isSubmitting={isSubbmiting}>
-              Kurti Objektą
+              Atnaujinti objektą
             </FormInput.SubmitButton>
           </div>
         )}
