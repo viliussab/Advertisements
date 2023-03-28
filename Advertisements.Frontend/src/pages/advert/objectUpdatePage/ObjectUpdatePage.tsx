@@ -86,15 +86,6 @@ function ObjectUpdatePage() {
     [form],
   );
 
-  React.useEffect(() => {
-    if (area) {
-      const lat = (area.latitudeSouth + area.latitudeNorth) / 2;
-      const long = (area.longitudeEast + area.longitudeWest) / 2;
-
-      setCoordinates(lat, long);
-    }
-  }, [area, setCoordinates]);
-
   const isLoading =
     !areasQuery.isSuccess && !typesQuery.isSuccess && !objectQuery.isSuccess;
 

@@ -9,8 +9,6 @@ type Props = {
 };
 
 function Navbar({ title }: Props) {
-  const navigate = useNavigate();
-
   return (
     <Mui.AppBar variant="elevation" color="info" position="static">
       <div className="flex items-center justify-start gap-2 p-3">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../../api/calls/advertQueries';
+import ObjectMapDetailsDialog from './private/ObjectMapDetailsDialog';
 import ObjectMapRender from './private/ObjectMapRender';
 
 const ObjectMapPage = () => {
@@ -9,21 +10,21 @@ const ObjectMapPage = () => {
     queryFn: advertQueries.areaKaunas.fn,
   });
 
-  if (!areaQuery.isFetched) {
-    return null;
-  }
+  const [selectedObjectId, setSelectedObjectId] = React.useState<string>();
 
   return (
-    <ObjectMapRender
-      area={areaQuery.data!}
-      className="h-full w-full"
-      markers={
-        areaQuery.data?.objects.map((x) => ({
-          lat: x.latitude,
-          lng: x.longitude,
-        })) || []
-      }
-    />
+    <>
+      <ObjectMapRender
+        onObjectSelect={(id) => setSelectedObjectId(id)}
+        area={areaQuery.data!}
+        className="h-[92.8vh] w-[100vw]"
+        objects={areaQuery.data?.objects || []}
+      />
+      <ObjectMapDetailsDialog
+        selectedObjectId={selectedObjectId}
+        resetSelectedId={() => setSelectedObjectId(undefined)}
+      />
+    </>
   );
 };
 

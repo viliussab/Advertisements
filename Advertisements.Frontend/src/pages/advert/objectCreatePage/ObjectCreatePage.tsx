@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import website_paths from '../../../config/website_paths';
 import Icons from '../../../config/imports/Icons';
+import mapFunctions from '../../../functions/mapFunctions';
 
 function CreateObjectPage() {
   const navigate = useNavigate();
@@ -75,10 +76,9 @@ function CreateObjectPage() {
 
   React.useEffect(() => {
     if (area) {
-      const lat = (area.latitudeSouth + area.latitudeNorth) / 2;
-      const long = (area.longitudeEast + area.longitudeWest) / 2;
+      const { lat, lng } = mapFunctions.getCenter(area);
 
-      setCoordinates(lat, long);
+      setCoordinates(lat, lng);
     }
   }, [area, setCoordinates]);
 
@@ -166,7 +166,7 @@ function CreateObjectPage() {
               />
               <FormInput.Checkbox
                 form={form}
-                fieldName="isIlluminated"
+                fieldName="illuminated"
                 label="Apšvietimas"
               />
             </div>

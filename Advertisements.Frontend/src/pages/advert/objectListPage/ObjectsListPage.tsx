@@ -5,16 +5,15 @@ import advertQueries from '../../../api/calls/advertQueries';
 import filterOptions from '../../../api/filterOptions/filterOptions';
 import objectOptions from '../../../api/filterOptions/objectOptions';
 import ObjectsQuery from '../../../api/queries/type.ObjectsQuery';
-import AdvertPlane, {
-  AdvertPlaneWithObjectsHasAreaAndType,
-} from '../../../api/responses/type.AdvertPlane';
+import AdvertPlaneOverview from '../../../api/responses/type.AdvertPlaneOverview';
+import PlaneIlluminationIcon from '../../../components/private/advert/PlaneIlluminationIcon';
+import PlanePermisson from '../../../components/private/advert/PlanePermisson';
+import PlanePremiumIcon from '../../../components/private/advert/PlanePremiumIcon';
 import Filters from '../../../components/public/input/filter';
 import Table, { ColumnConfig } from '../../../components/public/table/Table';
-import dateFns from '../../../config/imports/dateFns';
 import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
-import dateFunctions from '../../../functions/dateFunctions';
 import optionsFunctions from '../../../functions/optionsFunctions';
 
 function ObjectsListPage() {
@@ -43,7 +42,7 @@ function ObjectsListPage() {
 
   const regions = areasQuery.data?.flatMap((a) => a.regions) || [];
 
-  const columns: ColumnConfig<AdvertPlaneWithObjectsHasAreaAndType>[] = [
+  const columns: ColumnConfig<AdvertPlaneOverview>[] = [
     {
       title: 'Nr.',
       renderCell: (plane) => <>{plane.object.serialCode}</>,
@@ -135,13 +134,7 @@ function ObjectsListPage() {
     {
       title: 'Apšvietimas',
       renderCell: (plane) => (
-        <>
-          {plane.object.illuminated ? (
-            <Icons.LightMode className="text-yellow-300" />
-          ) : (
-            <Icons.LightMode className="text-gray-200" />
-          )}
-        </>
+        <PlaneIlluminationIcon illuminated={plane.object.illuminated} />
       ),
       key: 'illumination',
       filter: {
@@ -167,20 +160,12 @@ function ObjectsListPage() {
     },
     {
       title: 'Leidimas',
-      renderCell: (plane) => <PermissionCell plane={plane} />,
+      renderCell: (plane) => <PlanePermisson plane={plane} />,
       key: 'permitted',
     },
     {
       title: 'Premium',
-      renderCell: (plane) => (
-        <>
-          {plane.isPremium ? (
-            <Icons.Star className="text-amber-400" />
-          ) : (
-            <Icons.Star className="text-gray-200" />
-          )}
-        </>
-      ),
+      renderCell: (plane) => <PlanePremiumIcon isPremium={plane.isPremium} />,
       key: 'premium',
       filter: {
         isActive: !!query.premium?.toString(),
@@ -235,47 +220,6 @@ function ObjectsListPage() {
       />
     </div>
   );
-}
-
-export type PermittedCellProps = {
-  plane: AdvertPlane;
-};
-
-function PermissionCell({ plane }: PermittedCellProps) {
-  if (!plane.isPermitted || !plane.permissionExpiryDate) {
-    return (
-      <div className="text-red-800">
-        <Icons.Warning sx={{ mr: 1 }} />
-        Nėra leidimo
-      </div>
-    );
-  }
-
-  const expiryDate = new Date(plane.permissionExpiryDate!);
-
-  const daysLeft = dateFns.differenceInDays(expiryDate, Date.now());
-
-  if (daysLeft <= 0) {
-    return (
-      <div className="text-red-800">
-        <Icons.Warning sx={{ mr: 1 }} />
-        Pasibaigęs leidimas
-      </div>
-    );
-  }
-
-  const twoMonthsInDays = 60;
-
-  if (daysLeft <= twoMonthsInDays) {
-    return (
-      <div className="text-yellow-500">
-        <Icons.Warning sx={{ mr: 1 }} />
-        {`Leidimas pasibaigs už ${daysLeft} d.`}
-      </div>
-    );
-  }
-
-  return <div>{`Galioja iki ${dateFunctions.format(expiryDate)}`}</div>;
 }
 
 export default ObjectsListPage;
