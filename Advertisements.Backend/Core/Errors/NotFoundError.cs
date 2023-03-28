@@ -2,16 +2,16 @@ namespace Core.Errors;
 
 public class NotFoundError
 {
-    public NotFoundError(Guid id, Type model)
+    public NotFoundError(object identifier, Type model)
     {
-        Id = id;
+        Identifier = identifier.ToString();
         var name = model.Name;
         Model = char.ToLower(name[0]) + name[1..];
     }
 
-    public Guid Id { get; set; }
+    public string? Identifier { get; set; }
     
     public string Model { get; set; }
 
-    public string Message => $"{Model} not found with id: ${Id}";
+    public string Message => $"{Model} not found with identifier: ${Identifier}";
 }

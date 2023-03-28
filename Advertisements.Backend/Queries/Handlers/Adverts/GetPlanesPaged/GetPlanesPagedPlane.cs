@@ -5,12 +5,13 @@ namespace Queries.Handlers.Adverts.GetPlanesPaged;
 
 public class GetPlanesPagedPlane : AdvertPlaneFields
 {
-    public AdvertObjectWithAreaAndType Object { get; set; }
+    public AdvertObjectResponse Object { get; set; }
+    
+    public class AdvertObjectResponse : AdvertObjectFields
+    {
+        public AreaFields Area { get; set; }
+
+        public AdvertTypeFields Type { get; set; }
+    }
 }
 
-public class AdvertObjectWithAreaAndType : AdvertObjectFields
-{
-    public AreaFields Area { get; set; }
-
-    public AdvertTypeFields Type { get; set; }
-}

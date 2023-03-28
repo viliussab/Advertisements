@@ -1,11 +1,13 @@
 using Core.Database;
 using Core.Models;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
+using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetAreas;
 
-public class GetAreasHandler : BasedHandler<GetAreasQuery, IEnumerable<Area>, GetAreasValidator>
+public class GetAreasHandler : BasedHandler<GetAreasQuery, IEnumerable<AreaFields>, GetAreasValidator>
 {
     private readonly AdvertContext _context;
 
@@ -14,8 +16,13 @@ public class GetAreasHandler : BasedHandler<GetAreasQuery, IEnumerable<Area>, Ge
         _context = context;
     }
 
-    public override async Task<IEnumerable<Area>> Handle(GetAreasQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<AreaFields>> Handle(GetAreasQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Set<Area>().ToListAsync(cancellationToken: cancellationToken);
+        var areas = await _context.Set<Area>()
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        var areasDto = areas.Adapt<List<AreaFields>>();
+
+        return areasDto;
     }
 }

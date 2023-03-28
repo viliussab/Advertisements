@@ -36,9 +36,9 @@ const mutateAsync = async <TRequest>({
 const endpoints = {
   common: {
     advert: {
-      types: `${apiUrl}/type`,
-      areas: `${apiUrl}/area`,
-      planes: `${apiUrl}/plane`,
+      type: `${apiUrl}/type`,
+      area: `${apiUrl}/area`,
+      plane: `${apiUrl}/plane`,
       object: `${apiUrl}/object`,
     },
   },

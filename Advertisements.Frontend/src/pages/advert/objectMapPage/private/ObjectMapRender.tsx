@@ -5,22 +5,20 @@ import Mui from '../../../../config/imports/Mui';
 import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOverview';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
-type bound = google.maps.LatLngBounds;
 
 type Props = {
   area: Area;
-  marker: LatLngLiteral;
+  markers: LatLngLiteral[];
   className: string;
-  objects: AdvertObjectOverview[];
+  objects?: AdvertObjectOverview[];
 };
 
 const key = import.meta.env.VITE_GOOGLE_API_KEY;
 
-function Map(props: Props) {
-  const { area, className } = props;
+function ObjectMapRender(props: Props) {
+  const { area, className, markers } = props;
 
   const mapRef = React.useRef<google.maps.Map>();
-  const marker = React.useMemo(() => props.marker, [props.marker]);
   const boundaries = React.useMemo(
     () => ({
       sw: {
@@ -45,7 +43,6 @@ function Map(props: Props) {
       new google.maps.LatLngBounds(boundaries.sw, boundaries.ne),
       4,
     );
-    map.panTo(marker);
   };
 
   if (!isLoaded) {
@@ -57,14 +54,12 @@ function Map(props: Props) {
   }
 
   return (
-    <GoogleMap
-      onLoad={onLoad}
-      center={marker}
-      mapContainerClassName={className}
-    >
-      <MarkerF position={marker} />
+    <GoogleMap onLoad={onLoad} mapContainerClassName={className}>
+      {markers.map((m) => (
+        <MarkerF position={m} />
+      ))}
     </GoogleMap>
   );
 }
 
-export default Map;
+export default ObjectMapRender;

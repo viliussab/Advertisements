@@ -6,10 +6,11 @@ import AdvertType from '../responses/type.AdvertType';
 import Area from '../responses/type.Area';
 import PageResponse from '../responses/type.PageResponse';
 import api from './api';
+import AreaDetailed from './../responses/type.AreaDetailed';
 
 const getTypesAsync = async () => {
   const response = await api.queryAsync({
-    url: api.endpoints.common.advert.types,
+    url: api.endpoints.common.advert.type,
   });
 
   return response.data as AdvertType[];
@@ -17,7 +18,7 @@ const getTypesAsync = async () => {
 
 const getAreasAsync = async () => {
   const response = await api.queryAsync({
-    url: api.endpoints.common.advert.areas,
+    url: api.endpoints.common.advert.area,
   });
 
   return response.data as Area[];
@@ -25,7 +26,7 @@ const getAreasAsync = async () => {
 
 const getPagedPlanesAsync = async (query: PageQuery) => {
   const response = await api.queryAsync({
-    url: api.endpoints.common.advert.planes,
+    url: api.endpoints.common.advert.plane,
     query,
   });
 
@@ -38,6 +39,14 @@ const getObjectAsync = async (id: string) => {
   });
 
   return response.data as AdvertObjectDetailed;
+};
+
+const getKaunasAsync = async () => {
+  const response = await api.queryAsync({
+    url: `${api.endpoints.common.advert.area}/Kaunas`,
+  });
+
+  return response.data as AreaDetailed;
 };
 
 const advertQueries = {
@@ -56,6 +65,10 @@ const advertQueries = {
   object: {
     fn: getObjectAsync,
     key: 'object',
+  },
+  areaKaunas: {
+    fn: getKaunasAsync,
+    key: 'area_kaunas',
   },
 };
 
