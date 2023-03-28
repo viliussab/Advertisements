@@ -11,6 +11,7 @@ import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOve
 import mapFunctions from '../../../../functions/mapFunctions';
 import { getTableContainerUtilityClass } from '@mui/material';
 import ObjectMapMarker from './ObjectMapMarker';
+import Icons from '../../../../config/imports/Icons';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 
@@ -73,6 +74,10 @@ function ObjectMapRender(props: Props) {
           object={o}
         />
       ))}
+      <Mui.Fab variant="extended" className="top-16 right-2 float-right">
+        <Icons.FilterAlt sx={{ mr: 1 }} />
+        Filtrai
+      </Mui.Fab>
     </GoogleMap>
   );
 }

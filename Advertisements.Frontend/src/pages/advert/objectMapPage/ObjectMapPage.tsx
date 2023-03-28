@@ -1,6 +1,8 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../../api/calls/advertQueries';
+import Icons from '../../../config/imports/Icons';
+import Mui from '../../../config/imports/Mui';
 import ObjectMapDetailsDialog from './private/ObjectMapDetailsDialog';
 import ObjectMapRender from './private/ObjectMapRender';
 
