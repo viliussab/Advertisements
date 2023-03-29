@@ -1,6 +1,6 @@
 using Queries.Responses.Prototypes;
 
-namespace Queries.Handlers.Adverts.GetAreas;
+namespace Queries.Handlers.Adverts.GetAreaByName;
 
 public class GetAreaByNameResponse : AreaFields
 {

@@ -1,4 +1,3 @@
-import GetByIdQuery from '../queries/type.GetByIdQuery';
 import PageQuery from '../queries/type.PageQuery';
 import AdvertObjectDetailed from '../responses/type.AdvertObjectDetailed';
 import AdvertPlaneOverview from '../responses/type.AdvertPlaneOverview';

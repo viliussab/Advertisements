@@ -3,11 +3,10 @@ using Core.Errors;
 using Core.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Queries.Prototypes;
-using Queries.Responses.Prototypes;
 using OneOf;
+using Queries.Prototypes;
 
-namespace Queries.Handlers.Adverts.GetAreas;
+namespace Queries.Handlers.Adverts.GetAreaByName;
 
 public class GetAreaByNameHandler : BasedHandler<GetAreaByNameQuery, OneOf<NotFoundError, GetAreaByNameResponse>, GetAreaByNameValidator>
 {

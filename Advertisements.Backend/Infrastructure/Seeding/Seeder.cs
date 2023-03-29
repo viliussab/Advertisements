@@ -45,6 +45,20 @@ public static class Seeder
                 Name = "Vitrina",
             });
         }
+        
+        if (!context.Set<Customer>().Any())
+        {
+            context.Add(new Customer
+            {
+                Name = "Reklamos Arka",
+                CompanyCode = "303211411",
+                VatCode = "LT100009613214",
+                Address = "Tolminkiemio g. 1, LT-48178 Kaunas",
+                Phone = "+37068644020",
+                ContactPerson = "Vardenis Pavardenis",
+                Email = "vardenis@reklamosarka.lt"
+            });
+        }
 
         await context.SaveChangesAsync();
     }

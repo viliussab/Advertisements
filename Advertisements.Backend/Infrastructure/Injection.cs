@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Queries.Handlers.Adverts.GetAreas;
-using Queries.MapProfile;
+using Queries.MapProfiles;
 
 namespace Infrastructure;
 

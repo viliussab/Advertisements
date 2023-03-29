@@ -3,7 +3,8 @@ import ObjectCreatePage from '../pages/advert/objectCreatePage/ObjectCreatePage'
 import ObjectsListPage from '../pages/advert/objectListPage/ObjectsListPage';
 import ObjectMapPage from '../pages/advert/objectMapPage/ObjectMapPage';
 import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage';
-import CampaignsViewPage from '../pages/campaigns/CampaignsViewPage';
+import CampaignCreatePage from '../pages/campaigns/campaignCreatePage/CampaignCreatePage';
+import CampaignsViewPage from '../pages/campaigns/campaignsViewPage/CampaignsViewPage';
 import website_paths from './website_paths';
 
 export type Route = {
@@ -48,6 +49,13 @@ const routes: Array<Route> = [
     Page: ObjectsListPage,
     layout: {
       title: 'Objektų sąrašas',
+    },
+  },
+  {
+    path: website_paths.campaigns.create,
+    Page: CampaignCreatePage,
+    layout: {
+      title: 'Kurti kompaniją',
     },
   },
 ];

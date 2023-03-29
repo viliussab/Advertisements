@@ -41,6 +41,10 @@ const endpoints = {
       plane: `${apiUrl}/plane`,
       object: `${apiUrl}/object`,
     },
+    campaigns: {
+      campaign: `${apiUrl}/campaign`,
+      customer: `${apiUrl}/customer`,
+    },
   },
 };
 

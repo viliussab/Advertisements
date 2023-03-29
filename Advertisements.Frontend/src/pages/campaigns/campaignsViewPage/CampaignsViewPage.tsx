@@ -1,9 +1,7 @@
-import React from 'react';
-import RHF from '../../config/imports/RHF';
-import Form from './../../components/public/Form';
-import FormInput from '../../components/public/input/form';
-import Mui from '../../config/imports/Mui';
-import Private from './private';
+import Form from '../../../components/public/Form';
+import FormInput from '../../../components/public/input/form';
+import Mui from '../../../config/imports/Mui';
+import RHF from '../../../config/imports/RHF';
 
 type Type = {
   textfield: string;

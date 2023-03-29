@@ -2,7 +2,7 @@ using Core.Models;
 using Mapster;
 using Queries.Responses.Prototypes;
 
-namespace Queries.MapProfile;
+namespace Queries.MapProfiles;
 
 public class StorageFileMapProfile : IRegister
 {
