@@ -39,7 +39,7 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
         name={fieldName}
         control={form.control}
         render={({ field: { onChange, ...restField } }) => (
-          <>
+          <div className="relative flex items-center">
             <DatePicker
               displayWeekNumber
               {...datePickerProps}
@@ -59,14 +59,14 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
                 },
               }}
             />
-            <div>
-              {includeWeekNumber && (
-                <div className="ml-1 -mt-3">
-                  {dateFunctions.formatWeekShort(restField.value)}
-                </div>
-              )}
-            </div>
-          </>
+            {includeWeekNumber && (
+              <div className="absolute right-10">
+                <Mui.Chip
+                  label={dateFunctions.formatWeekShort(restField.value)}
+                ></Mui.Chip>
+              </div>
+            )}
+          </div>
         )}
       />
     </LocalizationProvider>
