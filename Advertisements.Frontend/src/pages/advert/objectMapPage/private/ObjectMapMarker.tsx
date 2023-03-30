@@ -1,12 +1,14 @@
 import { InfoWindowF, MarkerF } from '@react-google-maps/api';
 import React from 'react';
 import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOverview';
+import { AdvertObjectOfArea } from '../../../../api/responses/type.AreaDetailed';
 import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import ObjectMapDetailsDialog from './ObjectMapDetailsDialog';
+import ObjectMapPhoto from './ObjectMapPhoto';
 
 type Props = {
-  object: AdvertObjectOverview;
+  object: AdvertObjectOfArea;
   onObjectSelect: (id: string) => void;
 };
 
@@ -30,11 +32,18 @@ const ObjectMapMarker = ({ object, onObjectSelect }: Props) => {
           <InfoWindowF anchor={anchor}>
             <div>
               <div className="text-lg">{`${object.name}`}</div>
-              <div className="text-gray-500">{`${object.address}`}</div>
+              <div className="text-gray-500">{`${object.address}, ${object.region}`}</div>
               <div className="">
                 {`${object.planes.length} stotelės (${object.planes
                   .map((x) => x.partialName)
                   .join(', ')})`}
+              </div>
+              <div className="mt-2 flex justify-center">
+                {object.featuredPhoto && (
+                  <div className="grid h-32 w-48 bg-gray-100">
+                    <ObjectMapPhoto image={object.featuredPhoto} />
+                  </div>
+                )}
               </div>
               <div className="flex justify-center">
                 <Mui.Button

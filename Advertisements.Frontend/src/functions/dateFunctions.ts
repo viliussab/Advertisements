@@ -17,7 +17,7 @@ const getCurrentCampaignDay = () => {
   return campaignDayOfWeek;
 };
 
-const formatPeriodShort = (dateFrom: Date, dateTo: Date) => {
+const formatWeekPeriodShort = (dateFrom: Date, dateTo: Date) => {
   const weekFrom = dateFns.getWeek(dateFrom, {
     weekStartsOn: constants.week_starts_on as weekDay,
   });
@@ -29,6 +29,14 @@ const formatPeriodShort = (dateFrom: Date, dateTo: Date) => {
   return `w${weekFrom}-${weekTo}`;
 };
 
+const formatWeekShort = (date: Date) => {
+  const weekFrom = dateFns.getWeek(date, {
+    weekStartsOn: constants.week_starts_on as weekDay,
+  });
+
+  return `w${weekFrom}`;
+};
+
 const isCampaignWeekday = (date: Date) => {
   const dayofWeek = date.getDay();
 
@@ -38,7 +46,8 @@ const isCampaignWeekday = (date: Date) => {
 const dateFunctions = {
   format: format,
   getCurrentCampaignDay,
-  formatPeriodShort,
+  formatWeekPeriodShort,
+  formatWeekShort,
   isCampaignWeekday,
 };
 

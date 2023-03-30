@@ -13,6 +13,14 @@ type Bounds = {
   };
 };
 
+type getStreetviewUrlProps = {
+  latitude: number;
+  longitude: number;
+};
+
+const getStreetviewUrl = ({ latitude, longitude }: getStreetviewUrlProps) =>
+  `http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}`;
+
 type generateViewSourceProps = {
   longitude: number;
   latitude: number;
@@ -56,6 +64,7 @@ function getBoundsZoomLevel(bounds: Bounds) {
 }
 
 const mapFunctions = {
+  getStreetviewUrl,
   generateViewSource,
   getBoundsZoomLevel,
   getCenter,

@@ -5,6 +5,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
+using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetAreaByName;
 
@@ -23,6 +24,7 @@ public class GetAreaByNameHandler : BasedHandler<GetAreaByNameQuery, OneOf<NotFo
             .Set<Area>()
             .Include(x => x.Objects)
                 .ThenInclude(x => x.Planes)
+                    .ThenInclude(x => x.Photos)
             .Include(x => x.Objects)
                 .ThenInclude(x => x.Type)
             .FirstOrDefaultAsync(x => x.Name == request.Name, cancellationToken: cancellationToken);
@@ -33,6 +35,24 @@ public class GetAreaByNameHandler : BasedHandler<GetAreaByNameQuery, OneOf<NotFo
         }
 
         var dto = area.Adapt<GetAreaByNameResponse>();
+        
+        dto.Objects.ForEach(obj =>
+        {
+            var advertObject = area.Objects.First(x => x.Id == obj.Id);
+
+            var selectedPlane = advertObject.Planes
+                .Where(x => x.Photos.Count != 0)
+                .MinBy(plane => plane.PartialName);
+
+            var selectedPhoto = selectedPlane?
+                .Photos
+                .FirstOrDefault();
+
+            if (selectedPhoto is not null)
+            {
+                obj.FeaturedPhoto = selectedPhoto.Adapt<FileResponse>();
+            }
+        });
 
         return dto;
     }

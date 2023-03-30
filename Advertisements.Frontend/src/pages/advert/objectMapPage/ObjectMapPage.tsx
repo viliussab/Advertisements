@@ -19,7 +19,7 @@ const ObjectMapPage = () => {
       <ObjectMapRender
         onObjectSelect={(id) => setSelectedObjectId(id)}
         area={areaQuery.data!}
-        className="h-[92.8vh] w-[100vw]"
+        className="h-[calc(100vh-64px)] w-[100vw]"
         objects={areaQuery.data?.objects || []}
       />
       <ObjectMapDetailsDialog

@@ -8,7 +8,7 @@ const getEstimateProps = (campaign: CampaignCreateUpdate) => {
 
   const weekPeriod =
     !!campaign.periodStart && !!campaign.periodEnd
-      ? dateFunctions.formatPeriodShort(
+      ? dateFunctions.formatWeekPeriodShort(
           campaign.periodStart,
           campaign.periodEnd,
         )
@@ -19,7 +19,7 @@ const getEstimateProps = (campaign: CampaignCreateUpdate) => {
       ? dateFns.differenceInWeeks(campaign.periodEnd, campaign.periodStart) + 1
       : 0;
 
-  const stopPriceDiscounted = campaign.discountPercent
+  const planePriceDiscounted = campaign.discountPercent
     ? planePrice * ((100 - campaign.discountPercent) / 100)
     : planePrice;
 
@@ -36,24 +36,38 @@ const getEstimateProps = (campaign: CampaignCreateUpdate) => {
       ? constants.unplanned_plane_fee * campaign.planeAmount
       : 0;
 
-  const sideTotalPrice =
-    (campaign.planeAmount || 0) * weekCount * stopPriceDiscounted;
+  const planesPrice = (campaign.planeAmount || 0) * weekCount * planePrice;
 
-  const totalPriceNoVat = pressUnitsPrice + unplannedPrice + sideTotalPrice;
+  const planesPriceDiscounted =
+    planePriceDiscounted * weekCount * (campaign.planeAmount || 0);
+
+  const totalPriceNoVat = pressUnitsPrice + unplannedPrice + planesPrice;
+  const totalPriceOnlyVat = totalPriceNoVat * constants.vat;
 
   const totalPriceVat = totalPriceNoVat * (1 + constants.vat);
 
   return {
     weekCount,
     weekPeriod,
-    isUnplanned: !dateFunctions.isCampaignWeekday(campaign.periodStart),
-    stopPriceDiscounted: stopPriceDiscounted.toFixed(2),
-    sideTotalPrice: sideTotalPrice.toFixed(2),
-    pressUnitsPrice: pressUnitsPrice.toFixed(2),
-    pressUnits,
-    unplannedPrice: unplannedPrice.toFixed(2),
-    totalPriceNoVat: totalPriceNoVat.toFixed(2),
-    totalPriceVat: totalPriceVat.toFixed(2),
+    plane: {
+      price: planePrice.toFixed(2),
+      totalPrice: planesPrice.toFixed(2),
+      priceDiscounted: planePriceDiscounted.toFixed(2),
+      totalDiscounted: planesPriceDiscounted.toFixed(2),
+    },
+    unplanned: {
+      isUnplanned: !dateFunctions.isCampaignWeekday(campaign.periodStart),
+      totalPrice: unplannedPrice.toFixed(2),
+      price: constants.unplanned_plane_fee.toFixed(2),
+    },
+    press: {
+      count: pressUnits,
+      unitPrice: constants.press_price.toFixed(2),
+      totalPrice: pressUnitsPrice.toFixed(2),
+    },
+    totalNoVat: totalPriceNoVat.toFixed(2),
+    totalOnlyVat: totalPriceOnlyVat.toFixed(2),
+    totalInclVat: totalPriceVat.toFixed(2),
   };
 };
 

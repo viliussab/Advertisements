@@ -6,6 +6,7 @@ export const CampaignCreateUpdateSchema = zod.object({
   pricePerPlane: zod.number(),
   periodStart: zod.date(),
   periodEnd: zod.date(),
+  price: zod.number(),
   planeAmount: zod.number(),
   requiresPrinting: zod.boolean(),
   discountPercent: zod.number().min(0).max(99),

@@ -1,3 +1,4 @@
+using Core.Models;
 using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Adverts.GetAreaByName;
@@ -11,5 +12,7 @@ public class GetAreaByNameResponse : AreaFields
         public List<AdvertPlaneFields> Planes { get; set; }
         
         public AdvertTypeFields Type { get; set; }
+        
+        public FileResponse? FeaturedPhoto { get; set; }
     }
 }

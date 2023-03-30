@@ -12,6 +12,7 @@ import {
 } from '../../../api/commands/schema.createUpdateCampaign';
 import CampaignCreateUpdateFields from '../../../components/private/campaign/CampaignCreateUpdateFields';
 import CampaignOrderDocumentPreview from '../../../components/private/campaign/CampaignOrderDocumentPreview';
+import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
 import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
@@ -30,6 +31,7 @@ function CampaignCreatePage() {
     defaultValues: {
       periodStart: nextWeekStart,
       periodEnd: nextWeekStart,
+      price: constants.initial_plane_price,
     },
   });
 
@@ -80,7 +82,10 @@ function CampaignCreatePage() {
             </form>
           </div>
           <div>
-            <CampaignOrderDocumentPreview form={form} />
+            <CampaignOrderDocumentPreview
+              form={form}
+              customers={customersQuery.data || []}
+            />
           </div>
         </div>
       </Mui.Paper>

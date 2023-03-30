@@ -1,11 +1,16 @@
+import { ImportContactsSharp } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
 import advertQueries from '../../../../api/calls/advertQueries';
+import PlaneIlluminationIcon from '../../../../components/private/advert/PlaneIlluminationIcon';
 import PlanePermisson from '../../../../components/private/advert/PlanePermisson';
 import PlanePremiumIcon from '../../../../components/private/advert/PlanePremiumIcon';
+import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import website_paths from '../../../../config/website_paths';
+import mapFunctions from '../../../../functions/mapFunctions';
 import ObjectMapPhoto from './ObjectMapPhoto';
 
 type Props = {
@@ -42,7 +47,10 @@ const ObjectMapDetailsDialog = (props: Props) => {
       ) : (
         <div className="p-4">
           <div className="flex items-center justify-between gap-6">
-            <div className="text-center text-xl">{`${object.name}`}</div>
+            <div className="flex items-center text-center text-xl">
+              {`${object.name}`}{' '}
+              <PlaneIlluminationIcon illuminated={object.illuminated} />
+            </div>
             <Mui.Button
               onClick={() => {
                 navigate(
@@ -52,11 +60,25 @@ const ObjectMapDetailsDialog = (props: Props) => {
                 );
               }}
             >
-              Redaguoti objektą
+              Redaguoti objektą <Icons.Edit />
             </Mui.Button>
           </div>
-          <div className="text-sm text-gray-500">{object.address}</div>
-          <div className="text-sm text-gray-500">{object.illuminated}</div>
+          <div className="flex justify-between gap-2">
+            <div className="text-sm text-gray-500">{`${object.address}, ${object.region}`}</div>
+
+            <div className="">
+              <Button
+                color="info"
+                target="_blank"
+                href={mapFunctions.getStreetviewUrl({
+                  latitude: object.latitude,
+                  longitude: object.longitude,
+                })}
+              >
+                Atidaryti Streetview <Icons.Launch />
+              </Button>
+            </div>
+          </div>
           <div className="mt-4 flex flex-col gap-4">
             {object.planes.map((plane) => (
               <>

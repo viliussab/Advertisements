@@ -1,24 +1,18 @@
 import React from 'react';
 import Area from '../../../../api/responses/type.Area';
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-  InfoWindowF,
-} from '@react-google-maps/api';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import Mui from '../../../../config/imports/Mui';
-import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOverview';
 import mapFunctions from '../../../../functions/mapFunctions';
-import { getTableContainerUtilityClass } from '@mui/material';
 import ObjectMapMarker from './ObjectMapMarker';
 import Icons from '../../../../config/imports/Icons';
+import { AdvertObjectOfArea } from '../../../../api/responses/type.AreaDetailed';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 
 type Props = {
   area: Area | undefined;
   className: string;
-  objects: AdvertObjectOverview[];
+  objects: AdvertObjectOfArea[];
   onObjectSelect: (id: string) => void;
 };
 
@@ -48,7 +42,6 @@ function ObjectMapRender(props: Props) {
   });
 
   const onLoad = (map: google.maps.Map) => {
-    console.log('reloaded');
     mapRef.current = map;
   };
 
@@ -63,7 +56,7 @@ function ObjectMapRender(props: Props) {
   return (
     <GoogleMap
       onLoad={onLoad}
-      zoom={mapFunctions.getBoundsZoomLevel(boundaries)}
+      zoom={mapFunctions.getBoundsZoomLevel(boundaries) + 1.2}
       mapContainerClassName={className}
       center={mapFunctions.getCenter(area)}
     >

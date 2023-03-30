@@ -1,6 +1,7 @@
 import React from 'react';
 import { CampaignCreateUpdate } from '../../../api/commands/schema.createUpdateCampaign';
 import Customer from '../../../api/responses/type.Customer';
+import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
 import RHF from '../../../config/imports/RHF';
 import optionsFunctions from '../../../functions/optionsFunctions';
@@ -40,15 +41,18 @@ function CampaignCreateUpdateFields(props: Props) {
               keySelector: (customer) => customer.id,
             })}
           />
+
           <FormInput.DatePicker
             form={form}
             label="Data nuo"
             fieldName="periodStart"
+            includeWeekNumber
             onChangeSuccess={(value) => form.setValue('periodEnd', value)}
           />
           <FormInput.DatePicker
             form={form}
             label="Data iki"
+            includeWeekNumber
             fieldName="periodEnd"
             datePickerProps={{
               minDate: periodStart,
@@ -70,6 +74,25 @@ function CampaignCreateUpdateFields(props: Props) {
             }}
           />
           <FormInput.TextField
+            label="Kaina"
+            form={form}
+            fieldName="price"
+            muiProps={{
+              required: true,
+              type: 'number',
+              InputProps: {
+                endAdornment: (
+                  <Mui.InputAdornment position="end">
+                    <Icons.Euro />
+                  </Mui.InputAdornment>
+                ),
+              },
+            }}
+            rules={{
+              valueAsNumber: true,
+            }}
+          />
+          <FormInput.TextField
             label="Taikoma nuolaida"
             form={form}
             fieldName="discountPercent"
@@ -78,7 +101,9 @@ function CampaignCreateUpdateFields(props: Props) {
               type: 'number',
               InputProps: {
                 endAdornment: (
-                  <Mui.InputAdornment position="end">%</Mui.InputAdornment>
+                  <Mui.InputAdornment position="end">
+                    <Icons.Percent />
+                  </Mui.InputAdornment>
                 ),
               },
             }}
@@ -86,6 +111,7 @@ function CampaignCreateUpdateFields(props: Props) {
               valueAsNumber: true,
             }}
           />
+
           <FormInput.Checkbox
             fieldName="requiresPrinting"
             form={form}
