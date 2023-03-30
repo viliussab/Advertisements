@@ -56,15 +56,16 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
         </div>
         <div className="flex justify-center">
           <table className="border-collapse border">
-            <tr className="w-full text-center">
-              <td
-                className="border border-black px-2 text-center"
-                colSpan="100%"
-              >
-                Užsakymo informacija
-              </td>
-            </tr>
             <tbody>
+              <tr className="w-full text-center">
+                <td
+                  className="border border-black px-2 text-center"
+                  colSpan="100%"
+                >
+                  Užsakymo informacija
+                </td>
+              </tr>
+
               <tr>
                 <th className="border border-black px-2 text-center">
                   Produktas
@@ -218,14 +219,6 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
       </div>
     </>
   );
-};
-
-type TrProps = {
-  children: React.ReactNode;
-};
-
-const Tr = ({ children }: TrProps) => {
-  return <tr className="border border-black">{children}</tr>;
 };
 
 export default CampaignOrderDocumentPreview;
