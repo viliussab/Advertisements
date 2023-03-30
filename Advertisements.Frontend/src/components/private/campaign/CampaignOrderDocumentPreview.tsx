@@ -1,7 +1,9 @@
 import React from 'react';
 import { CampaignCreateUpdate } from '../../../api/commands/schema.createUpdateCampaign';
 import RHF from '../../../config/imports/RHF';
-import campaignService from '../../../services/campaignService';
+import campaignService, {
+  getEstimateReturn,
+} from '../../../services/campaignService';
 import Customer from '../../../api/responses/type.Customer';
 import constants from '../../../config/constants';
 
@@ -14,7 +16,7 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
   const campaign = form.watch();
   const customer = customers.find((x) => x.id === campaign.customerId);
 
-  const estimate = campaignService.getEstimateProps(campaign);
+  const estimate = campaignService.getEstimate(campaign);
 
   const renderCustomerRow = (header: string, content?: string) => {
     return (
@@ -97,22 +99,22 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                   {campaign.planeAmount}
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.weekCount}
+                  {estimate?.weekCount}
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.plane.price}€
+                  {estimate?.plane.price}€
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.plane.totalPrice}€
+                  {estimate?.plane.totalPrice}€
                 </td>
                 <td className="border border-black px-2 text-center">
                   {campaign.discountPercent}%
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.plane.priceDiscounted}€
+                  {estimate?.plane.priceDiscounted}€
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.plane.totalDiscounted}€
+                  {estimate?.plane.totalDiscounted}€
                 </td>
               </tr>
               {campaign.requiresPrinting && (
@@ -121,26 +123,26 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                     Spauda
                   </td>
                   <td className="border border-black px-2 text-center">
-                    {estimate.press.count}
+                    {estimate?.press.count}
                     <sup>2</sup>
                   </td>
                   <td className="border border-black px-2 text-center">-</td>
                   <td className="border border-black px-2 text-center">
-                    {estimate.press.unitPrice}€
+                    {estimate?.press.unitPrice}€
                   </td>
                   <td className="border border-black px-2 text-center">
-                    {estimate.press.totalPrice}€
+                    {estimate?.press.totalPrice}€
                   </td>
                   <td className="border border-black px-2 text-center">-</td>
                   <td className="border border-black px-2 text-center">
-                    {estimate.press.unitPrice}€
+                    {estimate?.press.unitPrice}€
                   </td>
                   <td className="border border-black px-2 text-center">
-                    {estimate.press.totalPrice}€
+                    {estimate?.press.totalPrice}€
                   </td>
                 </tr>
               )}
-              {estimate.unplanned.isUnplanned && (
+              {estimate?.unplanned.isUnplanned && (
                 <tr>
                   <td className="border border-black px-2 text-center">
                     Neplaninis kabinimas
@@ -182,7 +184,7 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                   Suma be PVM
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.totalNoVat}€
+                  {estimate?.totalNoVat}€
                 </td>
               </tr>
               <tr>
@@ -198,7 +200,7 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                   PVM 21%
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.totalOnlyVat}€
+                  {estimate?.totalOnlyVat}€
                 </td>
               </tr>
               <tr>
@@ -207,7 +209,7 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                   Suma su PVM
                 </td>
                 <td className="border border-black px-2 text-center">
-                  {estimate.totalInclVat}€
+                  {estimate?.totalInclVat}€
                 </td>
               </tr>
             </tbody>

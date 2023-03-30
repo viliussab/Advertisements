@@ -76,7 +76,7 @@ function CampaignCreateUpdateFields(props: Props) {
           <FormInput.TextField
             label="Kaina"
             form={form}
-            fieldName="price"
+            fieldName="pricePerPlane"
             muiProps={{
               required: true,
               type: 'number',

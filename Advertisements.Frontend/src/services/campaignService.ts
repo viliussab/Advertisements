@@ -3,8 +3,10 @@ import constants from '../config/constants';
 import dateFns from '../config/imports/dateFns';
 import dateFunctions from '../functions/dateFunctions';
 
-const getEstimateProps = (campaign: CampaignCreateUpdate) => {
-  const planePrice = campaign.pricePerPlane || constants.initial_plane_price;
+const getEstimate = (campaign: CampaignCreateUpdate) => {
+  const planePrice =
+    parseInt(campaign.pricePerPlane.toString(), 10) ||
+    constants.initial_plane_price;
 
   const weekPeriod =
     !!campaign.periodStart && !!campaign.periodEnd
@@ -41,7 +43,8 @@ const getEstimateProps = (campaign: CampaignCreateUpdate) => {
   const planesPriceDiscounted =
     planePriceDiscounted * weekCount * (campaign.planeAmount || 0);
 
-  const totalPriceNoVat = pressUnitsPrice + unplannedPrice + planesPrice;
+  const totalPriceNoVat =
+    planesPriceDiscounted + unplannedPrice + pressUnitsPrice;
   const totalPriceOnlyVat = totalPriceNoVat * constants.vat;
 
   const totalPriceVat = totalPriceNoVat * (1 + constants.vat);
@@ -72,7 +75,7 @@ const getEstimateProps = (campaign: CampaignCreateUpdate) => {
 };
 
 const campaignService = {
-  getEstimateProps,
+  getEstimate: getEstimate,
 };
 
 export default campaignService;

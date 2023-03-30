@@ -31,7 +31,7 @@ function CampaignCreatePage() {
     defaultValues: {
       periodStart: nextWeekStart,
       periodEnd: nextWeekStart,
-      price: constants.initial_plane_price,
+      pricePerPlane: constants.initial_plane_price,
     },
   });
 
