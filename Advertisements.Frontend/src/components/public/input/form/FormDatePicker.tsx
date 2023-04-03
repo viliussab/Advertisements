@@ -38,13 +38,14 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
       <RHF.Controller
         name={fieldName}
         control={form.control}
-        render={({ field: { onChange, ...restField } }) => (
+        render={({ field: { onChange, ref, ...restField } }) => (
           <div className="relative flex items-center">
             <DatePicker
               displayWeekNumber
               {...datePickerProps}
               label={label}
               onChange={(value) => {
+                console.log('newvalue', value);
                 onChange(value);
                 if (onChangeSuccess && value) {
                   onChangeSuccess(value);

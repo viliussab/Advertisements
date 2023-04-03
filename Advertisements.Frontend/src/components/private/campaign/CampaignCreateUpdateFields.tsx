@@ -13,12 +13,13 @@ type Props = {
   customers: Customer[];
   isSubmitting: boolean;
   submitText: string;
+  update?: boolean;
 };
 
 function CampaignCreateUpdateFields(props: Props) {
-  const { form, customers, isSubmitting, submitText } = props;
+  const { form, customers, isSubmitting, submitText, update } = props;
 
-  const [start] = form.watch(['start']);
+  const [start, end] = form.watch(['start', 'end']);
 
   return (
     <>
@@ -42,27 +43,31 @@ function CampaignCreateUpdateFields(props: Props) {
               keySelector: (customer) => customer.id,
             })}
           />
+          {!start && update ? null : (
+            <FormInput.DatePicker
+              form={form}
+              label="Data nuo"
+              fieldName="start"
+              includeWeekNumber="regular"
+              onChangeSuccess={(value) =>
+                form.setValue('end', dateFns.addDays(value, 7))
+              }
+            />
+          )}
+          {!end && update ? null : (
+            <FormInput.DatePicker
+              form={form}
+              label="Data iki"
+              includeWeekNumber="end"
+              fieldName="end"
+              datePickerProps={{
+                minDate: dateFns.addDays(start, 7),
+                disabled: !start,
+                shouldDisableDate: (date) => start.getDay() !== date.getDay(),
+              }}
+            />
+          )}
 
-          <FormInput.DatePicker
-            form={form}
-            label="Data nuo"
-            fieldName="start"
-            includeWeekNumber="regular"
-            onChangeSuccess={(value) =>
-              form.setValue('end', dateFns.addDays(value, 7))
-            }
-          />
-          <FormInput.DatePicker
-            form={form}
-            label="Data iki"
-            includeWeekNumber="end"
-            fieldName="end"
-            datePickerProps={{
-              minDate: dateFns.addDays(start, 7),
-              disabled: !start,
-              shouldDisableDate: (date) => start.getDay() !== date.getDay(),
-            }}
-          />
           <FormInput.TextField
             label="Plokštumų kiekis"
             form={form}

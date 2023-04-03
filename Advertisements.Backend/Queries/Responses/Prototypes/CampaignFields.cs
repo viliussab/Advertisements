@@ -19,4 +19,6 @@ public class CampaignFields
     public bool RequiresPrinting { get; set; }
 
     public int DiscountPercent { get; set; }
+    
+    public DateTime ModificationDate { get; set; }
 }

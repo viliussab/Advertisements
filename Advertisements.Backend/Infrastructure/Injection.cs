@@ -1,5 +1,6 @@
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
+using Core.Functions;
 using Core.Interfaces;
 using Core.Models;
 using FluentValidation;
@@ -26,8 +27,13 @@ public static class Injection
 	}
 	
 	private static void AddInfrastructureInterfaces(this IServiceCollection services)
-	{
+	{ 
+		TypeAdapterConfig.GlobalSettings
+			.NewConfig<Campaign, CampaignWithPriceDetails>()
+			.PreserveReference(true);
+			
 		TypeAdapterConfig.GlobalSettings.Scan(typeof(StorageFileMapProfile).Assembly);
+
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IDateProvider, DateProvider>();
 	}

@@ -4,7 +4,8 @@ import ObjectsListPage from '../pages/advert/objectListPage/ObjectsListPage';
 import ObjectMapPage from '../pages/advert/objectMapPage/ObjectMapPage';
 import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage';
 import CampaignCreatePage from '../pages/campaigns/campaignCreatePage/CampaignCreatePage';
-import CampaignsViewPage from '../pages/campaigns/campaignsViewPage/CampaignsViewPage';
+import CampaignsListPage from '../pages/campaigns/campaignsListPage/CampaignsListPage';
+import CampaignUpdatePage from '../pages/campaigns/campaignUpdatePage/CampaignUpdatePage';
 import website_paths from './website_paths';
 
 export type Route = {
@@ -18,7 +19,7 @@ export type Route = {
 const routes: Array<Route> = [
   {
     path: website_paths.campaigns.main,
-    Page: CampaignsViewPage,
+    Page: CampaignsListPage,
     layout: {
       title: 'Kampanijų sąrašas',
     },
@@ -56,6 +57,13 @@ const routes: Array<Route> = [
     Page: CampaignCreatePage,
     layout: {
       title: 'Kurti reklamos pasiūlymą',
+    },
+  },
+  {
+    path: website_paths.campaigns.edit,
+    Page: CampaignUpdatePage,
+    layout: {
+      title: 'Keisti reklamos pasiūlymą',
     },
   },
 ];

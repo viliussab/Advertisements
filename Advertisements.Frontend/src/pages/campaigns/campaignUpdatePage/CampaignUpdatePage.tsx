@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import campaignMutations from '../../../api/calls/campaignMutations';
 import campaignQueries from '../../../api/calls/campaignQueries';
@@ -19,27 +19,31 @@ import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
 import dateFunctions from '../../../functions/dateFunctions';
 
-function CampaignCreatePage() {
+function CampaignUpdatePage() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const nextWeekStart = dateFns.addWeeks(
-    dateFunctions.getCurrentCampaignDay(),
-    1,
-  );
+  const campaignQuery = useQuery({
+    queryKey: campaignQueries.campaign.key,
+    queryFn: () => campaignQueries.campaign.fn(id as string),
+  });
+
+  const campaign = campaignQuery.data;
 
   const form = useForm<CampaignCreateUpdate>({
     resolver: zodResolver(CampaignCreateUpdateSchema),
-    defaultValues: {
-      start: nextWeekStart,
-      end: dateFns.addWeeks(nextWeekStart, 1),
-      pricePerPlane: constants.initial_plane_price,
-      discountPercent: 0,
-      planeAmount: 0,
-      requiresPrinting: false,
-    },
+    values: campaign
+      ? {
+          ...campaign,
+          start: new Date(campaign.start),
+          end: new Date(campaign.end),
+        }
+      : undefined,
   });
 
-  const onSuccess = () => {
+  const start = form.watch('start');
+
+  const onCreateSuccess = () => {
     toast.success('Kampanija sukurta');
     navigate(website_paths.campaigns.main);
   };
@@ -47,7 +51,7 @@ function CampaignCreatePage() {
   const campaignCreateCommand = useMutation({
     mutationKey: campaignMutations.campaignCreate.key,
     mutationFn: campaignMutations.campaignCreate.fn,
-    onSuccess,
+    onSuccess: onCreateSuccess,
   });
 
   const customersQuery = useQuery({
@@ -55,7 +59,7 @@ function CampaignCreatePage() {
     queryFn: campaignQueries.customers.fn,
   });
 
-  if (customersQuery.isLoading) {
+  if (customersQuery.isLoading && campaignQuery.isLoading) {
     return <>Loading...</>;
   }
 
@@ -68,6 +72,7 @@ function CampaignCreatePage() {
               <div className="flex justify-center">
                 <div className="w-64 space-y-3 pt-0">
                   <CampaignCreateUpdateFields
+                    update
                     form={form}
                     customers={customersQuery.data || []}
                     isSubmitting={campaignCreateCommand.isLoading}
@@ -78,10 +83,12 @@ function CampaignCreatePage() {
             </Form>
           </div>
           <div>
-            <CampaignOrderDocumentPreview
-              form={form}
-              customers={customersQuery.data || []}
-            />
+            {start && (
+              <CampaignOrderDocumentPreview
+                form={form}
+                customers={customersQuery.data || []}
+              />
+            )}
           </div>
         </div>
       </Mui.Paper>
@@ -89,4 +96,4 @@ function CampaignCreatePage() {
   );
 }
 
-export default CampaignCreatePage;
+export default CampaignUpdatePage;

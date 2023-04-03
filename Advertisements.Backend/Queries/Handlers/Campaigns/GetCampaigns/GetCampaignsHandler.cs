@@ -2,6 +2,7 @@ using Core.Database;
 using Core.Functions;
 using Core.Models;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Queries.Extensions;
 using Queries.Prototypes;
 using Queries.Responses.Prototypes;
@@ -21,6 +22,8 @@ public class GetCampaignsHandler : BasedHandler<GetCampaignsQuery, PageResponse<
     {
         var campaignPage = await _context
             .Set<Campaign>()
+            .OrderBy(x => x.ModificationDate)
+            .Include(x => x.Customer)
             .ToPageAsync(request, cancellationToken);
 
         var dtoItems = campaignPage

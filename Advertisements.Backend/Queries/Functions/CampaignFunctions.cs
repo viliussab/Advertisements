@@ -2,6 +2,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using Core.Models;
 using Mapster;
+using Queries.Responses.Prototypes;
 
 namespace Core.Functions;
 
@@ -21,9 +22,11 @@ public class CampaignPress
     public double TotalPrice { get; set; }
 }
 
-public class CampaignWithPriceDetails : Campaign 
+public class CampaignWithPriceDetails : CampaignFields 
 {
     public int WeekCount { get; set; }
+    
+    public CustomerFields Customer { get; set; }
     
     public string WeekPeriod { get; set; }
     
@@ -46,7 +49,7 @@ public class CampaignWithPriceDetails : Campaign
 
 public static class CampaignFunctions
 {
-    private static int CalculateWeekCount(Campaign campaign)
+    private static int CalculateWeekCount(CampaignFields campaign)
     {
         var timeDifference = campaign.End - campaign.Start;
 

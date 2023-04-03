@@ -1,11 +1,8 @@
 import React from 'react';
 import { CampaignCreateUpdate } from '../../../api/commands/schema.createUpdateCampaign';
 import RHF from '../../../config/imports/RHF';
-import campaignService, {
-  getEstimateReturn,
-} from '../../../services/campaignService';
+import campaignService from '../../../services/campaignService';
 import Customer from '../../../api/responses/type.Customer';
-import constants from '../../../config/constants';
 
 type Props = {
   form: RHF.UseFormReturn<CampaignCreateUpdate>;
@@ -15,7 +12,6 @@ type Props = {
 const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
   const campaign = form.watch();
   const customer = customers.find((x) => x.id === campaign.customerId);
-
   const estimate = campaignService.getEstimate(campaign);
 
   const renderCustomerRow = (header: string, content?: string) => {
@@ -65,7 +61,6 @@ const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
                   Užsakymo informacija
                 </td>
               </tr>
-
               <tr>
                 <th className="border border-black px-2 text-center">
                   Produktas
