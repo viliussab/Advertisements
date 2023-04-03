@@ -44,7 +44,7 @@ function Navbar({ title }: Props) {
           routes={[
             {
               path: website_paths.campaigns.create,
-              title: 'Kurti kampaniją',
+              title: 'Kurti reklamos pasiūlymą',
               Icon: Icons.Add,
             },
             {

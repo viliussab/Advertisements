@@ -9,16 +9,13 @@ const getEstimate = (campaign: CampaignCreateUpdate) => {
     constants.initial_plane_price;
 
   const weekPeriod =
-    !!campaign.periodStart && !!campaign.periodEnd
-      ? dateFunctions.formatWeekPeriodShort(
-          campaign.periodStart,
-          campaign.periodEnd,
-        )
+    !!campaign.start && !!campaign.end
+      ? dateFunctions.formatWeekPeriodShort(campaign.start, campaign.end)
       : '-';
 
   const weekCount =
-    !!campaign.periodStart && !!campaign.periodEnd
-      ? dateFns.differenceInWeeks(campaign.periodEnd, campaign.periodStart) + 1
+    !!campaign.start && !!campaign.end
+      ? dateFns.differenceInWeeks(campaign.end, campaign.start)
       : 0;
 
   const planePriceDiscounted = campaign.discountPercent
@@ -33,8 +30,7 @@ const getEstimate = (campaign: CampaignCreateUpdate) => {
   const pressUnitsPrice = pressUnits * constants.press_price;
 
   const unplannedPrice =
-    !!campaign.planeAmount &&
-    !dateFunctions.isCampaignWeekday(campaign.periodStart)
+    !!campaign.planeAmount && !dateFunctions.isCampaignWeekday(campaign.start)
       ? constants.unplanned_plane_fee * campaign.planeAmount
       : 0;
 
@@ -59,7 +55,7 @@ const getEstimate = (campaign: CampaignCreateUpdate) => {
       totalDiscounted: planesPriceDiscounted.toFixed(2),
     },
     unplanned: {
-      isUnplanned: !dateFunctions.isCampaignWeekday(campaign.periodStart),
+      isUnplanned: !dateFunctions.isCampaignWeekday(campaign.start),
       totalPrice: unplannedPrice.toFixed(2),
       price: constants.unplanned_plane_fee.toFixed(2),
     },

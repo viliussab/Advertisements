@@ -20,10 +20,12 @@ public class Campaign : IModelMetadata
     public DateTime Start { get; set; }
 
     public DateTime End { get; set; }
-
-    public int SideCount { get; set; }
     
-    public bool CustomerProvidesPrinting { get; set; }
+    public double PricePerPlane { get; set; }
+
+    public int PlaneAmount { get; set; }
+    
+    public bool RequiresPrinting { get; set; }
 
     [Range(0, 100)]
     public int DiscountPercent { get; set; }

@@ -55,7 +55,7 @@ const routes: Array<Route> = [
     path: website_paths.campaigns.create,
     Page: CampaignCreatePage,
     layout: {
-      title: 'Kurti kompaniją',
+      title: 'Kurti reklamos pasiūlymą',
     },
   },
 ];

@@ -12,6 +12,7 @@ import {
 } from '../../../api/commands/schema.createUpdateCampaign';
 import CampaignCreateUpdateFields from '../../../components/private/campaign/CampaignCreateUpdateFields';
 import CampaignOrderDocumentPreview from '../../../components/private/campaign/CampaignOrderDocumentPreview';
+import Form from '../../../components/public/Form';
 import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
 import Mui from '../../../config/imports/Mui';
@@ -29,9 +30,11 @@ function CampaignCreatePage() {
   const form = useForm<CampaignCreateUpdate>({
     resolver: zodResolver(CampaignCreateUpdateSchema),
     defaultValues: {
-      periodStart: nextWeekStart,
-      periodEnd: nextWeekStart,
+      start: nextWeekStart,
+      end: dateFns.addWeeks(nextWeekStart, 1),
       pricePerPlane: constants.initial_plane_price,
+      discountPercent: 0,
+      requiresPrinting: false,
     },
   });
 
@@ -45,10 +48,6 @@ function CampaignCreatePage() {
     mutationFn: campaignMutations.campaignCreate.fn,
     onSuccess,
   });
-
-  const onSubmit = (values: CampaignCreateUpdate) => {
-    campaignCreateCommand.mutateAsync(values);
-  };
 
   const customersQuery = useQuery({
     queryKey: campaignQueries.customers.key,
@@ -64,22 +63,18 @@ function CampaignCreatePage() {
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
         <div className="flex gap-4">
           <div>
-            <form
-              onSubmit={(e) => {
-                form.handleSubmit(onSubmit)(e);
-              }}
-            >
+            <Form form={form} onSubmit={campaignCreateCommand.mutateAsync}>
               <div className="flex justify-center">
                 <div className="w-64 space-y-3 pt-0">
                   <CampaignCreateUpdateFields
                     form={form}
                     customers={customersQuery.data || []}
-                    isSubmitting={false}
+                    isSubmitting={campaignCreateCommand.isLoading}
                     submitText="Kurti naują"
                   />
                 </div>
               </div>
-            </form>
+            </Form>
           </div>
           <div>
             <CampaignOrderDocumentPreview

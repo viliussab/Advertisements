@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Queries.Handlers.Campaigns.GetCampaigns;
 using Queries.Handlers.Campaigns.GetCustomers;
 using Queries.Responses.Prototypes;
 
@@ -20,6 +21,15 @@ public class CampaignQueriesController : BasedController
     public async Task<IActionResult> GetPlanesForCampaign([FromRoute] Guid id)
     {
         return Ok("yes");
+    }
+    
+    [HttpGet("campaign")]
+    [ProducesResponseType(typeof(PageResponse<GetCampaignsCampaign>), 200)]
+    public async Task<IActionResult> GetCampaigns([FromQuery] GetCampaignsQuery query)
+    {
+        var customers = await Mediator.Send(query);
+        
+        return Ok(customers);
     }
     
     [HttpGet("customer")]

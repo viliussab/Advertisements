@@ -13,7 +13,7 @@ type Props<T extends RHF.FieldValues> = {
   fieldName: RHF.Path<T>;
   form: RHF.UseFormReturn<T>;
   label: string;
-  includeWeekNumber?: boolean;
+  includeWeekNumber?: 'regular' | 'end';
   onChangeSuccess?: (value: Date) => void;
   datePickerProps?: Omit<
     DatePickerProps<Date>,
@@ -59,7 +59,7 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
                 },
               }}
             />
-            {includeWeekNumber && (
+            {includeWeekNumber && restField.value && (
               <div className="absolute right-10">
                 <Mui.Chip
                   label={dateFunctions.formatWeekShort(restField.value)}

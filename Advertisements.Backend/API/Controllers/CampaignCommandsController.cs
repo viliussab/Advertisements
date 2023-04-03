@@ -1,3 +1,5 @@
+using Commands.Handlers.Campaigns.CreateCampaign;
+using Commands.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -5,11 +7,12 @@ namespace API.Controllers;
 public class CampaignCommandsController : BasedController
 {
     [HttpPost("campaign")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> CreateCampaign()
+    [ProducesResponseType(typeof(GuidSuccess), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignCommand command)
     {
-        return Ok("yes");
+        var result = await Mediator.Send(command);
+        
+        return Ok(result);
     }
     
     [HttpPut("campaign/{id:guid}")]

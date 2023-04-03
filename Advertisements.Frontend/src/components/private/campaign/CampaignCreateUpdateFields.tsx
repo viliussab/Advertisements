@@ -6,6 +6,7 @@ import Mui from '../../../config/imports/Mui';
 import RHF from '../../../config/imports/RHF';
 import optionsFunctions from '../../../functions/optionsFunctions';
 import FormInput from '../../public/input/form';
+import dateFns from './../../../config/imports/dateFns';
 
 type Props = {
   form: RHF.UseFormReturn<CampaignCreateUpdate>;
@@ -17,7 +18,7 @@ type Props = {
 function CampaignCreateUpdateFields(props: Props) {
   const { form, customers, isSubmitting, submitText } = props;
 
-  const [periodStart] = form.watch(['periodStart']);
+  const [start] = form.watch(['start']);
 
   return (
     <>
@@ -45,20 +46,21 @@ function CampaignCreateUpdateFields(props: Props) {
           <FormInput.DatePicker
             form={form}
             label="Data nuo"
-            fieldName="periodStart"
-            includeWeekNumber
-            onChangeSuccess={(value) => form.setValue('periodEnd', value)}
+            fieldName="start"
+            includeWeekNumber="regular"
+            onChangeSuccess={(value) =>
+              form.setValue('end', dateFns.addDays(value, 7))
+            }
           />
           <FormInput.DatePicker
             form={form}
             label="Data iki"
-            includeWeekNumber
-            fieldName="periodEnd"
+            includeWeekNumber="end"
+            fieldName="end"
             datePickerProps={{
-              minDate: periodStart,
-              disabled: !periodStart,
-              shouldDisableDate: (date) =>
-                periodStart.getDay() !== date.getDay(),
+              minDate: dateFns.addDays(start, 7),
+              disabled: !start,
+              shouldDisableDate: (date) => start.getDay() !== date.getDay(),
             }}
           />
           <FormInput.TextField
@@ -111,7 +113,6 @@ function CampaignCreateUpdateFields(props: Props) {
               valueAsNumber: true,
             }}
           />
-
           <FormInput.Checkbox
             fieldName="requiresPrinting"
             form={form}
