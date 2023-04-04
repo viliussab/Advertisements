@@ -11,13 +11,11 @@ import dateFns from './../../../config/imports/dateFns';
 type Props = {
   form: RHF.UseFormReturn<CampaignCreateUpdate>;
   customers: Customer[];
-  isSubmitting: boolean;
-  submitText: string;
   update?: boolean;
 };
 
 function CampaignCreateUpdateFields(props: Props) {
-  const { form, customers, isSubmitting, submitText, update } = props;
+  const { form, customers, update } = props;
 
   const [start, end] = form.watch(['start', 'end']);
 
@@ -125,9 +123,6 @@ function CampaignCreateUpdateFields(props: Props) {
           />
         </div>
       </div>
-      <FormInput.SubmitButton isSubmitting={isSubmitting}>
-        {submitText}
-      </FormInput.SubmitButton>
     </>
   );
 }

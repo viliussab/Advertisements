@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../../../api/calls/api';
 import campaignMutations from '../../../api/calls/campaignMutations';
 import campaignQueries from '../../../api/calls/campaignQueries';
 import {
@@ -13,8 +14,10 @@ import {
 import CampaignCreateUpdateFields from '../../../components/private/campaign/CampaignCreateUpdateFields';
 import CampaignOrderDocumentPreview from '../../../components/private/campaign/CampaignOrderDocumentPreview';
 import Form from '../../../components/public/Form';
+import FormInput from '../../../components/public/input/form';
 import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
+import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
 import dateFunctions from '../../../functions/dateFunctions';
@@ -48,9 +51,9 @@ function CampaignUpdatePage() {
     navigate(website_paths.campaigns.main);
   };
 
-  const campaignCreateCommand = useMutation({
-    mutationKey: campaignMutations.campaignCreate.key,
-    mutationFn: campaignMutations.campaignCreate.fn,
+  const campaignUpdateCommand = useMutation({
+    mutationKey: campaignMutations.campaignUpdate.key,
+    mutationFn: campaignMutations.campaignUpdate.fn,
     onSuccess: onCreateSuccess,
   });
 
@@ -66,31 +69,53 @@ function CampaignUpdatePage() {
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
-        <div className="flex gap-4">
-          <div>
-            <Form form={form} onSubmit={campaignCreateCommand.mutateAsync}>
+        <Form
+          form={form}
+          onSubmit={(values) => {
+            campaignUpdateCommand.mutateAsync({
+              id: id as string,
+              values,
+            });
+          }}
+        >
+          <div className="flex gap-4">
+            <div>
               <div className="flex justify-center">
                 <div className="w-64 space-y-3 pt-0">
                   <CampaignCreateUpdateFields
                     update
                     form={form}
                     customers={customersQuery.data || []}
-                    isSubmitting={campaignCreateCommand.isLoading}
-                    submitText="Kurti naują"
                   />
                 </div>
               </div>
-            </Form>
+            </div>
+            <div>
+              {start && (
+                <CampaignOrderDocumentPreview
+                  form={form}
+                  customers={customersQuery.data || []}
+                />
+              )}
+            </div>
           </div>
-          <div>
-            {start && (
-              <CampaignOrderDocumentPreview
-                form={form}
-                customers={customersQuery.data || []}
-              />
-            )}
+          <div className="mt-4 flex justify-between">
+            <FormInput.SubmitButton
+              isSubmitting={campaignUpdateCommand.isLoading}
+            >
+              Atnaujinti
+            </FormInput.SubmitButton>
+
+            <Mui.Button
+              color="info"
+              variant="contained"
+              href={`${api.endpoints.campaign.download_campaign_offer}/${id}`}
+            >
+              Atsisiųsti reklamos pasiūlymą
+              <Icons.FileOpen sx={{ ml: 1 }} />
+            </Mui.Button>
           </div>
-        </div>
+        </Form>
       </Mui.Paper>
     </div>
   );

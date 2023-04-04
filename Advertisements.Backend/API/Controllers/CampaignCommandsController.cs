@@ -18,9 +18,12 @@ public class CampaignCommandsController : BasedController
     [HttpPut("campaign/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateCampaign([FromRoute] Guid id)
+    public async Task<IActionResult> UpdateCampaign([FromRoute] Guid id, [FromBody] UpdateCampaignCommand command)
     {
-        return Ok("yes");
+        command.Id = id;
+        var response = await Mediator.Send(command);
+        
+        return Ok(response);
     }
     
     [HttpPatch("campaign/{id:guid}/planes")]

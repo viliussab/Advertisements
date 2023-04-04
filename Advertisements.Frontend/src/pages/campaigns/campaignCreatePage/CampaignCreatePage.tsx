@@ -13,6 +13,7 @@ import {
 import CampaignCreateUpdateFields from '../../../components/private/campaign/CampaignCreateUpdateFields';
 import CampaignOrderDocumentPreview from '../../../components/private/campaign/CampaignOrderDocumentPreview';
 import Form from '../../../components/public/Form';
+import FormInput from '../../../components/public/input/form';
 import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
 import Mui from '../../../config/imports/Mui';
@@ -62,28 +63,33 @@ function CampaignCreatePage() {
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50 p-4">
-        <div className="flex gap-4">
-          <div>
-            <Form form={form} onSubmit={campaignCreateCommand.mutateAsync}>
+        <Form form={form} onSubmit={campaignCreateCommand.mutateAsync}>
+          <div className="flex gap-4">
+            <div>
               <div className="flex justify-center">
                 <div className="w-64 space-y-3 pt-0">
                   <CampaignCreateUpdateFields
                     form={form}
                     customers={customersQuery.data || []}
-                    isSubmitting={campaignCreateCommand.isLoading}
-                    submitText="Kurti naują"
                   />
                 </div>
               </div>
-            </Form>
+            </div>
+            <div>
+              <CampaignOrderDocumentPreview
+                form={form}
+                customers={customersQuery.data || []}
+              />
+            </div>
           </div>
-          <div>
-            <CampaignOrderDocumentPreview
-              form={form}
-              customers={customersQuery.data || []}
-            />
+          <div className="mt-4 flex justify-between">
+            <FormInput.SubmitButton
+              isSubmitting={campaignCreateCommand.isLoading}
+            >
+              Atnaujinti
+            </FormInput.SubmitButton>
           </div>
-        </div>
+        </Form>
       </Mui.Paper>
     </div>
   );

@@ -58,7 +58,7 @@ function CampaignsListPage() {
           )}
         </>
       ),
-      key: 'campaignName',
+      key: 'period',
     },
     {
       title: 'Savaičių kiekis',

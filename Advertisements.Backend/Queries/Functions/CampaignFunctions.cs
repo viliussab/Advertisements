@@ -65,7 +65,7 @@ public static class CampaignFunctions
                        $"{DateFunctions.GetWeekNumber(campaign.Start)}" +
                        $"-" +
                        $"{DateFunctions.GetWeekNumber(campaign.End)}";
-        c.PlaneUnitPriceDiscounted = c.PricePerPlane * (1 - c.DiscountPercent / 100);
+        c.PlaneUnitPriceDiscounted = c.PricePerPlane * (1.0 - c.DiscountPercent / 100.0);
         c.PlanesTotalPrice = c.PricePerPlane * c.WeekCount * c.PlaneAmount;
         c.PlanesTotalPriceDiscounted = c.PlaneUnitPriceDiscounted * c.WeekCount * c.PlaneAmount;
 
@@ -74,8 +74,8 @@ public static class CampaignFunctions
             : BuildUnplanned(c);
         
         c.Press = campaign.RequiresPrinting
-            ? null
-            : BuildPress(c);
+            ? BuildPress(c)
+            : null;
 
         c.TotalNoVat = c.PlanesTotalPriceDiscounted
                        + (c.Press?.TotalPrice ?? 0)
@@ -92,7 +92,7 @@ public static class CampaignFunctions
         {
             UnitCount = (int)(campaign.PlaneAmount * Constants.PressPrintRatio)
         };
-        press.TotalPrice = press.UnitCount * campaign.PlaneAmount;
+        press.TotalPrice = press.UnitCount * press.UnitPrice;
 
         return press;
     }
@@ -106,5 +106,4 @@ public static class CampaignFunctions
 
         return press;
     }
-    
 }

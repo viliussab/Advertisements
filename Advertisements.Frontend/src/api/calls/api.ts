@@ -46,6 +46,9 @@ const endpoints = {
       customer: `${apiUrl}/customer`,
     },
   },
+  campaign: {
+    download_campaign_offer: `${apiUrl}/campaign/downloadOffer`,
+  },
 };
 
 const api = {
