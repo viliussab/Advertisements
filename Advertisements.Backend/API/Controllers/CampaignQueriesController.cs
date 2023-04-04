@@ -1,5 +1,6 @@
 using Core.Errors;
 using Microsoft.AspNetCore.Mvc;
+using Queries.Handlers.Campaigns.BuildCampaignOffer;
 using Queries.Handlers.Campaigns.GetCampaignById;
 using Queries.Handlers.Campaigns.GetCampaigns;
 using Queries.Handlers.Campaigns.GetCustomers;
@@ -38,9 +39,9 @@ public class CampaignQueriesController : BasedController
     [ProducesResponseType(typeof(PageResponse<GetCampaignsCampaign>), 200)]
     public async Task<IActionResult> GetCampaigns([FromQuery] GetCampaignsQuery query)
     {
-        var customers = await Mediator.Send(query);
+        var campaignsPage = await Mediator.Send(query);
         
-        return Ok(customers);
+        return Ok(campaignsPage);
     }
     
     [HttpGet("customer")]
@@ -53,11 +54,13 @@ public class CampaignQueriesController : BasedController
     }
     
     [HttpGet("campaign/downloadOffer/{id:guid}")]
-    [ProducesResponseType(typeof(PageResponse<GetCampaignsCampaign>), 200)]
     public async Task<IActionResult> BuildCampaignOffer([FromRoute] Guid id)
     {
-        var customers = await Mediator.Send(query);
+        var file = await Mediator.Send(new BuildCampaignOfferQuery
+        {
+            Id = id,
+        });
         
-        return Ok(customers);
+        return File(file);
     }
 }

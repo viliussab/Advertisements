@@ -6,8 +6,8 @@ namespace Core.Interfaces;
 public interface IJwtService
 {
     UserRefreshToken BuildRefreshToken(User user);
-	
+
     Jwt BuildJwt(UserRefreshToken refreshToken);
 
-    bool IsAccessTokenValid(string accessToken);
+    Task<Jwt> SyncAccessTokenAsync(Jwt jwtDto);
 }

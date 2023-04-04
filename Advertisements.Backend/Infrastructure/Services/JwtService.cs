@@ -2,9 +2,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Core.Components;
+using Core.Database;
 using Core.Interfaces;
 using Core.Models;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services;
@@ -12,18 +14,22 @@ namespace Infrastructure.Services;
 public class JwtService : IJwtService
 {
 	private readonly IDateProvider _dateProvider;
-	private readonly IOptions<JwtServiceSettings> _settings;
+	private readonly JwtServiceSettings _jwtSettings;
 	private const string HashAlgorithm = SecurityAlgorithms.HmacSha256Signature;
 
 	private readonly JwtSecurityTokenHandler _tokenHandler;
 	private readonly SymmetricSecurityKey _securityKey;
+	private readonly UserManager<User> _userManager;
+	private readonly AdvertContext _context;
 
-	public JwtService(IDateProvider dateProvider, IOptions<JwtServiceSettings> settings)
+	public JwtService(IDateProvider dateProvider, JwtServiceSettings jwtSettings, UserManager<User> userManager, AdvertContext context)
 	{
 		_dateProvider = dateProvider;
-		_settings = settings;
+		_jwtSettings = jwtSettings;
+		_userManager = userManager;
+		_context = context;
 		_tokenHandler = new JwtSecurityTokenHandler();
-		_securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.Value.Secret));
+		_securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret));
 	}
 	
 	public UserRefreshToken BuildRefreshToken(User user)
@@ -32,7 +38,7 @@ public class JwtService : IJwtService
 		{
 			User = user,
 			UserId = user.Id,
-			ExpirationDate = _dateProvider.Now.Add(_settings.Value.RefreshTokenLifetime),
+			ExpirationDate = _dateProvider.Now.Add(_jwtSettings.RefreshTokenLifetime),
 		};
 
 		return refreshToken;
@@ -49,33 +55,100 @@ public class JwtService : IJwtService
 			RefreshTokenId = refreshToken.Id,
 		};
 	}
-	
-	private SecurityTokenDescriptor CreateAccessTokenDescriptor(User user)
+
+	private SecurityTokenDescriptor CreateAccessTokenDescriptor(User user, DateTime? expirationDate = null)
 	{
 		var claims = new List<Claim>
 		{			
-			new(ClaimTypes.Sid, user.Id),
+			new(ClaimTypes.Sid, user.Id.ToString()),
 			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 			new(ClaimTypes.Role, user.Role.ToString())
 		};
-
+		
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(claims),
-			Expires = _dateProvider.Now.Add(_settings.Value.TokenLifetime),
+			Expires = expirationDate ?? _dateProvider.Now.Add(_jwtSettings.TokenLifetime),
 			SigningCredentials = new SigningCredentials(_securityKey, HashAlgorithm),
 		};
 
 		return tokenDescriptor;
 	}
 	
-	public bool IsAccessTokenValid(string accessToken)
+	public virtual bool IsAccessTokenExpired(string accessToken)
 	{
 		var expirationDate = GetExpirationDate(accessToken);
 		
-		return expirationDate > _dateProvider.Now;
+		return expirationDate < _dateProvider.Now;
 	}
-	
+
+	public async Task<bool> IsPermissionsMetadataOutdatedAsync(string accessToken)
+	{
+		var jwtSecurityToken = _tokenHandler.ReadJwtToken(accessToken);
+
+		var id = jwtSecurityToken
+			.Claims
+			.First(x => x.Type.Equals(ClaimTypes.Sid))
+			.Value;
+		var user = await _userManager.FindByIdAsync(id);
+
+		var tokenRole = jwtSecurityToken
+			.Claims
+			.First(x => x.Type.Equals("role"))
+			.Value;
+		var userRole = user.Role.ToString();
+		
+		return tokenRole != userRole;
+	}
+
+	public async Task<Jwt> RefreshMetadataAsync(Jwt jwt)
+	{
+		var jwtSecurityToken = _tokenHandler.ReadJwtToken(jwt.AccessToken);
+		
+		var id = jwtSecurityToken
+			.Claims
+			.First(x => x.Type.Equals(ClaimTypes.Sid))
+			.Value;
+		var user = await _userManager.FindByIdAsync(id);
+		
+		var expirationDate = GetExpirationDate(jwt.AccessToken);
+		var tokenDescriptor = CreateAccessTokenDescriptor(user, expirationDate);
+		var updateSecurityToken = _tokenHandler.CreateToken(tokenDescriptor);
+
+		var accessToken = _tokenHandler.WriteToken(updateSecurityToken);
+
+		var newJwt = new Jwt { RefreshTokenId = jwt.RefreshTokenId, AccessToken = accessToken };
+
+		return newJwt;
+	}
+
+	public async Task<Jwt> SyncAccessTokenAsync(Jwt jwtDto)
+	{
+		var refreshToken = await _context
+			.Set<UserRefreshToken>()
+			.FirstOrDefaultAsync(x => x.Id == jwtDto.RefreshTokenId);
+		if (refreshToken is null)
+		{
+			throw new SecurityTokenExpiredException("Invalid refresh token");
+		}
+		
+		if (IsAccessTokenExpired(jwtDto.AccessToken))
+		{
+			if (refreshToken.IsInvalidated || refreshToken.ExpirationDate < _dateProvider.Now)
+			{
+				throw new SecurityTokenExpiredException("Invalid refresh token");
+			}
+			return BuildJwt(refreshToken);
+		}
+
+		if (await IsPermissionsMetadataOutdatedAsync(jwtDto.AccessToken))
+		{
+			return await RefreshMetadataAsync(jwtDto);
+		}
+
+		return jwtDto;
+	}
+
 	private DateTime GetExpirationDate(string token)
 	{
 		var accessToken = _tokenHandler.ReadJwtToken(token);
