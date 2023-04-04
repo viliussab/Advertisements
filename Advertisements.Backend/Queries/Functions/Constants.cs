@@ -1,4 +1,4 @@
-namespace Core.Functions;
+namespace Queries.Functions;
 
 public static class Constants
 {

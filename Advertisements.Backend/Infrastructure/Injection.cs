@@ -1,6 +1,5 @@
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
-using Core.Functions;
 using Core.Interfaces;
 using Core.Models;
 using FluentValidation;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Queries.Functions;
 using Queries.Handlers.Adverts.GetAreas;
 using Queries.MapProfiles;
 
@@ -36,6 +36,7 @@ public static class Injection
 
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IDateProvider, DateProvider>();
+		services.AddScoped<IPdfBuilder, PdfBuilder>();
 	}
 
 	private static void AddPostgresProvider(this IServiceCollection services, IConfiguration configuration)

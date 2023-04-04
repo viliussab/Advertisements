@@ -1,11 +1,10 @@
 using Commands.Responses;
 using Core.Database;
 using Core.Models;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
 
-namespace Commands.Handlers.Campaigns.CreateCampaign;
+namespace Commands.Handlers.Campaigns.UpdateCampaign;
 
 public class UpdateCampaignHandler : BasedHandler<
     UpdateCampaignCommand,

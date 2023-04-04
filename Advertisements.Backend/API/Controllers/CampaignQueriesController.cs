@@ -51,4 +51,13 @@ public class CampaignQueriesController : BasedController
         
         return Ok(customers);
     }
+    
+    [HttpGet("campaign/downloadOffer/{id:guid}")]
+    [ProducesResponseType(typeof(PageResponse<GetCampaignsCampaign>), 200)]
+    public async Task<IActionResult> BuildCampaignOffer([FromRoute] Guid id)
+    {
+        var customers = await Mediator.Send(query);
+        
+        return Ok(customers);
+    }
 }

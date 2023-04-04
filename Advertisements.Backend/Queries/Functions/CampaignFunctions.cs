@@ -1,10 +1,8 @@
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using Core.Models;
 using Mapster;
 using Queries.Responses.Prototypes;
 
-namespace Core.Functions;
+namespace Queries.Functions;
 
 public class CampaignUnplanned
 {

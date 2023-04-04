@@ -1,4 +1,5 @@
 using Commands.Handlers.Campaigns.CreateCampaign;
+using Commands.Handlers.Campaigns.UpdateCampaign;
 using Commands.Responses;
 using Microsoft.AspNetCore.Mvc;
 

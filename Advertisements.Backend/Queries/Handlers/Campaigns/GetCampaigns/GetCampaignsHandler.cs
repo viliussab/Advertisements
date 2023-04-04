@@ -1,9 +1,9 @@
 using Core.Database;
-using Core.Functions;
 using Core.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Queries.Extensions;
+using Queries.Functions;
 using Queries.Prototypes;
 using Queries.Responses.Prototypes;
 

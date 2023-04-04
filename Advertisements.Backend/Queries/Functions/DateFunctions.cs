@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Core.Functions;
+namespace Queries.Functions;
 
 public static class DateFunctions
 {

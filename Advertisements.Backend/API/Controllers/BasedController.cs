@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using Queries.Responses;
 
 namespace API.Controllers;
 
@@ -25,5 +27,15 @@ public class BasedController : ControllerBase
                     $"Could not access user when the user is anonymous");
             }
         }
+    }
+    
+    protected FileContentResult File(DownloadFile file)
+    {
+        var provider = new FileExtensionContentTypeProvider();
+        var contentType = provider.TryGetContentType(file.FileName, out var parsedContentType) 
+            ? parsedContentType
+            : "application/octet-stream";
+			
+        return File(file.Content, contentType, file.FileName);
     }
 }
