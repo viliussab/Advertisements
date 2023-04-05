@@ -34,7 +34,7 @@ public static class Injection
 			
 		TypeAdapterConfig.GlobalSettings.Scan(typeof(StorageFileMapProfile).Assembly);
 
-		services.AddScoped<IJwtService, JwtService>();
+		// services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IDateProvider, DateProvider>();
 		services.AddScoped<IPdfBuilder, PdfBuilder>();
 	}
