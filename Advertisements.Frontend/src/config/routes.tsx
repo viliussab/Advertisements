@@ -4,6 +4,7 @@ import ObjectsListPage from '../pages/advert/objectListPage/ObjectsListPage';
 import ObjectMapPage from '../pages/advert/objectMapPage/ObjectMapPage';
 import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage';
 import CampaignCreatePage from '../pages/campaigns/campaignCreatePage/CampaignCreatePage';
+import CampaignPlanesPage from '../pages/campaigns/campaignPlanesPage/CampaignPlanesPage';
 import CampaignsListPage from '../pages/campaigns/campaignsListPage/CampaignsListPage';
 import CampaignUpdatePage from '../pages/campaigns/campaignUpdatePage/CampaignUpdatePage';
 import website_paths from './website_paths';
@@ -64,6 +65,13 @@ const routes: Array<Route> = [
     Page: CampaignUpdatePage,
     layout: {
       title: 'Keisti reklamos pasiūlymą',
+    },
+  },
+  {
+    path: website_paths.campaigns.edit_detalize,
+    Page: CampaignPlanesPage,
+    layout: {
+      title: 'Kampanijos plokštumos',
     },
   },
 ];

@@ -1,18 +1,16 @@
 import { InfoWindowF, MarkerF } from '@react-google-maps/api';
 import React from 'react';
-import AdvertObjectOverview from '../../../../api/responses/type.AdvertObjectOverview';
 import { AdvertObjectOfArea } from '../../../../api/responses/type.AreaDetailed';
 import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
-import ObjectMapDetailsDialog from './ObjectMapDetailsDialog';
-import ObjectMapPhoto from './ObjectMapPhoto';
+import ObjectMapPhoto from '../../../advert/objectMapPage/private/ObjectMapPhoto';
 
 type Props = {
   object: AdvertObjectOfArea;
   onObjectSelect: (id: string) => void;
 };
 
-const ObjectMapMarker = ({ object, onObjectSelect }: Props) => {
+const CampaignPlanesMapMarker = ({ object, onObjectSelect }: Props) => {
   const [anchor, setAnchor] = React.useState<google.maps.MVCObject>();
   const [openInfo, setOpenInfo] = React.useState(false);
 
@@ -61,4 +59,4 @@ const ObjectMapMarker = ({ object, onObjectSelect }: Props) => {
   );
 };
 
-export default React.memo(ObjectMapMarker);
+export default React.memo(CampaignPlanesMapMarker);

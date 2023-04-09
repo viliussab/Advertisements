@@ -12,6 +12,7 @@ type Props = {
 const CampaignOrderDocumentPreview = ({ form, customers }: Props) => {
   const campaign = form.watch();
   const customer = customers.find((x) => x.id === campaign.customerId);
+
   const estimate = campaignService.getEstimate(campaign);
 
   const renderCustomerRow = (header: string, content?: string) => {

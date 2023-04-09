@@ -8,6 +8,7 @@ const website_paths = {
   campaigns: {
     create: '/campaigns/create',
     edit: '/campaigns/:id',
+    edit_detalize: '/campaigns/:id/planes',
     main: '/',
     weekly_overview: '/campaigns/weekly-overview',
   },
