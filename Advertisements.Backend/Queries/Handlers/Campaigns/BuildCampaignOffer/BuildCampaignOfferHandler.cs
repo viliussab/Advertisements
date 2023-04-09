@@ -33,13 +33,16 @@ public class BuildCampaignOfferHandler : BasedHandler<BuildCampaignOfferQuery, D
         var html = factory.InitialTemplate;
         html = factory.InjectCustomerRepresentative(html, campaign.Customer, campaign.Name);
         html = factory.InjectTableRows(html, campaignDetailed);
+        html = factory.InjectDemoCompanyRepresentative(html);
+        html = factory.InjectTotalSums(html, campaignDetailed);
+        html = factory.InjectPlaneTooltip(html, campaignDetailed);
 
         var htmlContent = _pdfBuilder.BuildFromHtml(html);
 
         return new DownloadFile
         {
             Content = htmlContent,
-            FileName = "test.pdf",
+            FileName = "offer.pdf",
         };
     }
 }
