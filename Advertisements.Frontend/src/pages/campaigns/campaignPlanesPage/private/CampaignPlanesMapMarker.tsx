@@ -4,24 +4,55 @@ import { AdvertObjectOfArea } from '../../../../api/responses/type.AreaDetailed'
 import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import ObjectMapPhoto from '../../../advert/objectMapPage/private/ObjectMapPhoto';
+import { SelectStatus } from './type.CampaignPlanesPage';
 
 type Props = {
   object: AdvertObjectOfArea;
   onObjectSelect: (id: string) => void;
+  selectStatus: SelectStatus;
+  clusterer: any;
 };
 
-const CampaignPlanesMapMarker = ({ object, onObjectSelect }: Props) => {
+const CampaignPlanesMapMarker = ({
+  object,
+  onObjectSelect,
+  selectStatus,
+  clusterer,
+}: Props) => {
   const [anchor, setAnchor] = React.useState<google.maps.MVCObject>();
   const [openInfo, setOpenInfo] = React.useState(false);
+
+  const onLoad = (marker: google.maps.Marker) => {
+    setAnchor(marker);
+  };
+
+  const getIcon = () => {
+    if (selectStatus === 'unselected') {
+      return '/pins/red-pin.svg';
+    }
+
+    if (selectStatus === 'selected') {
+      console.log('found selected');
+      return '/pins/green-pin.svg';
+    }
+
+    if (selectStatus === 'notSelectable') {
+      return '/pins/grey-pin.svg';
+    }
+  };
 
   return (
     <>
       <MarkerF
-        onLoad={(marker) => setAnchor(marker)}
+        key={object.id}
+        onLoad={onLoad}
+        clusterer={clusterer}
         onMouseDown={() => {
           setOpenInfo((prev) => !prev);
         }}
-        key={object.id}
+        options={{
+          icon: getIcon(),
+        }}
         position={{ lat: object.latitude, lng: object.longitude }}
       >
         {anchor && openInfo && (
@@ -59,4 +90,4 @@ const CampaignPlanesMapMarker = ({ object, onObjectSelect }: Props) => {
   );
 };
 
-export default React.memo(CampaignPlanesMapMarker);
+export default CampaignPlanesMapMarker;

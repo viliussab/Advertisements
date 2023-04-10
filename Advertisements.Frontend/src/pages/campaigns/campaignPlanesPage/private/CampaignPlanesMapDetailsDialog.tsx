@@ -1,6 +1,6 @@
-import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../../../api/calls/advertQueries';
+import AdvertPlaneOfCampaign from '../../../../api/responses/type.AdvertPlaneOfCampaign';
 import PlaneIlluminationIcon from '../../../../components/private/advert/PlaneIlluminationIcon';
 import PlanePermisson from '../../../../components/private/advert/PlanePermisson';
 import PlanePremiumIcon from '../../../../components/private/advert/PlanePremiumIcon';
@@ -8,14 +8,22 @@ import Icons from '../../../../config/imports/Icons';
 import Mui from '../../../../config/imports/Mui';
 import mapFunctions from '../../../../functions/mapFunctions';
 import ObjectMapPhoto from '../../../advert/objectMapPage/private/ObjectMapPhoto';
+import { SelectedPlaneToEdit } from './type.CampaignPlanesPage';
 
 type Props = {
   selectedObjectId: string | undefined;
   resetSelectedId: () => void;
+  selectedPlanes: AdvertPlaneOfCampaign[];
+  onPlaneSelect: (plane: SelectedPlaneToEdit) => void;
 };
 
 const CampaignPlanesMapDetailsDialog = (props: Props) => {
-  const { selectedObjectId, resetSelectedId } = props;
+  const {
+    selectedObjectId: selectedObjectId,
+    resetSelectedId,
+    onPlaneSelect,
+    selectedPlanes,
+  } = props;
 
   const objectQuery = useQuery({
     queryKey: advertQueries.object.key,
@@ -23,6 +31,10 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
       selectedObjectId ? advertQueries.object.fn(selectedObjectId) : undefined,
     enabled: !!selectedObjectId,
   });
+
+  const isPlaneSelected = (id: string) => {
+    return !!selectedPlanes.find((x) => x.id === id);
+  };
 
   const object = objectQuery.data;
 
@@ -40,7 +52,7 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
           <Mui.CircularProgress />
         </div>
       ) : (
-        <div className="pt-4 pb-4">
+        <div className="pt-4">
           <div className="pl-4 pr-4">
             <div className="flex items-center justify-between gap-6">
               <div className="flex items-center text-center text-xl">
@@ -64,12 +76,24 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
               <div className=""></div>
             </div>
           </div>
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-4 flex flex-col">
             {object.planes.map((plane) => (
               <>
                 <div
                   key={plane.id}
-                  className="flex justify-between gap-4 pl-4 pr-4  hover:cursor-pointer hover:bg-gray-200"
+                  onClick={() => {
+                    onPlaneSelect({
+                      id: plane.id,
+                      name: object.name + ' ' + plane.partialName,
+                    });
+                    resetSelectedId();
+                  }}
+                  className={`flex justify-between gap-4 p-4
+                    ${
+                      isPlaneSelected(plane.id)
+                        ? 'bg-green-200 hover:cursor-pointer hover:bg-green-300'
+                        : 'hover:cursor-pointer hover:bg-gray-200'
+                    }`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
