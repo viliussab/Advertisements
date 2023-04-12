@@ -29,6 +29,14 @@ const formatWeekPeriodShort = (dateFrom: Date, dateTo: Date) => {
   return `w${weekFrom}-${weekTo}`;
 };
 
+const toDateOnly = (date: Date) => {
+  const dateOnly = new Date(date);
+  console.log('date', date);
+  dateOnly.setUTCHours(0, 0, 0, 0);
+
+  return dateOnly;
+};
+
 const formatWeekShort = (date: Date) => {
   const weekFrom = dateFns.getWeek(date, {
     weekStartsOn: constants.week_starts_on as weekDay,
@@ -45,6 +53,7 @@ const isCampaignWeekday = (date: Date) => {
 
 const dateFunctions = {
   format: format,
+  toDateOnly,
   getCurrentCampaignDay,
   formatWeekPeriodShort,
   formatWeekShort,

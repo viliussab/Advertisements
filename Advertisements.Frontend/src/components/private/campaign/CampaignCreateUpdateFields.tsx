@@ -44,7 +44,7 @@ function CampaignCreateUpdateFields(props: Props) {
           {!start && update ? null : (
             <FormInput.DatePicker
               form={form}
-              label="Data nuo"
+              label="Data nuo imtinai"
               fieldName="start"
               includeWeekNumber="regular"
               onChangeSuccess={(value) =>
@@ -55,11 +55,11 @@ function CampaignCreateUpdateFields(props: Props) {
           {!end && update ? null : (
             <FormInput.DatePicker
               form={form}
-              label="Data iki"
+              label="Data iki imtinai"
               includeWeekNumber="end"
               fieldName="end"
               datePickerProps={{
-                minDate: dateFns.addDays(start, 7),
+                minDate: start,
                 disabled: !start,
                 shouldDisableDate: (date) => start.getDay() !== date.getDay(),
               }}

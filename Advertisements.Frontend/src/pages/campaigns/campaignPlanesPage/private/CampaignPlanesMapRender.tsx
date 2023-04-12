@@ -18,12 +18,20 @@ type Props = {
   objects: AdvertObjectOfArea[];
   selectedPlanes: AdvertPlaneOfCampaign[];
   onObjectSelect: (objectId: string) => void;
+  switchViewMode: () => void;
 };
 
 const key = import.meta.env.VITE_GOOGLE_API_KEY;
 
 function CampaignPlanesMapRender(props: Props) {
-  const { area, className, objects, onObjectSelect, selectedPlanes } = props;
+  const {
+    area,
+    className,
+    objects,
+    onObjectSelect,
+    selectedPlanes,
+    switchViewMode,
+  } = props;
 
   const mapRef = React.useRef<google.maps.Map>();
   const boundaries = React.useMemo(
@@ -96,6 +104,7 @@ function CampaignPlanesMapRender(props: Props) {
           variant="extended"
           color="primary"
           className="absolute top-4 left-2"
+          onClick={switchViewMode}
         >
           <Icons.Refresh sx={{ mr: 1 }} />
           Sąrašas

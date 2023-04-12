@@ -5,6 +5,15 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setDefaultOptions } from 'date-fns';
 import lt from 'date-fns/locale/lt/index';
+import {
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Chart as ChartJs,
+} from 'chart.js';
 
 function App() {
   const queryClient = new QueryClient();
@@ -12,6 +21,15 @@ function App() {
     weekStartsOn: 1,
     locale: lt,
   });
+
+  ChartJs.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+  );
 
   return (
     <QueryClientProvider client={queryClient}>

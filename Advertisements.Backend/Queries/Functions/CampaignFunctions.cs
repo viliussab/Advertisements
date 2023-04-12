@@ -51,7 +51,7 @@ public static class CampaignFunctions
     {
         var timeDifference = campaign.End - campaign.Start;
 
-        return (int)Math.Ceiling(timeDifference.TotalDays / 7);
+        return (int)Math.Ceiling(timeDifference.TotalDays / 7) + 1;
     }
 
     public static CampaignWithPriceDetails BuildPriceDetailsCampaign(Campaign campaign)

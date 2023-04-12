@@ -15,7 +15,7 @@ const getEstimate = (campaign: CampaignCreateUpdate) => {
 
   const weekCount =
     !!campaign.start && !!campaign.end
-      ? dateFns.differenceInWeeks(campaign.end, campaign.start)
+      ? dateFns.differenceInWeeks(campaign.end, campaign.start) + 1
       : 0;
 
   const planePriceDiscounted = campaign.discountPercent
