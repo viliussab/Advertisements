@@ -1,7 +1,7 @@
 import zod from 'zod';
 
 export const updateCampaignPlaneSchema = zod.object({
-  id: zod.string(),
+  planeId: zod.string(),
   weekFrom: zod.date(),
   weekTo: zod.date(),
 });

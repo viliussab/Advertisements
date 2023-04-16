@@ -32,12 +32,15 @@ const CampaignPlanesMapMarker = ({
     }
 
     if (selectStatus === 'selected') {
-      console.log('found selected');
       return '/pins/green-pin.svg';
     }
 
     if (selectStatus === 'notSelectable') {
       return '/pins/grey-pin.svg';
+    }
+
+    if (selectStatus === 'hovered') {
+      return '/pins/blue-pin.svg';
     }
   };
 

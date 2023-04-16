@@ -1,5 +1,6 @@
 using Commands.Handlers.Campaigns.CreateCampaign;
 using Commands.Handlers.Campaigns.UpdateCampaign;
+using Commands.Handlers.Campaigns.UpdateCampaignPlanes;
 using Commands.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,10 +30,12 @@ public class CampaignCommandsController : BasedController
     
     [HttpPatch("campaign/{id:guid}/planes")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateCampaignAdverts([FromRoute] Guid id)
+    public async Task<IActionResult> UpdateCampaignAdverts([FromRoute] Guid id, [FromBody] UpdateCampaignPlanesCommand command)
     {
-        return Ok("yes");
+        command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
     }
     
     [HttpPatch("campaign/{id:guid}/status")]

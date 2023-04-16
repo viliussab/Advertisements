@@ -24,8 +24,6 @@ public class CampaignWithPriceDetails : CampaignFields
 {
     public int WeekCount { get; set; }
     
-    public CustomerFields Customer { get; set; }
-    
     public string WeekPeriod { get; set; }
     
     public double PlaneUnitPriceDiscounted { get; set; }

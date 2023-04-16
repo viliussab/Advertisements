@@ -1,4 +1,6 @@
 import { CampaignCreateUpdate } from '../commands/schema.createUpdateCampaign';
+import CampaignPlaneUpdate from '../commands/type.CampaignPlaneUpdate';
+import CampaignPlane from '../responses/type.CampaignPlane';
 import api from './api';
 
 const createCampaignAsync = async (values: CampaignCreateUpdate) => {
@@ -29,6 +31,24 @@ const updateCampaignAsync = async ({
   return response;
 };
 
+type updateCampaignPlanesAsyncProps = {
+  id: string;
+  campaignPlanes: CampaignPlaneUpdate[];
+};
+
+const updateCampaignPlanesAsync = async ({
+  id,
+  campaignPlanes,
+}: updateCampaignPlanesAsyncProps) => {
+  const response = await api.mutateAsync({
+    url: api.endpoints.campaign.buildCampaignPlaneEndpoint(id),
+    body: { campaignPlanes },
+    httpMethod: 'patch',
+  });
+
+  return response;
+};
+
 const campaignMutations = {
   campaignCreate: {
     fn: createCampaignAsync,
@@ -37,6 +57,10 @@ const campaignMutations = {
   campaignUpdate: {
     fn: updateCampaignAsync,
     key: 'campaign_update',
+  },
+  campaignPlanesUpdate: {
+    fn: updateCampaignPlanesAsync,
+    key: 'campaign_planes_update',
   },
 };
 

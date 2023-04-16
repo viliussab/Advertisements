@@ -1,5 +1,7 @@
+import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../../../api/calls/advertQueries';
+import { AdvertPlaneWPhotos } from '../../../../api/responses/type.AdvertObjectDetailed';
 import AdvertPlaneOfCampaign from '../../../../api/responses/type.AdvertPlaneOfCampaign';
 import PlaneIlluminationIcon from '../../../../components/private/advert/PlaneIlluminationIcon';
 import PlanePermisson from '../../../../components/private/advert/PlanePermisson';
@@ -12,18 +14,22 @@ import { SelectedPlaneToEdit } from './type.CampaignPlanesPage';
 
 type Props = {
   selectedObjectId: string | undefined;
-  resetSelectedId: () => void;
+  resetSelectedObjectId: () => void;
   selectedPlanes: AdvertPlaneOfCampaign[];
+  deselectPlane: (id: string) => void;
   onPlaneSelect: (plane: SelectedPlaneToEdit) => void;
 };
 
 const CampaignPlanesMapDetailsDialog = (props: Props) => {
   const {
-    selectedObjectId: selectedObjectId,
-    resetSelectedId,
+    selectedObjectId,
+    resetSelectedObjectId,
     onPlaneSelect,
+    deselectPlane,
     selectedPlanes,
   } = props;
+
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
 
   const objectQuery = useQuery({
     queryKey: advertQueries.object.key,
@@ -44,7 +50,7 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
   return (
     <Mui.Dialog
       open={!!selectedObjectId}
-      onClose={resetSelectedId}
+      onClose={resetSelectedObjectId}
       maxWidth={false}
     >
       {objectQuery.isLoading || !object ? (
@@ -72,7 +78,6 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
             </div>
             <div className="flex justify-between gap-2">
               <div className="text-sm text-gray-500">{`${object.address}, ${object.region}`}</div>
-
               <div className=""></div>
             </div>
           </div>
@@ -81,12 +86,20 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
               <>
                 <div
                   key={plane.id}
-                  onClick={() => {
+                  onClick={(e) => {
+                    const selectedPlane = selectedPlanes.find(
+                      (x) => x.id === plane.id,
+                    );
+                    if (selectedPlane) {
+                      setMenuAnchor(e.currentTarget);
+                      return;
+                    }
+
                     onPlaneSelect({
-                      id: plane.id,
+                      planeId: plane.id,
                       name: object.name + ' ' + plane.partialName,
                     });
-                    resetSelectedId();
+                    resetSelectedObjectId();
                   }}
                   className={`flex justify-between gap-4 p-4
                     ${
@@ -126,6 +139,42 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
                     </div>
                   )}
                 </div>
+                <Mui.Menu
+                  anchorEl={menuAnchor}
+                  open={Boolean(menuAnchor)}
+                  onClose={() => {
+                    setMenuAnchor(null);
+                  }}
+                >
+                  <div className="">
+                    <Mui.Button
+                      onClick={() => {
+                        setMenuAnchor(null);
+                        deselectPlane(plane.id);
+                        resetSelectedObjectId();
+                      }}
+                    >
+                      Panaiktinti pasirinkimą
+                    </Mui.Button>
+                    <Mui.Button
+                      color="info"
+                      onClick={() => {
+                        const values = selectedPlanes.find(
+                          (x) => x.id === plane.id,
+                        );
+                        setMenuAnchor(null);
+                        onPlaneSelect({
+                          planeId: plane.id,
+                          name: object.name + ' ' + plane.partialName,
+                          values,
+                        });
+                        resetSelectedObjectId();
+                      }}
+                    >
+                      Keisti plokštumos periodą
+                    </Mui.Button>
+                  </div>
+                </Mui.Menu>
               </>
             ))}
           </div>
@@ -134,5 +183,23 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
     </Mui.Dialog>
   );
 };
+
+type DetailsPlane = {
+  photo: AdvertPlaneWPhotos;
+};
+
+function f() {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+}
 
 export default CampaignPlanesMapDetailsDialog;

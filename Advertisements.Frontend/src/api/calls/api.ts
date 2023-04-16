@@ -48,6 +48,8 @@ const endpoints = {
   },
   campaign: {
     download_campaign_offer: `${apiUrl}/campaign/downloadOffer`,
+    buildCampaignPlaneEndpoint: (id: string) =>
+      `${apiUrl}/campaign/${id}/planes`,
   },
 };
 

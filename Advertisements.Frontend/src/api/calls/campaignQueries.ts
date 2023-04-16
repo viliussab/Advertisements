@@ -18,7 +18,7 @@ const getCampaignAsync = async (id: string) => {
     url: `${api.endpoints.common.campaigns.campaign}/${id}`,
   });
 
-  return response.data as Campaign;
+  return response.data as CampaignOverview;
 };
 
 const getPagedCampaignsAsync = async (query: CampaignsQuery) => {

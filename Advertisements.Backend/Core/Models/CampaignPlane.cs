@@ -9,8 +9,8 @@ public class CampaignPlane
     public Guid PlaneId { get; set; }
 
     public virtual AdvertPlane Plane { get; set; } = null!;
+    
+    public DateTime WeekFrom { get; set; }
 
-    public int WeekFrom { get; set; }
-
-    public int WeekTo { get; set; }
+    public DateTime WeekTo { get; set; }
 }

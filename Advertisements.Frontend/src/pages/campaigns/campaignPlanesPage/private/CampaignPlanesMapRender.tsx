@@ -11,12 +11,14 @@ import Icons from '../../../../config/imports/Icons';
 import { AdvertObjectOfArea } from '../../../../api/responses/type.AreaDetailed';
 import CampaignPlanesMapMarker from './CampaignPlanesMapMarker';
 import AdvertPlaneOfCampaign from '../../../../api/responses/type.AdvertPlaneOfCampaign';
+import { SelectStatus } from './type.CampaignPlanesPage';
 
 type Props = {
   area: Area | undefined;
   className: string;
   objects: AdvertObjectOfArea[];
   selectedPlanes: AdvertPlaneOfCampaign[];
+  hoveredObjectId?: string;
   onObjectSelect: (objectId: string) => void;
   switchViewMode: () => void;
 };
@@ -30,9 +32,11 @@ function CampaignPlanesMapRender(props: Props) {
     objects,
     onObjectSelect,
     selectedPlanes,
+    hoveredObjectId,
     switchViewMode,
   } = props;
 
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const mapRef = React.useRef<google.maps.Map>();
   const boundaries = React.useMemo(
     () =>
@@ -53,10 +57,6 @@ function CampaignPlanesMapRender(props: Props) {
     googleMapsApiKey: key,
   });
 
-  const onLoad = (map: google.maps.Map) => {
-    mapRef.current = map;
-  };
-
   if (!isLoaded || !boundaries || !area) {
     return (
       <div className={`${className} flex items-center justify-center`}>
@@ -65,7 +65,17 @@ function CampaignPlanesMapRender(props: Props) {
     );
   }
 
-  const getMarkerStatus = (object: AdvertObjectOfArea) => {
+  const onLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+
+    map.setCenter(mapFunctions.getCenter(area));
+  };
+
+  const getMarkerStatus = (object: AdvertObjectOfArea): SelectStatus => {
+    if (object.id === hoveredObjectId) {
+      return 'hovered';
+    }
+
     const planeFound = (selectedPlanes || []).find((p) =>
       object.planes.some((y) => y.id === p.id),
     );
@@ -82,8 +92,14 @@ function CampaignPlanesMapRender(props: Props) {
       onLoad={onLoad}
       zoom={mapFunctions.getBoundsZoomLevel(boundaries) + 1.2}
       mapContainerClassName={className}
-      center={mapFunctions.getCenter(area)}
     >
+      <Mui.Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
+        test
+      </Mui.Drawer>
       <MarkerClustererF minimumClusterSize={1000}>
         {(clusterer) => (
           <>
@@ -99,7 +115,7 @@ function CampaignPlanesMapRender(props: Props) {
           </>
         )}
       </MarkerClustererF>
-      <div>
+      {/* <div>
         <Mui.Fab
           variant="extended"
           color="primary"
@@ -109,13 +125,17 @@ function CampaignPlanesMapRender(props: Props) {
           <Icons.Refresh sx={{ mr: 1 }} />
           Sąrašas
         </Mui.Fab>
-      </div>
-      <div>
-        <Mui.Fab variant="extended" className="absolute top-8 left-2">
+      </div> */}
+      {/* <div>
+        <Mui.Fab
+          onClick={() => setOpenDrawer(true)}
+          variant="extended"
+          className="absolute top-4 left-2"
+        >
           <Icons.FilterAlt sx={{ mr: 1 }} />
           Filtrai
         </Mui.Fab>
-      </div>
+      </div> */}
     </GoogleMap>
   );
 }

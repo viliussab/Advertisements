@@ -1,12 +1,14 @@
 using Queries.Responses.Prototypes;
 
-namespace Queries.Handlers.Campaigns.GetCampaigns;
+namespace Queries.Responses;
 
-public class GetCampaignsCampaign : CampaignFields
+public class CampaignOverview : CampaignFields
 {
     public int WeekCount { get; set; }
     
     public double TotalNoVat { get; set; }
     
     public CustomerFields Customer { get; set; }
+    
+    public List<CampaignPlaneFields> CampaignPlanes { get; set; }
 }

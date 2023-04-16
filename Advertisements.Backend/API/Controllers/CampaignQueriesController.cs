@@ -4,6 +4,7 @@ using Queries.Handlers.Campaigns.BuildCampaignOffer;
 using Queries.Handlers.Campaigns.GetCampaignById;
 using Queries.Handlers.Campaigns.GetCampaigns;
 using Queries.Handlers.Campaigns.GetCustomers;
+using Queries.Responses;
 using Queries.Responses.Prototypes;
 
 namespace API.Controllers;
@@ -36,7 +37,7 @@ public class CampaignQueriesController : BasedController
     }
     
     [HttpGet("campaign")]
-    [ProducesResponseType(typeof(PageResponse<GetCampaignsCampaign>), 200)]
+    [ProducesResponseType(typeof(PageResponse<CampaignOverview>), 200)]
     public async Task<IActionResult> GetCampaigns([FromQuery] GetCampaignsQuery query)
     {
         var campaignsPage = await Mediator.Send(query);

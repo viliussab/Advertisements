@@ -11,6 +11,8 @@ public class AdvertPlaneFields
     public bool IsPermitted { get; set; }
         
     public DateTime? PermissionExpiryDate { get; set; }
+    
+    public DateTime CreationDate { get; set; }
         
     public bool IsPremium { get; set; }
 }

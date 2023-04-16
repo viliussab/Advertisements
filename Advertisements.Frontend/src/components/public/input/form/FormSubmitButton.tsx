@@ -4,12 +4,17 @@ import Mui from './../../../../config/imports/Mui';
 type FormSubmitButtonProps = {
   children: React.ReactNode;
   isSubmitting: boolean;
+  buttonProps?: Mui.ButtonProps;
 };
 
-function FormSubmitButton({ children, isSubmitting }: FormSubmitButtonProps) {
+function FormSubmitButton({
+  children,
+  isSubmitting,
+  buttonProps,
+}: FormSubmitButtonProps) {
   if (isSubmitting) {
     return (
-      <Mui.Button type="submit">
+      <Mui.Button type="submit" {...buttonProps}>
         <Mui.CircularProgress size={24} />
       </Mui.Button>
     );
@@ -17,7 +22,7 @@ function FormSubmitButton({ children, isSubmitting }: FormSubmitButtonProps) {
 
   return (
     <>
-      <Mui.Button type="submit" variant="contained">
+      <Mui.Button type="submit" {...buttonProps} variant="contained">
         {children}
       </Mui.Button>
     </>

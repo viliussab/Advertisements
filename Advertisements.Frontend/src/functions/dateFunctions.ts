@@ -31,7 +31,6 @@ const formatWeekPeriodShort = (dateFrom: Date, dateTo: Date) => {
 
 const toDateOnly = (date: Date) => {
   const dateOnly = new Date(date);
-  console.log('date', date);
   dateOnly.setUTCHours(0, 0, 0, 0);
 
   return dateOnly;

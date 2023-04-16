@@ -17,6 +17,10 @@ type TableProps<T> = {
   columns: ColumnConfig<T>[];
   data: T[];
   onClick?: (elem: T) => void;
+  rowsProps?: {
+    onMouseOver?: (elem: T) => void;
+    onMouseOut?: (elem: T) => void;
+  };
   keySelector: (elem: T) => string;
   paging?: {
     totalCount: number;
@@ -28,7 +32,7 @@ type TableProps<T> = {
 };
 
 export default function Table<T>(props: TableProps<T>) {
-  const { columns, data, onClick, keySelector, paging } = props;
+  const { columns, data, onClick, keySelector, paging, rowsProps } = props;
 
   return (
     <div>
@@ -69,6 +73,12 @@ export default function Table<T>(props: TableProps<T>) {
           {data.map((elem) => (
             <tr
               key={keySelector(elem)}
+              onMouseOver={() =>
+                rowsProps?.onMouseOver && rowsProps.onMouseOver(elem)
+              }
+              onMouseOut={() =>
+                rowsProps?.onMouseOut && rowsProps.onMouseOut(elem)
+              }
               onClick={() => onClick && onClick(elem)}
               className={`nth border-b
                 ${onClick && 'hover:cursor-pointer hover:bg-blue-100'}`}

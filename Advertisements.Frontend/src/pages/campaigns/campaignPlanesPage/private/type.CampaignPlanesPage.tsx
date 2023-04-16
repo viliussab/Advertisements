@@ -1,6 +1,13 @@
-export type SelectStatus = 'unselected' | 'selected' | 'notSelectable';
+import AdvertPlaneOfCampaign from '../../../../api/responses/type.AdvertPlaneOfCampaign';
+
+export type SelectStatus =
+  | 'unselected'
+  | 'selected'
+  | 'notSelectable'
+  | 'hovered';
 
 export type SelectedPlaneToEdit = {
   name: string;
-  id: string;
+  planeId: string;
+  values?: AdvertPlaneOfCampaign;
 };

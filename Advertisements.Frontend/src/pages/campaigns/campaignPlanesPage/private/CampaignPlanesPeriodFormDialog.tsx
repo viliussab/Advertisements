@@ -13,46 +13,39 @@ import dateFunctions from '../../../../functions/dateFunctions';
 import { SelectedPlaneToEdit } from './type.CampaignPlanesPage';
 
 type Props = {
-  selectedPlane: SelectedPlaneToEdit | undefined;
+  editPlane: SelectedPlaneToEdit | undefined;
   resetSelectedId: () => void;
   campaign: Campaign;
   onSubmit: (values: UpdateCampaignPlane) => void;
 };
 
 function CampaignPlanesPeriodFormDialog(props: Props) {
-  const {
-    campaign,
-    onSubmit,
-    selectedPlane: selectedPlane,
-    resetSelectedId,
-  } = props;
+  const { campaign, onSubmit, editPlane, resetSelectedId } = props;
 
-  if (!selectedPlane) {
+  if (!editPlane) {
     return <></>;
   }
 
   const form = RHF.useForm({
     resolver: zodResolver(updateCampaignPlaneSchema),
-    defaultValues: {
-      id: selectedPlane.id,
-      weekFrom: dateFunctions.toDateOnly(new Date(campaign.start)),
-      weekTo: dateFunctions.toDateOnly(new Date(campaign.end)),
-    },
+    defaultValues: editPlane.values
+      ? editPlane.values
+      : {
+          planeId: editPlane.planeId,
+          weekFrom: dateFunctions.toDateOnly(new Date(campaign.start)),
+          weekTo: dateFunctions.toDateOnly(new Date(campaign.end)),
+        },
   });
 
   const formValues = form.watch();
 
   return (
-    <Mui.Dialog
-      open={!!selectedPlane}
-      onClose={resetSelectedId}
-      maxWidth={false}
-    >
+    <Mui.Dialog open={!!editPlane} onClose={resetSelectedId} maxWidth={false}>
       <Form form={form} onSubmit={onSubmit}>
         <div className="space-y-3 bg-gray-50 p-4">
           <div className="text-lg ">
             <span>{`Pasirinkti `}</span>
-            <span className="font-bold">{selectedPlane.name}</span>
+            <span className="font-bold">{editPlane.name}</span>
             <span>{` periodą`}</span>
           </div>
           <FormInput.DatePicker

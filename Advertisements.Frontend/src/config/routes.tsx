@@ -6,6 +6,7 @@ import ObjectUpdatePage from '../pages/advert/objectUpdatePage/ObjectUpdatePage'
 import CampaignCreatePage from '../pages/campaigns/campaignCreatePage/CampaignCreatePage';
 import CampaignPlanesPage from '../pages/campaigns/campaignPlanesPage/CampaignPlanesPage';
 import CampaignsListPage from '../pages/campaigns/campaignsListPage/CampaignsListPage';
+import CampaignSummaryPage from '../pages/campaigns/campaignSummaryPage/CampaignSummaryPage';
 import CampaignUpdatePage from '../pages/campaigns/campaignUpdatePage/CampaignUpdatePage';
 import website_paths from './website_paths';
 
@@ -72,6 +73,13 @@ const routes: Array<Route> = [
     Page: CampaignPlanesPage,
     layout: {
       title: 'Kampanijos plokštumos',
+    },
+  },
+  {
+    path: website_paths.campaigns.weekly_overview,
+    Page: CampaignSummaryPage,
+    layout: {
+      title: 'Kampanijų suvestinė',
     },
   },
 ];
