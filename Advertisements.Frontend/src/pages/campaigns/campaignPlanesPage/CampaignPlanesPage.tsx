@@ -15,7 +15,7 @@ import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
 import dateFunctions from '../../../functions/dateFunctions';
 import CampaignPlanesBarGraphDialog from './private/CampaignPlanesBarGraphDialog';
-import campaignPLanesFunctions from './private/campaignPlanesFunctions';
+import campaignPlanesFunctions from './private/campaignPlanesFunctions';
 import CampaignPlanesMapDetailsDialog from './private/CampaignPlanesMapDetailsDialog';
 import CampaignPlanesMapRender from './private/CampaignPlanesMapRender';
 import CampaignPlanesOccupancyTable from './private/CampaignPlanesOccupancyTable';
@@ -154,7 +154,7 @@ function CampaignPlanesPage() {
 
   const viewPlanes = mapToViewFromMap(area, selectedCp);
 
-  const isFullfilled = campaignPLanesFunctions.isCampaignPlanesFullfiled(
+  const isFullfilled = campaignPlanesFunctions.isCampaignPlanesFullfiled(
     viewPlanes,
     campaign,
   );

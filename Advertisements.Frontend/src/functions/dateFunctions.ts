@@ -12,9 +12,22 @@ const getCurrentCampaignDay = () => {
     weekStartsOn: constants.week_starts_on as weekDay,
   });
 
-  const campaignDayOfWeek = dateFns.addDays(lastDayOfWeek, -6);
+  const campaignDayOfWeek = dateFns.subDays(lastDayOfWeek, 6);
+  const jsDate = new Date();
+  const date = dateFns.addMinutes(
+    campaignDayOfWeek,
+    -1 * jsDate.getTimezoneOffset(),
+  );
 
-  return campaignDayOfWeek;
+  return date;
+};
+
+const formatWeekPeriodMonths = (dateFrom: Date, dateTo: Date) => {
+  const from = dateFns.format(dateFrom, 'MM/dd');
+
+  const to = dateFns.format(dateTo, 'MM/dd');
+
+  return `${from} - ${to}`;
 };
 
 const formatWeekPeriodShort = (dateFrom: Date, dateTo: Date) => {
@@ -30,10 +43,18 @@ const formatWeekPeriodShort = (dateFrom: Date, dateTo: Date) => {
 };
 
 const toDateOnly = (date: Date) => {
-  const dateOnly = new Date(date);
-  dateOnly.setUTCHours(0, 0, 0, 0);
+  const dateOnly = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
 
-  return dateOnly;
+  const utcDateOnly = dateFns.addMinutes(
+    dateOnly,
+    -1 * date.getTimezoneOffset(),
+  );
+
+  return utcDateOnly;
 };
 
 const formatWeekShort = (date: Date) => {
@@ -53,6 +74,7 @@ const isCampaignWeekday = (date: Date) => {
 const dateFunctions = {
   format: format,
   toDateOnly,
+  formatWeekPeriodMonths,
   getCurrentCampaignDay,
   formatWeekPeriodShort,
   formatWeekShort,

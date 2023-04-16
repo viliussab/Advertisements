@@ -9,6 +9,7 @@ type Campaign = {
   requiresPrinting: boolean;
   discountPercent: number;
   modificationDate: string;
+  isFulfilled: boolean;
 };
 
 export default Campaign;

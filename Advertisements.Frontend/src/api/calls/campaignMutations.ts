@@ -49,6 +49,16 @@ const updateCampaignPlanesAsync = async ({
   return response;
 };
 
+const confirmCampaignAsync = async (id: string) => {
+  const response = await api.mutateAsync({
+    url: api.endpoints.campaign.buildCampaignConfirmEndpoint(id),
+    body: undefined,
+    httpMethod: 'patch',
+  });
+
+  return response;
+};
+
 const campaignMutations = {
   campaignCreate: {
     fn: createCampaignAsync,
@@ -61,6 +71,10 @@ const campaignMutations = {
   campaignPlanesUpdate: {
     fn: updateCampaignPlanesAsync,
     key: 'campaign_planes_update',
+  },
+  campaignConfirm: {
+    fn: confirmCampaignAsync,
+    key: 'campaign_confirm',
   },
 };
 

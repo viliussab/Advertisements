@@ -16,8 +16,5 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
             .WithMany(x => x.Campaigns)
             .HasForeignKey(x => x.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Property(x => x.ConfirmationStatus)
-            .HasConversion(EnumConversion.Get<CampaignConfirmationStatus>());
     }
 }

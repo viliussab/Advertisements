@@ -50,6 +50,9 @@ const endpoints = {
     download_campaign_offer: `${apiUrl}/campaign/downloadOffer`,
     buildCampaignPlaneEndpoint: (id: string) =>
       `${apiUrl}/campaign/${id}/planes`,
+    buildCampaignConfirmEndpoint: (id: string) =>
+      `${apiUrl}/campaign/${id}/confirm`,
+    summary: `${apiUrl}/campaign/summary`,
   },
 };
 

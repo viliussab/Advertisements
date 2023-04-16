@@ -8,6 +8,8 @@ public class CampaignOverview : CampaignFields
     
     public double TotalNoVat { get; set; }
     
+    public int SelectedPlaneAmount { get; set; }
+    
     public CustomerFields Customer { get; set; }
     
     public List<CampaignPlaneFields> CampaignPlanes { get; set; }

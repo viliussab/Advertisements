@@ -1,7 +1,9 @@
+using Commands.Handlers.Campaigns.ConfirmCampaign;
 using Commands.Handlers.Campaigns.CreateCampaign;
 using Commands.Handlers.Campaigns.UpdateCampaign;
 using Commands.Handlers.Campaigns.UpdateCampaignPlanes;
 using Commands.Responses;
+using Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -38,11 +40,15 @@ public class CampaignCommandsController : BasedController
         return NoContent();
     }
     
-    [HttpPatch("campaign/{id:guid}/status")]
+    [HttpPatch("campaign/{id:guid}/confirm")]
+    [ProducesResponseType(typeof(ConflictError), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateCampaignStatus([FromRoute] Guid id)
+    public async Task<IActionResult> ConfirmCampaign([FromRoute] Guid id)
     {
-        return Ok("yes");
+        var result = await Mediator.Send(new ConfirmCampaignCommand { Id = id });
+
+        return result.Match<IActionResult>(
+            Conflict,
+            _ => NoContent());
     }
 }

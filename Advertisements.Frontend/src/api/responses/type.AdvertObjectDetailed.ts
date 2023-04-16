@@ -6,7 +6,7 @@ type AdvertObjectDetailed = AdvertObject & {
   planes: AdvertPlaneWPhotos[];
 };
 
-type AdvertPlaneWPhotos = AdvertPlane & {
+export type AdvertPlaneWPhotos = AdvertPlane & {
   photos: FileResponse[];
 };
 

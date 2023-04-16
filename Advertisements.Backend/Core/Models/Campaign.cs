@@ -12,9 +12,7 @@ public class Campaign : IModelMetadata
     public Guid CustomerId { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
-
-    public CampaignConfirmationStatus ConfirmationStatus { get; set; } = CampaignConfirmationStatus.Draft;
-
+    
     public string Name { get; set; } = null!;
     
     public DateTime Start { get; set; }
@@ -26,6 +24,8 @@ public class Campaign : IModelMetadata
     public int PlaneAmount { get; set; }
     
     public bool RequiresPrinting { get; set; }
+    
+    public bool IsFulfilled { get; set; } = false;
 
     [Range(0, 100)]
     public int DiscountPercent { get; set; }

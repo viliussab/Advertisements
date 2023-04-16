@@ -48,7 +48,10 @@ function FormDatePicker<T extends RHF.FieldValues>(props: Props<T>) {
                 if (!value) {
                   return onChange(value);
                 }
+                console.log('value', value);
                 const date = dateFunctions.toDateOnly(value);
+                console.log('date', date);
+
                 onChange(date);
                 if (onChangeSuccess && date) {
                   onChangeSuccess(date);

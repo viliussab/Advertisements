@@ -20,5 +20,7 @@ public class CampaignFields
 
     public int DiscountPercent { get; set; }
     
+    public bool IsFulfilled { get; set; } = false;
+
     public DateTime ModificationDate { get; set; }
 }

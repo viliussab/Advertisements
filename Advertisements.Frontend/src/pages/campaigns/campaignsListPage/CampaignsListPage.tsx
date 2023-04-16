@@ -1,12 +1,17 @@
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import campaignMutations from '../../../api/calls/campaignMutations';
 import campaignQueries from '../../../api/calls/campaignQueries';
 import CampaignsQuery from '../../../api/queries/type.CampaignsQuery';
 import CampaignOverview from '../../../api/responses/type.CampaignOverview';
 import Table, { ColumnConfig } from '../../../components/public/table/Table';
+import Icons from '../../../config/imports/Icons';
+import Mui from '../../../config/imports/Mui';
 import website_paths from '../../../config/website_paths';
 import dateFunctions from '../../../functions/dateFunctions';
+import campaignPlanesFunctions from '../campaignPlanesPage/private/campaignPlanesFunctions';
 
 function CampaignsListPage() {
   const navigate = useNavigate();
@@ -24,6 +29,14 @@ function CampaignsListPage() {
   const customersQuery = useQuery({
     queryKey: campaignQueries.customers.key,
     queryFn: campaignQueries.customers.fn,
+  });
+
+  const confirmMutation = useMutation({
+    mutationKey: campaignMutations.campaignConfirm.key,
+    mutationFn: campaignMutations.campaignConfirm.fn,
+    onSuccess() {
+      toast.success('Kampanija patvirtinta');
+    },
   });
 
   if (!customersQuery.isFetched && !campaignsQuery.isFetched) {
@@ -61,13 +74,38 @@ function CampaignsListPage() {
       key: 'period',
     },
     {
-      title: 'Savaičių kiekis',
+      title: 'Savaitės',
       renderCell: (campaign) => <>{campaign.weekCount}</>,
       key: 'weekCount',
     },
     {
+      title: 'Plokštumos',
+      renderCell: (campaign) => {
+        if (campaignPlanesFunctions.isCampaignFullfiled(campaign)) {
+          return (
+            <div className="font-bold text-green-700">
+              {campaign.planeAmount}/{campaign.planeAmount}
+            </div>
+          );
+        }
+
+        const remainders =
+          campaignPlanesFunctions.getRemaindersCampaign(campaign);
+        const left =
+          remainders.reduce(
+            (acc, x) => acc + (campaign.planeAmount - x.left),
+            0,
+          ) / campaign.weekCount;
+
+        console.log('left', left);
+
+        return <>{`~${Math.floor(left)}/${campaign.planeAmount}`}</>;
+      },
+      key: 'planeAmount',
+    },
+    {
       title: 'Suma be PVM',
-      renderCell: (campaign) => <>{campaign.totalNoVat}€</>,
+      renderCell: (campaign) => <>{campaign.totalNoVat.toFixed(2)}€</>,
       key: 'totalNoVat',
     },
   ];
@@ -91,11 +129,39 @@ function CampaignsListPage() {
             }));
           },
         }}
-        onClick={(campaign) => {
-          navigate(
-            generatePath(website_paths.campaigns.edit, { id: campaign.id }),
-          );
-        }}
+        renderOnClickMenu={(campaign) => (
+          <>
+            <Mui.Button
+              onClick={() =>
+                navigate(
+                  generatePath(website_paths.campaigns.edit, {
+                    id: campaign.id,
+                  }),
+                )
+              }
+            >
+              Pasiūlymas <Icons.Edit sx={{ ml: 2 }} />
+            </Mui.Button>
+            <Mui.Button color="info">
+              Stotelės <Icons.AddLocation sx={{ ml: 2 }} />
+            </Mui.Button>
+            {!campaign.isFulfilled &&
+              campaignPlanesFunctions.isCampaignFullfiled(campaign) && (
+                <Mui.Button
+                  disabled={
+                    confirmMutation.isLoading || confirmMutation.isSuccess
+                  }
+                  variant="contained"
+                  onClick={() => confirmMutation.mutateAsync(campaign.id)}
+                >
+                  Tvirtinti kampaniją <Icons.Check sx={{ ml: 2 }} />
+                </Mui.Button>
+              )}
+          </>
+        )}
+        // onClick={(campaign) => {
+
+        // }}
         columns={columns}
         data={campaignsQuery.data?.items || []}
         keySelector={(plane) => plane.id}

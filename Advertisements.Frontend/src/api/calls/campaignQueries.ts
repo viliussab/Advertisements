@@ -1,6 +1,7 @@
 import CampaignsQuery from '../queries/type.CampaignsQuery';
-import Campaign from '../responses/type.Campaign';
+import CampaignSummaryQuery from '../queries/type.CampaignSummaryQuery';
 import CampaignOverview from '../responses/type.CampaignOverview';
+import CampaignSummaryWeek from '../responses/type.CampaignSummaryWeek';
 import Customer from '../responses/type.Customer';
 import PageResponse from '../responses/type.PageResponse';
 import api from './api';
@@ -30,6 +31,15 @@ const getPagedCampaignsAsync = async (query: CampaignsQuery) => {
   return response.data as PageResponse<CampaignOverview>;
 };
 
+const getCampaignSummaryAsync = async (query: CampaignSummaryQuery) => {
+  const response = await api.queryAsync({
+    url: api.endpoints.campaign.summary,
+    query,
+  });
+
+  return response.data as CampaignSummaryWeek[];
+};
+
 const campaignQueries = {
   customers: {
     fn: getCustomersAsync,
@@ -42,6 +52,10 @@ const campaignQueries = {
   pagedCampaigns: {
     fn: getPagedCampaignsAsync,
     key: 'paged_campaigns',
+  },
+  campaignSummary: {
+    fn: getCampaignSummaryAsync,
+    key: 'campaign_summary',
   },
 };
 

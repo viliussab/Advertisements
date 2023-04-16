@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Campaigns.BuildCampaignOffer;
 using Queries.Handlers.Campaigns.GetCampaignById;
 using Queries.Handlers.Campaigns.GetCampaigns;
+using Queries.Handlers.Campaigns.GetCampaignsSummary;
 using Queries.Handlers.Campaigns.GetCustomers;
 using Queries.Responses;
 using Queries.Responses.Prototypes;
@@ -27,13 +28,14 @@ public class CampaignQueriesController : BasedController
             NotFound,
             Ok);
     }
-    
-    [HttpGet("plane/campaign/{id:guid}")]
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GetPlanesForCampaign([FromRoute] Guid id)
+
+    [HttpGet("campaign/summary")]
+    [ProducesResponseType(typeof(IEnumerable<GetCampaignsSummaryWeeklyResponse>), 200)]
+    public async Task<IActionResult> GetCampaignsSummary([FromQuery] GetCampaignsSummaryQuery query)
     {
-        return Ok("yes");
+        var campaigns = await Mediator.Send(query);
+
+        return Ok(campaigns);
     }
     
     [HttpGet("campaign")]

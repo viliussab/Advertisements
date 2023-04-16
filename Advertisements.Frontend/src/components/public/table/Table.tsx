@@ -17,6 +17,7 @@ type TableProps<T> = {
   columns: ColumnConfig<T>[];
   data: T[];
   onClick?: (elem: T) => void;
+  renderOnClickMenu?: (elem: T) => React.ReactNode;
   rowsProps?: {
     onMouseOver?: (elem: T) => void;
     onMouseOut?: (elem: T) => void;
@@ -31,8 +32,80 @@ type TableProps<T> = {
   };
 };
 
+type TableRowProps<T> = {
+  columns: ColumnConfig<T>[];
+  renderOnClickMenu?: (elem: T) => React.ReactNode;
+  onClick?: (elem: T) => void;
+  rowsProps?: {
+    onMouseOver?: (elem: T) => void;
+    onMouseOut?: (elem: T) => void;
+  };
+  elem: T;
+};
+
+function TableRow<T>(props: TableRowProps<T>) {
+  const { rowsProps, elem, renderOnClickMenu, onClick, columns } = props;
+
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+
+  return (
+    <>
+      <tr
+        onMouseOver={() =>
+          rowsProps?.onMouseOver && rowsProps.onMouseOver(elem)
+        }
+        onMouseOut={() => rowsProps?.onMouseOut && rowsProps.onMouseOut(elem)}
+        onClick={(e) => {
+          renderOnClickMenu && setMenuAnchor(e.currentTarget);
+          onClick && onClick(elem);
+        }}
+        className={`nth border-b
+      ${
+        (onClick || renderOnClickMenu) &&
+        'hover:cursor-pointer hover:bg-blue-100'
+      }`}
+      >
+        {columns.map((c) => (
+          <td key={c.key} className="py-1 px-1">
+            <div className="flex items-center justify-center text-center align-middle">
+              {c.renderCell(elem)}
+            </div>
+          </td>
+        ))}
+      </tr>
+      {renderOnClickMenu && (
+        <Mui.Menu
+          PaperProps={{
+            elevation: 0,
+          }}
+          MenuListProps={{
+            sx: {
+              p: 0,
+            },
+          }}
+          anchorEl={menuAnchor}
+          open={Boolean(menuAnchor)}
+          onClose={() => {
+            setMenuAnchor(null);
+          }}
+        >
+          <div className="border">{renderOnClickMenu(elem)}</div>
+        </Mui.Menu>
+      )}
+    </>
+  );
+}
+
 export default function Table<T>(props: TableProps<T>) {
-  const { columns, data, onClick, keySelector, paging, rowsProps } = props;
+  const {
+    columns,
+    data,
+    onClick,
+    keySelector,
+    paging,
+    rowsProps,
+    renderOnClickMenu,
+  } = props;
 
   return (
     <div>
@@ -71,26 +144,14 @@ export default function Table<T>(props: TableProps<T>) {
         </thead>
         <tbody>
           {data.map((elem) => (
-            <tr
+            <TableRow<T>
+              columns={columns}
               key={keySelector(elem)}
-              onMouseOver={() =>
-                rowsProps?.onMouseOver && rowsProps.onMouseOver(elem)
-              }
-              onMouseOut={() =>
-                rowsProps?.onMouseOut && rowsProps.onMouseOut(elem)
-              }
-              onClick={() => onClick && onClick(elem)}
-              className={`nth border-b
-                ${onClick && 'hover:cursor-pointer hover:bg-blue-100'}`}
-            >
-              {columns.map((c) => (
-                <td key={c.key} className="py-1 px-1">
-                  <div className="flex items-center justify-center text-center align-middle">
-                    {c.renderCell(elem)}
-                  </div>
-                </td>
-              ))}
-            </tr>
+              elem={elem}
+              renderOnClickMenu={renderOnClickMenu}
+              onClick={onClick}
+              rowsProps={rowsProps}
+            />
           ))}
         </tbody>
       </table>
