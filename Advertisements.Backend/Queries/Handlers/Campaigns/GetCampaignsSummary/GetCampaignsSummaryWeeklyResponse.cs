@@ -1,5 +1,4 @@
 using Queries.Responses;
-using Queries.Responses.Prototypes;
 
 namespace Queries.Handlers.Campaigns.GetCampaignsSummary;
 
@@ -8,7 +7,7 @@ public class GetCampaignsSummaryWeeklyResponse
     public List<CampaignOverview> Campaigns { get; set; }
     
     public DateTime Week { get; set; }
-
+    
     public double ReservedTotalPrice { get; set; }
     
     public double ConfirmedTotalPrice { get; set; }

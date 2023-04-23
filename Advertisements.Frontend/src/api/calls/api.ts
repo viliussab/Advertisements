@@ -39,6 +39,7 @@ const endpoints = {
       type: `${apiUrl}/type`,
       area: `${apiUrl}/area`,
       plane: `${apiUrl}/plane`,
+      weekly_summary: `${apiUrl}/plane/summary`,
       object: `${apiUrl}/object`,
     },
     campaigns: {

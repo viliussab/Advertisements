@@ -29,6 +29,8 @@ function CampaignPlanesPage() {
 
   const [selectedCp, setSelectedCp] = React.useState<CampaignPlaneUpdate[]>([]);
 
+  console.log('seelceted', selectedCp);
+
   const aboveWidthThreshold = Mui.useMediaQuery('(min-width:900px)');
 
   const [planeListQuery, setPlaneListQuery] = React.useState<ObjectsQuery>({
@@ -162,24 +164,57 @@ function CampaignPlanesPage() {
   return (
     <div className="flex justify-center">
       <Mui.Paper elevation={4} className="m-4 bg-gray-50">
-        <Mui.Box className="mb-4 w-full bg-gray-200">
+        <Mui.Box className=" w-full bg-gray-200">
           <Mui.Tabs value={1} onChange={redirectToEdit} variant="fullWidth">
             <Mui.Tab label="Reklamos Pasiūlymas" />
             <Mui.Tab label="Plokštumų Detalizacija" />
           </Mui.Tabs>
         </Mui.Box>
         <div className="">
+          <div
+            className={`${
+              !aboveWidthThreshold ? 'w-[96vw]' : 'w-[70vw]'
+            } h-[60vh] flex-grow`}
+          >
+            <div className={isMap ? '' : 'hidden'}>
+              <CampaignPlanesMapRender
+                selectedPlanes={viewPlanes}
+                area={area}
+                hoveredObjectId={hoveredMapObjectId}
+                objects={area?.objects || []}
+                className={`${
+                  !aboveWidthThreshold
+                    ? 'w-[96vw]'
+                    : 'w-[70vw] flex-grow basis-0'
+                } relative h-[60vh]`}
+                onObjectSelect={(id) => {
+                  setSelectedMapObjectId(id);
+                }}
+                switchViewMode={() => setIsMap(false)}
+              />
+            </div>
+            <div className={isMap ? 'hidden' : 'flex bg-gray-800'}>
+              <div
+                className={`${
+                  !aboveWidthThreshold
+                    ? 'w-[96vw]'
+                    : 'w-[70vw] flex-grow basis-0'
+                } relative h-[60vh]`}
+              >
+                <CampaignPlanesOccupancyTable
+                  planes={planesQuery.data?.items || []}
+                />
+              </div>
+            </div>
+          </div>
           <div className={`${!aboveWidthThreshold ? 'w-[96vw]' : 'w-[70vw]'}`}>
-            <div className="mb-2 flex items-center justify-center">
+            <div className="m-2 flex items-center justify-center">
               {isFullfilled ? (
                 <div className="font-lg font-bold text-green-800">
                   Plokštumos parinktos
                 </div>
               ) : (
                 <div className="items-cetner flex flex-wrap justify-center gap-2">
-                  <div className="flex items-center text-center">
-                    Ne visos plokštumos parinktos
-                  </div>
                   <Mui.Button onClick={() => setOpenGraph(true)}>
                     Peržiūrėti užimtumo grafiką
                   </Mui.Button>
@@ -212,7 +247,7 @@ function CampaignPlanesPage() {
                 <></>
               )}
             </div>
-            <div className="m-2 flex justify-center gap-2">
+            <div className="m-4 flex justify-center gap-2">
               <FormInput.SubmitButton
                 isSubmitting={updateCampaignPlanesMutation.isLoading}
                 buttonProps={{
@@ -226,45 +261,6 @@ function CampaignPlanesPage() {
               >
                 Išsaugoti
               </FormInput.SubmitButton>
-              <Mui.Button variant="contained" color="info">
-                Pdf Klientui
-              </Mui.Button>
-            </div>
-          </div>
-          <div
-            className={`${
-              !aboveWidthThreshold ? 'w-[96vw]' : 'w-[70vw]'
-            } h-[80vh] flex-grow`}
-          >
-            <div className={isMap ? '' : 'hidden'}>
-              <CampaignPlanesMapRender
-                selectedPlanes={viewPlanes}
-                area={area}
-                hoveredObjectId={hoveredMapObjectId}
-                objects={area?.objects || []}
-                className={`${
-                  !aboveWidthThreshold
-                    ? 'w-[96vw]'
-                    : 'w-[70vw] flex-grow basis-0'
-                } relative h-[80vh]`}
-                onObjectSelect={(id) => {
-                  setSelectedMapObjectId(id);
-                }}
-                switchViewMode={() => setIsMap(false)}
-              />
-            </div>
-            <div className={isMap ? 'hidden' : 'flex bg-gray-800'}>
-              <div
-                className={`${
-                  !aboveWidthThreshold
-                    ? 'w-[96vw]'
-                    : 'w-[70vw] flex-grow basis-0'
-                } relative h-[80vh]`}
-              >
-                <CampaignPlanesOccupancyTable
-                  planes={planesQuery.data?.items || []}
-                />
-              </div>
             </div>
           </div>
         </div>

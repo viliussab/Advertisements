@@ -6,6 +6,7 @@ import campaignMutations from '../../../api/calls/campaignMutations';
 import campaignQueries from '../../../api/calls/campaignQueries';
 import CampaignsQuery from '../../../api/queries/type.CampaignsQuery';
 import CampaignOverview from '../../../api/responses/type.CampaignOverview';
+import CampaignInfoDialog from '../../../components/private/campaign/CampaignInfoDialog';
 import Table, { ColumnConfig } from '../../../components/public/table/Table';
 import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
@@ -39,6 +40,8 @@ function CampaignsListPage() {
     },
   });
 
+  const [selectedCampaignId, setSelectedCampaignId] = React.useState<string>();
+
   if (!customersQuery.isFetched && !campaignsQuery.isFetched) {
     return <>Loading...</>;
   }
@@ -58,7 +61,7 @@ function CampaignsListPage() {
     },
     {
       title: 'Kampanijos pavadinimas',
-      renderCell: (campaign) => <>{campaign.name}</>,
+      renderCell: (campaign) => <div className="">{campaign.name}</div>,
       key: 'campaignName',
     },
     {
@@ -129,42 +132,17 @@ function CampaignsListPage() {
             }));
           },
         }}
-        renderOnClickMenu={(campaign) => (
-          <>
-            <Mui.Button
-              onClick={() =>
-                navigate(
-                  generatePath(website_paths.campaigns.edit, {
-                    id: campaign.id,
-                  }),
-                )
-              }
-            >
-              Pasiūlymas <Icons.Edit sx={{ ml: 2 }} />
-            </Mui.Button>
-            <Mui.Button color="info">
-              Stotelės <Icons.AddLocation sx={{ ml: 2 }} />
-            </Mui.Button>
-            {!campaign.isFulfilled &&
-              campaignPlanesFunctions.isCampaignFullfiled(campaign) && (
-                <Mui.Button
-                  disabled={
-                    confirmMutation.isLoading || confirmMutation.isSuccess
-                  }
-                  variant="contained"
-                  onClick={() => confirmMutation.mutateAsync(campaign.id)}
-                >
-                  Tvirtinti kampaniją <Icons.Check sx={{ ml: 2 }} />
-                </Mui.Button>
-              )}
-          </>
-        )}
-        // onClick={(campaign) => {
-
-        // }}
+        onClick={(campaign) => setSelectedCampaignId(campaign.id)}
         columns={columns}
         data={campaignsQuery.data?.items || []}
         keySelector={(plane) => plane.id}
+        buildTrClassName={(e) => (e.isFulfilled ? 'bg-green-100' : '')}
+      />
+      <CampaignInfoDialog
+        selectedCampaignId={selectedCampaignId}
+        resetSelectedId={() => {
+          setSelectedCampaignId(undefined);
+        }}
       />
     </div>
   );

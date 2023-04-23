@@ -5,6 +5,7 @@ using Queries.Handlers.Adverts.GetAreaByName;
 using Queries.Handlers.Adverts.GetAreas;
 using Queries.Handlers.Adverts.GetObjectById;
 using Queries.Handlers.Adverts.GetPlanesPaged;
+using Queries.Handlers.Adverts.GetPlaneSummary;
 using Queries.Handlers.Adverts.GetTypes;
 using Queries.Responses.Prototypes;
 
@@ -58,8 +59,17 @@ public class AdvertQueriesController : BasedController
     }
 
     [HttpGet("plane")]
-    [ProducesResponseType(typeof(List<AdvertPlane>), 200)]
+    [ProducesResponseType(typeof(PageResponse<GetPlanesPagedPlane>), 200)]
     public async Task<IActionResult> GetPlanesPaged([FromQuery] GetPlanesPagedQuery query)
+    {
+        var response = await Mediator.Send(query);
+        
+        return Ok(response);
+    }
+    
+    [HttpGet("plane/summary")]
+    [ProducesResponseType(typeof(PageResponse<PlaneWithWeeks>), 200)]
+    public async Task<IActionResult> GetPlaneSummaryPaged([FromQuery] GetWeeklySummaryQuery query)
     {
         var response = await Mediator.Send(query);
         

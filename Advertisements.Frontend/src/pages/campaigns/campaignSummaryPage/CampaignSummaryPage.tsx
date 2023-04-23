@@ -4,21 +4,24 @@ import campaignQueries from '../../../api/calls/campaignQueries';
 import CampaignSummaryQuery from '../../../api/queries/type.CampaignSummaryQuery';
 import Campaign from '../../../api/responses/type.Campaign';
 import CampaignSummaryWeek from '../../../api/responses/type.CampaignSummaryWeek';
+import CampaignInfoDialog from '../../../components/private/campaign/CampaignInfoDialog';
 import Filters from '../../../components/public/input/filter';
+import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
-import dateFunctions from '../../../functions/dateFunctions';
+import dateFunctions, { weekDay } from '../../../functions/dateFunctions';
+import dateStylingFunctions from '../../../functions/dateStylingFunctions';
 
 function CampaignSummaryPage() {
-  const currentWeek = dateFunctions.getCurrentCampaignDay();
-  const from = dateFns.subWeeks(currentWeek, 1);
-  const to = dateFns.addWeeks(currentWeek, 4);
+  const thisYear = new Date(new Date().getFullYear(), 0, 1);
+
+  const thisYearFirstWeek = dateFunctions.getCampaignDay(thisYear);
 
   const [query, setQuery] = React.useState<CampaignSummaryQuery>({
-    from,
-    to,
+    from: thisYearFirstWeek,
   });
 
   const [hoveredCampaignId, setHoveredCampaignId] = React.useState<string>();
+  const [selectedCampaignId, setSelectedCampaignId] = React.useState<string>();
 
   const summaryQuery = useQuery({
     queryKey: [campaignQueries.campaignSummary.key, query],
@@ -28,67 +31,44 @@ function CampaignSummaryPage() {
   type headerRowProps = {
     name: string;
     renderCell: (c: CampaignSummaryWeek) => React.ReactNode;
+    tdClassName?: string;
   };
 
-  const renderHead = (
+  const renderSupportingRows = (
     rows: headerRowProps[],
     summaries: CampaignSummaryWeek[],
   ) => {
     return rows.map((row, i) => (
-      <tr className={i % 2 === 0 ? 'bg-gray-100' : 'bg-gray-50'}>
+      <tr className={i % 2 === 0 ? 'bg-blue-100' : 'bg-blue-50'}>
         <th
-          className={`py-1 px-2 text-right text-sm uppercase ${
-            i % 2 === 0 ? 'bg-slate-200' : 'bg-slate-100'
-          }`}
+          className={`absolute z-10 w-32 py-1 px-2 text-center text-sm uppercase ${
+            i % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'
+          } `}
         >
           {row.name}
         </th>
         {summaries.map((summary) => (
-          <td className="border pl-2 text-center">{row.renderCell(summary)}</td>
+          <td
+            className={`text-center" + min-w-[120px] border pl-2 ${row.tdClassName}`}
+          >
+            {row.renderCell(summary)}
+          </td>
         ))}
       </tr>
     ));
   };
 
-  const headerRows = [
-    {
-      name: 'Savaitė',
-      renderCell: (summary) =>
-        dateFunctions.formatWeekShort(new Date(summary.week)),
-    },
-    {
-      name: 'Data',
-      renderCell: (summary) =>
-        dateFunctions.formatWeekPeriodMonths(
-          new Date(summary.week),
-          dateFns.addWeeks(new Date(summary.week), 1),
-        ),
-    },
+  const supportingRows = [
     {
       name: 'Užimtumas',
       renderCell: (summary) => <>{summary.planeOccupancyPercent}%</>,
-    },
-    {
-      name: 'Rezervuota',
-      renderCell: (summary) => (
-        <div className="flex justify-between gap-2">
-          <div>{summary.planesReservedTotalCount} p. </div>
-          <div>{summary.reservedTotalPrice.toFixed(1)}€</div>
-        </div>
-      ),
+      tdClassName: 'font-bold',
     },
     {
       name: 'Patvirtinta',
       renderCell: (summary) => (
-        <div className="flex justify-between gap-2">
-          <div>{summary.planesConfirmedTotalCount} p.</div>
-          <div>{summary.confirmedTotalPrice.toFixed(1)}€</div>
-        </div>
+        <div>{summary.confirmedTotalPrice.toFixed(1)}€</div>
       ),
-    },
-    {
-      name: 'Viso plokštumų',
-      renderCell: (summary) => <div>{summary.planeTotalCount}</div>,
     },
     {
       name: 'Viso laisvų',
@@ -109,11 +89,15 @@ function CampaignSummaryPage() {
     : [];
 
   const getCellColor = (campaign: Campaign) => {
-    if (campaign.isFulfilled) {
-      return 'green';
+    if (hoveredCampaignId === campaign.id) {
+      return 'bg-blue-200 text-blue-900';
     }
 
-    return 'gray';
+    if (campaign.isFulfilled) {
+      return 'bg-green-200 text-green-900';
+    }
+
+    return 'bg-gray-100 text-gray-900';
   };
 
   return (
@@ -122,8 +106,7 @@ function CampaignSummaryPage() {
         <Filters.DatePicker
           label="Data nuo"
           onChange={(val) => {
-            const toDate = val > query.to ? val : query.to;
-            if (val) setQuery((prev) => ({ ...prev, from: val, to: toDate }));
+            if (val) setQuery((prev) => ({ ...prev, from: val }));
           }}
           value={query.from}
           includeWeekNumber="end"
@@ -132,32 +115,75 @@ function CampaignSummaryPage() {
               dateFunctions.getCurrentCampaignDay().getDay() !== date.getDay(),
           }}
         />
-        <Filters.DatePicker
-          label="Data Iki"
-          onChange={(val) => {
-            setQuery((prev) => ({ ...prev, to: val }));
-          }}
-          value={query.to}
-          includeWeekNumber="end"
-          datePickerProps={{
-            minDate: query.from,
-            shouldDisableDate: (date) =>
-              dateFunctions.getCurrentCampaignDay().getDay() !== date.getDay(),
-          }}
-        />
       </div>
-      <div className="flex justify-center">
+      <div className="mr-4 ml-4 overflow-x-scroll">
         {!summaryQuery.isLoading && (
-          <table>
-            <thead className="sticky">
-              {renderHead(headerRows, summaries)}
+          <table className="table-fixed">
+            <thead className="">
+              {renderSupportingRows(supportingRows, summaries)}
+              <tr>
+                <th className="h-6 pl-16 pr-16"></th>
+              </tr>
+              <tr>
+                <th
+                  className={`absolute z-10 w-32 py-1 px-2 text-center text-sm uppercase ${'bg-gray-300'}`}
+                >
+                  Menėsis
+                </th>
+                {summaries.map((summary, i) => (
+                  <td
+                    className={`h-7 border pl-2 text-center text-xs font-bold uppercase ${
+                      dateStylingFunctions.getMonthCss(new Date(summary.week))
+                        .strong
+                    }`}
+                  >
+                    {dateStylingFunctions.getMonthText(
+                      new Date(summary.week),
+                      i,
+                    )}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <th
+                  className={` absolute z-10 w-32 py-1 px-2 pt-3 pb-[0.70rem] text-center text-sm uppercase ${'bg-gray-200'}`}
+                >
+                  Savaitė
+                </th>
+                {summaries.map((summary) => (
+                  <td
+                    className={`min-w-[120px] border pl-2 text-center ${
+                      dateStylingFunctions.getMonthCss(new Date(summary.week))
+                        .weak
+                    }`}
+                  >
+                    <div className="text-sm font-bold uppercase">
+                      {dateFunctions.formatWeekShort(new Date(summary.week))}
+                    </div>
+                    <div className="text-sm">
+                      {dateFunctions.formatWeekPeriodMonths(
+                        new Date(summary.week),
+                        dateFns.addWeeks(new Date(summary.week), 1),
+                      )}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <th className="h-3 pl-16 pr-16"></th>
+              </tr>
             </thead>
             <tbody className="">
               {bodyRowsEnumerate.map((i) => (
                 <>
                   <tr>
-                    <th className="bg-orange-100 py-1 pl-2 pr-2 text-sm uppercase text-orange-700">
-                      Kampanija
+                    <th className="absolute z-10 w-32   text-sm uppercase ">
+                      <div className="bg-orange-100 py-1 pl-2 pr-2 text-orange-700">
+                        Kampanija
+                      </div>
+                      <div className="bg-gray-100 py-1 pl-2 pr-2 text-gray-700">
+                        Plokštumos
+                      </div>
                     </th>
                     {summaries.map((summary) =>
                       isThereCampaignInRow(summary.campaigns, i) ? (
@@ -166,49 +192,41 @@ function CampaignSummaryPage() {
                             setHoveredCampaignId(summary.campaigns[i].id)
                           }
                           onMouseLeave={() => setHoveredCampaignId(undefined)}
-                          className={`border-collapse border-2 border-b-0 px-1 text-center
-                    bg-${getCellColor(summary.campaigns[i])}-100
-                    text-${getCellColor(summary.campaigns[i])}-700
-                    ${
-                      hoveredCampaignId === summary.campaigns[i].id &&
-                      'bg-blue-200 text-blue-700'
-                    } `}
-                        >
-                          {summary.campaigns[i].name}
-                        </td>
-                      ) : (
-                        <td></td>
-                      ),
-                    )}
-                  </tr>
-                  <tr>
-                    <th className="bg-gray-100 py-1 pl-2 pr-2 text-sm uppercase text-gray-700">
-                      Plokštumos
-                    </th>
-                    {summaries.map((summary) =>
-                      isThereCampaignInRow(summary.campaigns, i) ? (
-                        <td
-                          onMouseOver={() =>
-                            setHoveredCampaignId(summary.campaigns[i].id)
+                          onClick={() =>
+                            setSelectedCampaignId(summary.campaigns[i].id)
                           }
-                          onMouseLeave={() => setHoveredCampaignId(undefined)}
-                          className={`border-collapse border-2 border-t-0 px-1
-                    bg-${getCellColor(summary.campaigns[i])}-100
-                    text-${getCellColor(summary.campaigns[i])}-700
-                    ${
-                      hoveredCampaignId === summary.campaigns[i].id &&
-                      'bg-blue-200 text-blue-700'
-                    } `}
+                          className={`border-collapse cursor-pointer border px-1 text-center
+                          ${getCellColor(summary.campaigns[i])}`}
                         >
-                          <div className="flex justify-between gap-4">
-                            <div>{summary.campaigns[i].planeAmount} p.</div>
-                            <div>
-                              {summary.campaigns[i].totalNoVat.toFixed(1)}€
-                            </div>
+                          <div className="">
+                            <table>
+                              <tr className="">
+                                <td colSpan={2}>
+                                  <div className="block w-32 overflow-hidden text-ellipsis whitespace-nowrap text-center uppercase">
+                                    {summary.campaigns[i].name}
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr className="">
+                                <td className="w-8 text-left font-bold">
+                                  <div className="ml-4">
+                                    {summary.campaigns[i].planeAmount}
+                                  </div>
+                                </td>
+                                <td className="mr-2 w-24 text-right">
+                                  <div className="mr-4">
+                                    {summary.campaigns[i].totalNoVat.toFixed(1)}
+                                    €
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
                           </div>
                         </td>
                       ) : (
-                        <td></td>
+                        <td>
+                          <div className="w-32"></div>
+                        </td>
                       ),
                     )}
                   </tr>
@@ -218,6 +236,13 @@ function CampaignSummaryPage() {
           </table>
         )}
       </div>
+      <CampaignInfoDialog
+        selectedCampaignId={selectedCampaignId}
+        resetSelectedId={() => {
+          setHoveredCampaignId(undefined);
+          setSelectedCampaignId(undefined);
+        }}
+      />
     </div>
   );
 }

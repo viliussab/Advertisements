@@ -5,7 +5,22 @@ const format = (date: Date) => {
   return dateFns.format(date, 'yyyy-MM-dd');
 };
 
-type weekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type weekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+const getCampaignDay = (date: Date) => {
+  const lastDayOfWeek = dateFns.lastDayOfWeek(date, {
+    weekStartsOn: constants.week_starts_on as weekDay,
+  });
+
+  const campaignDayOfWeek = dateFns.addDays(lastDayOfWeek, 1);
+  const jsDate = new Date();
+  const result = dateFns.addMinutes(
+    campaignDayOfWeek,
+    -1 * jsDate.getTimezoneOffset(),
+  );
+
+  return result;
+};
 
 const getCurrentCampaignDay = () => {
   const lastDayOfWeek = dateFns.lastDayOfWeek(new Date(), {
@@ -23,9 +38,9 @@ const getCurrentCampaignDay = () => {
 };
 
 const formatWeekPeriodMonths = (dateFrom: Date, dateTo: Date) => {
-  const from = dateFns.format(dateFrom, 'MM/dd');
+  const from = dateFns.format(dateFrom, 'MM.dd');
 
-  const to = dateFns.format(dateTo, 'MM/dd');
+  const to = dateFns.format(dateTo, 'MM.dd');
 
   return `${from} - ${to}`;
 };
@@ -72,6 +87,7 @@ const isCampaignWeekday = (date: Date) => {
 };
 
 const dateFunctions = {
+  getCampaignDay,
   format: format,
   toDateOnly,
   formatWeekPeriodMonths,

@@ -1,7 +1,9 @@
 import React from 'react';
 import { useQuery } from 'react-query';
 import advertQueries from '../../../../api/calls/advertQueries';
-import { AdvertPlaneWPhotos } from '../../../../api/responses/type.AdvertObjectDetailed';
+import AdvertObjectDetailed, {
+  AdvertPlaneWPhotos,
+} from '../../../../api/responses/type.AdvertObjectDetailed';
 import AdvertPlaneOfCampaign from '../../../../api/responses/type.AdvertPlaneOfCampaign';
 import PlaneIlluminationIcon from '../../../../components/private/advert/PlaneIlluminationIcon';
 import PlanePermisson from '../../../../components/private/advert/PlanePermisson';
@@ -29,8 +31,6 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
     selectedPlanes,
   } = props;
 
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
-
   const objectQuery = useQuery({
     queryKey: advertQueries.object.key,
     queryFn: () =>
@@ -38,14 +38,7 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
     enabled: !!selectedObjectId,
   });
 
-  const isPlaneSelected = (id: string) => {
-    return !!selectedPlanes.find((x) => x.id === id);
-  };
-
   const object = objectQuery.data;
-
-  const getPlaneGridSize = (photosLength: number) =>
-    Math.ceil(Math.sqrt(photosLength));
 
   return (
     <Mui.Dialog
@@ -84,97 +77,14 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
           <div className="mt-4 flex flex-col">
             {object.planes.map((plane) => (
               <>
-                <div
-                  key={plane.id}
-                  onClick={(e) => {
-                    const selectedPlane = selectedPlanes.find(
-                      (x) => x.id === plane.id,
-                    );
-                    if (selectedPlane) {
-                      setMenuAnchor(e.currentTarget);
-                      return;
-                    }
-
-                    onPlaneSelect({
-                      planeId: plane.id,
-                      name: object.name + ' ' + plane.partialName,
-                    });
-                    resetSelectedObjectId();
-                  }}
-                  className={`flex justify-between gap-4 p-4
-                    ${
-                      isPlaneSelected(plane.id)
-                        ? 'bg-green-200 hover:cursor-pointer hover:bg-green-300'
-                        : 'hover:cursor-pointer hover:bg-gray-200'
-                    }`}
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <div className="">{`${plane.partialName} pusė`}</div>
-                      <PlanePremiumIcon isPremium={plane.isPremium} />
-                    </div>
-                    <div className="mt-2">
-                      <PlanePermisson plane={plane} />
-                    </div>
-                  </div>
-                  {!plane.photos?.length ? (
-                    <div className="flex h-24 w-32 items-center justify-center bg-gray-300 text-gray-400">
-                      Nuotraukų nėra
-                    </div>
-                  ) : (
-                    <div
-                      className="grid h-24 w-32 bg-gray-100"
-                      style={{
-                        gridTemplateColumns: `repeat(${getPlaneGridSize(
-                          plane.photos.length,
-                        )}, minmax(0, 1fr))`,
-                        gridTemplateRows: `repeat(${getPlaneGridSize(
-                          plane.photos.length,
-                        )}, minmax(0, 1fr))`,
-                      }}
-                    >
-                      {plane.photos.map((photo) => (
-                        <ObjectMapPhoto key={photo.id} image={photo} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <Mui.Menu
-                  anchorEl={menuAnchor}
-                  open={Boolean(menuAnchor)}
-                  onClose={() => {
-                    setMenuAnchor(null);
-                  }}
-                >
-                  <div className="">
-                    <Mui.Button
-                      onClick={() => {
-                        setMenuAnchor(null);
-                        deselectPlane(plane.id);
-                        resetSelectedObjectId();
-                      }}
-                    >
-                      Panaiktinti pasirinkimą
-                    </Mui.Button>
-                    <Mui.Button
-                      color="info"
-                      onClick={() => {
-                        const values = selectedPlanes.find(
-                          (x) => x.id === plane.id,
-                        );
-                        setMenuAnchor(null);
-                        onPlaneSelect({
-                          planeId: plane.id,
-                          name: object.name + ' ' + plane.partialName,
-                          values,
-                        });
-                        resetSelectedObjectId();
-                      }}
-                    >
-                      Keisti plokštumos periodą
-                    </Mui.Button>
-                  </div>
-                </Mui.Menu>
+                <Plane
+                  deselectPlane={deselectPlane}
+                  object={object}
+                  onPlaneSelect={onPlaneSelect}
+                  plane={plane}
+                  resetSelectedObjectId={resetSelectedObjectId}
+                  selectedPlanes={selectedPlanes}
+                />
               </>
             ))}
           </div>
@@ -184,22 +94,125 @@ const CampaignPlanesMapDetailsDialog = (props: Props) => {
   );
 };
 
-type DetailsPlane = {
-  photo: AdvertPlaneWPhotos;
+type PlaneProps = {
+  resetSelectedObjectId: () => void;
+  selectedPlanes: AdvertPlaneOfCampaign[];
+  deselectPlane: (id: string) => void;
+  plane: AdvertPlaneWPhotos;
+  onPlaneSelect: (plane: SelectedPlaneToEdit) => void;
+  object: AdvertObjectDetailed;
 };
 
-function f() {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null,
+function Plane(props: PlaneProps) {
+  const {
+    resetSelectedObjectId,
+    selectedPlanes,
+    deselectPlane,
+    plane,
+    onPlaneSelect,
+    object,
+  } = props;
+
+  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+
+  const isPlaneSelected = (id: string) => {
+    return !!selectedPlanes.find((x) => x.id === id);
+  };
+
+  const getPlaneGridSize = (photosLength: number) =>
+    Math.ceil(Math.sqrt(photosLength));
+
+  return (
+    <>
+      <div
+        key={plane.id}
+        onClick={(e) => {
+          const selectedPlane = selectedPlanes.find((x) => x.id === plane.id);
+          if (selectedPlane) {
+            setMenuAnchor(e.currentTarget);
+            return;
+          }
+
+          onPlaneSelect({
+            planeId: plane.id,
+            name: object.name + ' ' + plane.partialName,
+          });
+          resetSelectedObjectId();
+        }}
+        className={`flex justify-between gap-4 p-4
+                    ${
+                      isPlaneSelected(plane.id)
+                        ? 'bg-green-200 hover:cursor-pointer hover:bg-green-300'
+                        : 'hover:cursor-pointer hover:bg-gray-200'
+                    }`}
+      >
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="">{`${plane.partialName} pusė`}</div>
+            <PlanePremiumIcon isPremium={plane.isPremium} />
+          </div>
+          <div className="mt-2">
+            <PlanePermisson plane={plane} />
+          </div>
+        </div>
+        {!plane.photos?.length ? (
+          <div className="flex h-24 w-32 items-center justify-center bg-gray-300 text-gray-400">
+            Nuotraukų nėra
+          </div>
+        ) : (
+          <div
+            className="grid h-24 w-32 bg-gray-100"
+            style={{
+              gridTemplateColumns: `repeat(${getPlaneGridSize(
+                plane.photos.length,
+              )}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${getPlaneGridSize(
+                plane.photos.length,
+              )}, minmax(0, 1fr))`,
+            }}
+          >
+            {plane.photos.map((photo) => (
+              <ObjectMapPhoto key={photo.id} image={photo} />
+            ))}
+          </div>
+        )}
+      </div>
+      <Mui.Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={() => {
+          setMenuAnchor(null);
+        }}
+      >
+        <div className="">
+          <Mui.Button
+            color="error"
+            onClick={() => {
+              setMenuAnchor(null);
+              deselectPlane(plane.id);
+              resetSelectedObjectId();
+            }}
+          >
+            Panaiktinti <Icons.Delete sx={{ ml: 1 }} />
+          </Mui.Button>
+          <Mui.Button
+            onClick={() => {
+              const values = selectedPlanes.find((x) => x.id === plane.id);
+              setMenuAnchor(null);
+              onPlaneSelect({
+                planeId: plane.id,
+                name: object.name + ' ' + plane.partialName,
+                values,
+              });
+              resetSelectedObjectId();
+            }}
+          >
+            Keisti periodą <Icons.Refresh sx={{ ml: 1 }} />
+          </Mui.Button>
+        </div>
+      </Mui.Menu>
+    </>
   );
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 }
 
 export default CampaignPlanesMapDetailsDialog;

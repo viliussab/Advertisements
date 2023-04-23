@@ -6,6 +6,8 @@ import Area from '../responses/type.Area';
 import PageResponse from '../responses/type.PageResponse';
 import api from './api';
 import AreaDetailed from './../responses/type.AreaDetailed';
+import WeeklyRegistryQuery from '../queries/type.WeeklyRegistryQuery';
+import PlaneSummary from '../responses/type.PlaneSummary';
 
 const getTypesAsync = async () => {
   const response = await api.queryAsync({
@@ -48,6 +50,15 @@ const getKaunasAsync = async () => {
   return response.data as AreaDetailed;
 };
 
+const getWeeklyRegistryAsync = async (query: WeeklyRegistryQuery) => {
+  const response = await api.queryAsync({
+    url: api.endpoints.common.advert.weekly_summary,
+    query,
+  });
+
+  return response.data as PlaneSummary;
+};
+
 const advertQueries = {
   types: {
     fn: getTypesAsync,
@@ -68,6 +79,10 @@ const advertQueries = {
   areaKaunas: {
     fn: getKaunasAsync,
     key: 'area_kaunas',
+  },
+  weeklySummary: {
+    fn: getWeeklyRegistryAsync,
+    key: 'weekly_summary',
   },
 };
 

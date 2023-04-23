@@ -18,7 +18,9 @@ public class GetCustomersHandler : BasedHandler<GetCustomersQuery, IEnumerable<C
 
     public override async Task<IEnumerable<CustomerFields>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
-        var customers = await _context.Set<Customer>().ToListAsync(cancellationToken: cancellationToken);
+        var customers = await _context
+            .Set<Customer>()
+            .ToListAsync(cancellationToken: cancellationToken);
         var customersDto = customers.Adapt<List<CustomerFields>>();
 
         return customersDto;

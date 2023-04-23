@@ -26,6 +26,7 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
                 x.Start >= request.From && x.Start <= request.To
                 || x.End >= request.From && x.End <= request.To)
             .Include(x => x.CampaignPlanes)
+            .Include(x => x.Customer)
             .ToListAsync(cancellationToken: cancellationToken);
 
         var planes = await _context
@@ -54,11 +55,16 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
             weeklySummary.ReservedTotalPrice = campaignsOfWeek.Sum(GetWeeklyPrice);
             weeklySummary.PlanesConfirmedTotalCount = confirmedWeekCampaigns.Sum(x => x.CampaignPlanes.Count);
             weeklySummary.PlanesReservedTotalCount = campaignsOfWeek.Sum(x => x.CampaignPlanes.Count);
-            var campaignsDto = campaignsOfWeek.Select(
-                CampaignFunctions.BuildPriceDetailsCampaign);
-            
-            weeklySummary.Campaigns = campaignsDto.Adapt<List<CampaignOverview>>();
-            
+
+            weeklySummary.Campaigns = campaignsOfWeek.Select(c =>
+            {
+                var details = CampaignFunctions.BuildPriceDetailsCampaign(c);
+                var dto = details.Adapt<CampaignOverview>();
+                dto.Customer = c.Customer.Adapt<CustomerFields>();
+
+                return dto;
+            }).ToList();
+
             weeklySummary.PlaneTotalCount = planes
                 .Count(x => x.CreationDate <= week.AddDays(6));
 

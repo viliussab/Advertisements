@@ -15,7 +15,7 @@ function Navbar({ title }: Props) {
         <div className="mr-2 h-10">
           <img className="h-full w-full" src="/logo.png" />
         </div>
-        <p className="mr-2 ml-2 text-lg font-medium uppercase">{title}</p>
+        <p className="mr-2 ml-2 text-lg  uppercase italic">{title}</p>
 
         <Mui.Divider orientation="vertical" flexItem />
 

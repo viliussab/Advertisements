@@ -5,6 +5,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
+using Queries.Functions;
 using Queries.Prototypes;
 using Queries.Responses;
 using Queries.Responses.Prototypes;
@@ -25,14 +26,18 @@ public class GetCampaignByIdHandler : BasedHandler<GetCampaignByIdQuery, OneOf<N
         var campaign = await _context
             .Set<Campaign>()
             .Include(x => x.CampaignPlanes)
+            .Include(x => x.Customer)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (campaign is null)
         {
             return new NotFoundError(request.Id, typeof(Campaign));
         }
-
+        
+        var campaignDetailed = CampaignFunctions.BuildPriceDetailsCampaign(campaign);
         var dto = campaign.Adapt<CampaignOverview>();
+        dto.WeekCount = campaignDetailed.WeekCount;
+        dto.TotalNoVat = campaignDetailed.TotalNoVat;
 
         return dto;
     }

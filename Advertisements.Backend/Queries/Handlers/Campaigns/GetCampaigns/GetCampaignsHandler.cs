@@ -23,7 +23,7 @@ public class GetCampaignsHandler : BasedHandler<GetCampaignsQuery, PageResponse<
     {
         var campaignPage = await _context
             .Set<Campaign>()
-            .OrderBy(x => x.ModificationDate)
+            .OrderByDescending(x => x.ModificationDate)
             .Include(x => x.Customer)
             .Include(x => x.CampaignPlanes)
             .ToPageAsync(request, cancellationToken);

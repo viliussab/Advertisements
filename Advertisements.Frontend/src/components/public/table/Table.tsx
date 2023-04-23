@@ -3,7 +3,7 @@ import Mui from '../../../config/imports/Mui';
 import TableHeaderFilter from './TableHeaderFilter';
 
 export type ColumnConfig<T> = {
-  title: string;
+  title: string | React.ReactNode;
   renderCell: (elem: T) => React.ReactNode;
   key: string;
   filter?: {
@@ -13,7 +13,7 @@ export type ColumnConfig<T> = {
   };
 };
 
-type TableProps<T> = {
+export type TableProps<T> = {
   columns: ColumnConfig<T>[];
   data: T[];
   onClick?: (elem: T) => void;
@@ -30,6 +30,7 @@ type TableProps<T> = {
     setPageNumber: (pageNumber: number) => void;
     setPageSize: (pageSize: number) => void;
   };
+  buildTrClassName?: (elem: T) => string;
 };
 
 type TableRowProps<T> = {
@@ -40,11 +41,19 @@ type TableRowProps<T> = {
     onMouseOver?: (elem: T) => void;
     onMouseOut?: (elem: T) => void;
   };
+  buildTrClassName?: (elem: T) => string;
   elem: T;
 };
 
-function TableRow<T>(props: TableRowProps<T>) {
-  const { rowsProps, elem, renderOnClickMenu, onClick, columns } = props;
+export function TableRow<T>(props: TableRowProps<T>) {
+  const {
+    rowsProps,
+    elem,
+    renderOnClickMenu,
+    onClick,
+    columns,
+    buildTrClassName,
+  } = props;
 
   const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
 
@@ -59,7 +68,7 @@ function TableRow<T>(props: TableRowProps<T>) {
           renderOnClickMenu && setMenuAnchor(e.currentTarget);
           onClick && onClick(elem);
         }}
-        className={`nth border-b
+        className={`nth border-b ${buildTrClassName && buildTrClassName(elem)}
       ${
         (onClick || renderOnClickMenu) &&
         'hover:cursor-pointer hover:bg-blue-100'
@@ -105,6 +114,7 @@ export default function Table<T>(props: TableProps<T>) {
     paging,
     rowsProps,
     renderOnClickMenu,
+    buildTrClassName,
   } = props;
 
   return (
@@ -151,6 +161,7 @@ export default function Table<T>(props: TableProps<T>) {
               renderOnClickMenu={renderOnClickMenu}
               onClick={onClick}
               rowsProps={rowsProps}
+              buildTrClassName={buildTrClassName}
             />
           ))}
         </tbody>
