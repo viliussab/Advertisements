@@ -1,6 +1,8 @@
-namespace Queries.Handlers.Auth;
+using MediatR;
 
-public class GetUserQuery
+namespace Queries.Handlers.Auth.GetUser;
+
+public class GetUserQuery : IRequest<UserResponse>
 {
-    
+    public string Id { get; set; }
 }

@@ -13,8 +13,6 @@ const website_paths = {
     weekly_overview: '/campaigns/weekly-overview',
   },
   customers: {
-    create: '/customers/create',
-    edit: '/customers/:id',
     main: '/customers',
   },
   adverts: {

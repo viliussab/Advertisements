@@ -9,6 +9,7 @@ import CampaignPlanesPage from '../pages/campaigns/campaignPlanesPage/CampaignPl
 import CampaignsListPage from '../pages/campaigns/campaignsListPage/CampaignsListPage';
 import CampaignSummaryPage from '../pages/campaigns/campaignSummaryPage/CampaignSummaryPage';
 import CampaignUpdatePage from '../pages/campaigns/campaignUpdatePage/CampaignUpdatePage';
+import CustomersManagePage from '../pages/campaigns/customersManagePage/CustomersManagePage';
 import website_paths from './website_paths';
 
 export type Route = {
@@ -88,6 +89,13 @@ const routes: Array<Route> = [
     Page: WeeklyRegistryPage,
     layout: {
       title: 'Savaitinis registras',
+    },
+  },
+  {
+    path: website_paths.customers.main,
+    Page: CustomersManagePage,
+    layout: {
+      title: 'Valdyti klientus',
     },
   },
 ];

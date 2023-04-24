@@ -7,6 +7,7 @@ using Core.Interfaces;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services;
@@ -22,14 +23,18 @@ public class JwtService : IJwtService
 	private readonly UserManager<User> _userManager;
 	private readonly AdvertContext _context;
 
-	public JwtService(IDateProvider dateProvider, JwtServiceSettings jwtSettings, UserManager<User> userManager, AdvertContext context)
+	public JwtService(
+		IDateProvider dateProvider,
+		IOptionsMonitor<JwtServiceSettings> jwtSettings,
+		UserManager<User> userManager,
+		AdvertContext context)
 	{
 		_dateProvider = dateProvider;
-		_jwtSettings = jwtSettings;
+		_jwtSettings = jwtSettings.CurrentValue;
 		_userManager = userManager;
 		_context = context;
 		_tokenHandler = new JwtSecurityTokenHandler();
-		_securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret));
+		_securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret));
 	}
 	
 	public UserRefreshToken BuildRefreshToken(User user)

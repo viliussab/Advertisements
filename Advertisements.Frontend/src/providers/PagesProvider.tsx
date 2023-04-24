@@ -1,5 +1,5 @@
 import routes, { Route } from '../config/routes';
-import { Route as RRD_Router, BrowserRouter, Routes } from 'react-router-dom';
+import { Route as RRD_Route, BrowserRouter, Routes } from 'react-router-dom';
 import Layout from '../components/private/layout/Layout';
 
 function PagesProvider() {
@@ -7,7 +7,7 @@ function PagesProvider() {
     <BrowserRouter>
       <Routes>
         {routes.map((route) => (
-          <RRD_Router
+          <RRD_Route
             key={route.path}
             path={route.path}
             element={<Layout route={route} />}

@@ -13,13 +13,13 @@ public class BasedController : ControllerBase
     protected IMediator Mediator => HttpContext.RequestServices.GetService<IMediator>() ??
                                     throw new InvalidOperationException("Mediator was not found");
     
-    protected Guid CurrentUserId
+    protected string CurrentUserId
     {
         get
         {
             try
             {
-                return Guid.Parse(User.FindFirstValue(ClaimTypes.Sid)!);
+                return User.FindFirstValue(ClaimTypes.Sid)!;
             }
             catch
             {

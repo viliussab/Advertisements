@@ -47,6 +47,11 @@ const endpoints = {
       customer: `${apiUrl}/customer`,
     },
   },
+  auth: {
+    me: `${apiUrl}/me`,
+    login: `${apiUrl}/login`,
+    logout: `${apiUrl}/logout`,
+  },
   campaign: {
     download_campaign_offer: `${apiUrl}/campaign/downloadOffer`,
     buildCampaignPlaneEndpoint: (id: string) =>

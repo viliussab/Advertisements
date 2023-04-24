@@ -1,12 +1,25 @@
 using Core.Database;
+using Core.Enums;
 using Core.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Seeding;
 
 public static class Seeder
 {
-    public static async Task Seed(AdvertContext context)
+    public static async Task Seed(AdvertContext context, UserManager<User> userManager)
     {
+        if (!userManager.Users.Any())
+        {
+            var user = new User
+            {
+                UserName = "admin@reklamosarka.com",
+                Email = "admin@reklamosarka.com",
+                Role = Role.Admin,
+            };
+            await userManager.CreateAsync(user, "Testing1!");
+        }
+        
         if (!context.Set<Area>().Any())
         {
             context.Add(new Area

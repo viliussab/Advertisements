@@ -1,7 +1,9 @@
 using Commands.Handlers.Campaigns.ConfirmCampaign;
 using Commands.Handlers.Campaigns.CreateCampaign;
+using Commands.Handlers.Campaigns.CreateCustomer;
 using Commands.Handlers.Campaigns.UpdateCampaign;
 using Commands.Handlers.Campaigns.UpdateCampaignPlanes;
+using Commands.Handlers.Campaigns.UpdateCustomer;
 using Commands.Responses;
 using Core.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,25 @@ public class CampaignCommandsController : BasedController
         var result = await Mediator.Send(command);
         
         return Ok(result);
+    }
+    
+    [HttpPost("customer")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerCommand command)
+    {
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+    
+    [HttpPut("customer/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateCustomer([FromRoute] Guid id, [FromBody] UpdateCustomerCommand command)
+    {
+        command.Id = id;
+        await Mediator.Send(command);
+
+        return NoContent();
     }
     
     [HttpPut("campaign/{id:guid}")]

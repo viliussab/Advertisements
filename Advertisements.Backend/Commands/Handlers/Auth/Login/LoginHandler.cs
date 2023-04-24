@@ -5,7 +5,7 @@ using Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace Commands.Handlers.Auth;
+namespace Commands.Handlers.Auth.Login;
 
 public class LoginHandler : IRequestHandler<LoginCommand, Jwt>
 {

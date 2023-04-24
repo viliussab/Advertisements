@@ -62,6 +62,11 @@ function Navbar({ title }: Props) {
               title: 'Savaitinis registras',
               Icon: Icons.LocationOn,
             },
+            {
+              path: website_paths.customers.main,
+              title: 'Valdyti klientus',
+              Icon: Icons.People,
+            },
           ]}
         />
       </div>

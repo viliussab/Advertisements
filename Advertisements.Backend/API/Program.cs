@@ -1,9 +1,15 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
+using Core.Models;
 using Infrastructure;
 using Infrastructure.Seeding;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Queries.Handlers.Adverts.GetAreas;
 
@@ -20,6 +26,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAreasQuery>());
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateObjectCommand>());
+builder.Services.AddAuthorization();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -53,7 +60,26 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+var jwtSettings = builder.Services.BuildServiceProvider().GetService<IOptionsMonitor<JwtServiceSettings>>();
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings!.CurrentValue.Secret)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        RequireExpirationTime = true,
+        ValidateLifetime = true,
+    };
+});
 
 var app = builder.Build();
 
@@ -69,6 +95,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -80,9 +109,8 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Advertiseme
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetService<AdvertContext>()!;
-    await Seeder.Seed(context);
+    var userManager = scope.ServiceProvider.GetService<UserManager<User>>()!;
+    await Seeder.Seed(context, userManager);
 }
-
-
 
 app.Run();

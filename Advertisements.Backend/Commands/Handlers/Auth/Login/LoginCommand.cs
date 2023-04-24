@@ -1,7 +1,7 @@
 using Core.Components;
 using MediatR;
 
-namespace Commands.Handlers.Auth;
+namespace Commands.Handlers.Auth.Login;
 
 public class LoginCommand : IRequest<Jwt>
 {

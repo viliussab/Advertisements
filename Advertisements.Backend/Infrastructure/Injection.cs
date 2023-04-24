@@ -34,7 +34,7 @@ public static class Injection
 			
 		TypeAdapterConfig.GlobalSettings.Scan(typeof(StorageFileMapProfile).Assembly);
 
-		// services.AddScoped<IJwtService, JwtService>();
+		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IDateProvider, DateProvider>();
 		services.AddScoped<IPdfBuilder, PdfBuilder>();
 	}
@@ -50,8 +50,9 @@ public static class Injection
 	private static void AddAuthentication(this IServiceCollection services)
 	{
 		services
-			.AddIdentityCore<User>()
-			.AddEntityFrameworkStores<AdvertContext>();
+			.AddIdentity<User, IdentityRole>()
+			.AddEntityFrameworkStores<AdvertContext>()
+			.AddDefaultTokenProviders();
 		services.Configure<IdentityOptions>(options =>
 		{
 			options.Password.RequireDigit = true;
