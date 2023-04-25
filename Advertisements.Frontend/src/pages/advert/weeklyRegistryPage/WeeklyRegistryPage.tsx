@@ -14,14 +14,16 @@ import {
 } from '../../../components/public/table/Table';
 import TableHeaderFilter from '../../../components/public/table/TableHeaderFilter';
 import dateFns from '../../../config/imports/dateFns';
+import Icons from '../../../config/imports/Icons';
 import Mui from '../../../config/imports/Mui';
 import dateFunctions from '../../../functions/dateFunctions';
 import dateStylingFunctions from '../../../functions/dateStylingFunctions';
 import optionsFunctions from '../../../functions/optionsFunctions';
 import ObjectMapDetailsDialog from '../objectMapPage/private/ObjectMapDetailsDialog';
+import _ from 'lodash';
 
 type PlaneColumnConfig = ColumnConfig<AdvertPlaneOfSummary> & {
-  tdWidthClass: string;
+  rowWidthPx: number;
 };
 
 function WeeklyRegistryPage() {
@@ -30,7 +32,7 @@ function WeeklyRegistryPage() {
 
   const [query, setQuery] = React.useState<WeeklyRegistryQuery>({
     pageNumber: 1,
-    pageSize: 25,
+    pageSize: 1000,
     from: thisYearFirstWeek,
   });
   const [objectId, setObjectId] = React.useState<string>();
@@ -52,9 +54,14 @@ function WeeklyRegistryPage() {
 
   const columns: PlaneColumnConfig[] = [
     {
+      title: 'Nr.',
+      renderCell: (plane) => <>{`${plane.object.serialCode}`}</>,
+      key: 'number',
+      rowWidthPx: 40,
+    },
+    {
       title: 'Pavadinimas',
       renderCell: (plane) => <>{`${plane.object.name} ${plane.partialName}`}</>,
-      tdWidthClass: 'w-32',
       key: 'name',
       filter: {
         isActive: !!query.name,
@@ -69,12 +76,12 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, name: undefined }));
         },
       },
+      rowWidthPx: 128,
     },
     {
       title: 'Adresas',
       renderCell: (plane) => <>{plane.object.address}</>,
       key: 'address',
-      tdWidthClass: 'w-32',
       filter: {
         isActive: !!query.address,
         renderFilter: () => (
@@ -90,12 +97,12 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, address: undefined }));
         },
       },
+      rowWidthPx: 96,
     },
     {
       title: 'Pusė',
       renderCell: (plane) => <>{plane.partialName}</>,
       key: 'side',
-      tdWidthClass: 'text-center',
       filter: {
         isActive: !!query.side,
         renderFilter: () => (
@@ -110,6 +117,7 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, side: undefined }));
         },
       },
+      rowWidthPx: 64,
     },
     {
       title: 'Rajonas',
@@ -131,15 +139,22 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, region: undefined }));
         },
       },
-      tdWidthClass: '',
+      rowWidthPx: 96,
     },
     {
-      tdWidthClass: 'text-center',
-      title: 'Premium',
-      renderCell: (plane) => <PlanePremiumIcon isPremium={plane.isPremium} />,
+      title: (
+        <>
+          <Icons.Star />
+        </>
+      ),
+      renderCell: (plane) => (
+        <>
+          <PlanePremiumIcon isPremium={plane.isPremium} />
+        </>
+      ),
       key: 'premium',
       filter: {
-        isActive: !!query.premium?.toString(),
+        isActive: !!query.premium,
         renderFilter: () => (
           <Filters.Select
             emptyOptionDisplay="Visi"
@@ -158,26 +173,31 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, premium: undefined }));
         },
       },
+      rowWidthPx: 80,
     },
   ];
 
   return (
     <div>
-      <div className="sticky m-4 flex justify-center gap-4">
-        <Filters.DatePicker
-          label="Data nuo"
-          onChange={(val) => {
-            if (val) setQuery((prev) => ({ ...prev, from: val }));
-          }}
-          value={query.from}
-          includeWeekNumber="end"
-          datePickerProps={{
-            shouldDisableDate: (date) =>
-              dateFunctions.getCurrentCampaignDay().getDay() !== date.getDay(),
-          }}
-        />
+      <div className="white fixed top-16 z-10 h-[88px] w-full bg-white"></div>
+      <div className="z-20 m-4 mb-16 flex justify-center gap-4 bg-white">
+        <div className="fixed z-20 flex-1 bg-white">
+          <Filters.DatePicker
+            label="Data nuo"
+            onChange={(val) => {
+              if (val) setQuery((prev) => ({ ...prev, from: val }));
+            }}
+            value={query.from}
+            includeWeekNumber="end"
+            datePickerProps={{
+              shouldDisableDate: (date) =>
+                dateFunctions.getCurrentCampaignDay().getDay() !==
+                date.getDay(),
+            }}
+          />
+        </div>
       </div>
-      <WeeklyRegistryTable
+      <RegistryTable
         hoveredCampaignId={hoveredCampaignId}
         onCampaignHover={(id) => setHoveredCampaignId(id)}
         onCampaignClick={(id) => setSelectedCampaignId(id)}
@@ -221,181 +241,212 @@ function WeeklyRegistryPage() {
   );
 }
 
-type WeeklyRegistryTableProps = TableProps<AdvertPlaneOfSummary> & {
+type RegistryTableProps = {
   columns: PlaneColumnConfig[];
-  weeks: Date[];
-  hoveredCampaignId: string | undefined;
-  onCampaignHover: (id: string | undefined) => void;
-  onCampaignClick: (id: string | undefined) => void;
-};
-
-function WeeklyRegistryTable(props: WeeklyRegistryTableProps) {
-  const { columns, data, keySelector, paging, rowsProps, onClick, weeks } =
-    props;
-
-  return (
-    <div className="mr-4 ml-4 mb-4 overflow-x-scroll">
-      <table className="text-left text-sm text-gray-500">
-        <thead className="text-black">
-          <tr>
-            <td colSpan={columns.length} className="">
-              {paging && (
-                <Mui.TablePagination
-                  component="div"
-                  count={paging.totalCount}
-                  page={paging.pageNumber - 1}
-                  onPageChange={(_, pageNumber) =>
-                    paging.setPageNumber(pageNumber + 1)
-                  }
-                  rowsPerPage={paging.pageSize}
-                  onRowsPerPageChange={(event) =>
-                    paging.setPageSize(Number(event.target.value))
-                  }
-                  labelDisplayedRows={({ from, to, count }) =>
-                    `${from}-${to} iš ${count}`
-                  }
-                  labelRowsPerPage="Puslapio dydis: "
-                />
-              )}
-            </td>
-            {weeks.map((week, i) => (
-              <td
-                className={`h-7 min-w-[120px] border pl-2 text-center text-sm font-bold uppercase ${
-                  dateStylingFunctions.getMonthCss(week).strong
-                }`}
-              >
-                {dateStylingFunctions.getMonthText(week, i)}
-              </td>
-            ))}
-          </tr>
-          <tr className="">
-            {columns.map((c) => (
-              <th
-                scope="col"
-                key={c.title}
-                className={`sticky bg-gray-100 py-1 px-2 text-xs uppercase text-gray-700`}
-              >
-                <div className="flex items-center justify-center text-center ">
-                  {c.title}
-                  {c.filter && <TableHeaderFilter {...c.filter} />}
-                </div>
-              </th>
-            ))}
-            {weeks.map((week) => (
-              <td
-                className={`min-w-[120px] border pl-2 text-center ${
-                  dateStylingFunctions.getMonthCss(week).weak
-                }`}
-              >
-                <div className="font-bold">
-                  {dateFunctions.formatWeekShort(week)}
-                </div>
-                <div className="text-sm">
-                  {dateFunctions.formatWeekPeriodMonths(
-                    week,
-                    dateFns.addWeeks(week, 1),
-                  )}
-                </div>
-              </td>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((elem) => (
-            <WeeklyRegistryRow
-              columns={columns}
-              key={keySelector(elem)}
-              elem={elem}
-              onClick={onClick}
-              rowsProps={rowsProps}
-              weeks={weeks}
-              hoveredCampaignId={props.hoveredCampaignId}
-              onCampaignHover={props.onCampaignHover}
-              onCampaignClick={props.onCampaignClick}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-type WeeklyRegistryRowProps = {
-  columns: PlaneColumnConfig[];
+  data: AdvertPlaneOfSummary[];
+  onClick?: (elem: AdvertPlaneOfSummary) => void;
+  renderOnClickMenu?: (elem: AdvertPlaneOfSummary) => React.ReactNode;
   rowsProps?: {
     onMouseOver?: (elem: AdvertPlaneOfSummary) => void;
     onMouseOut?: (elem: AdvertPlaneOfSummary) => void;
   };
-  onClick?: (elem: AdvertPlaneOfSummary) => void;
-  elem: AdvertPlaneOfSummary;
+  keySelector: (elem: AdvertPlaneOfSummary) => string;
+  paging?: {
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+    setPageNumber: (pageNumber: number) => void;
+    setPageSize: (pageSize: number) => void;
+  };
   weeks: Date[];
   hoveredCampaignId: string | undefined;
   onCampaignHover: (id: string | undefined) => void;
   onCampaignClick: (id: string | undefined) => void;
 };
 
-export function WeeklyRegistryRow(props: WeeklyRegistryRowProps) {
+function RegistryTable(props: RegistryTableProps) {
   const {
-    rowsProps,
-    elem,
-    onClick,
     columns,
+    data,
+    paging,
+    onClick,
     weeks,
     hoveredCampaignId,
-    onCampaignHover,
     onCampaignClick,
+    onCampaignHover,
   } = props;
 
-  const [rowHovered, setRowHovered] = React.useState(false);
+  const width = columns.reduce((sum, col) => sum + col.rowWidthPx, 0);
 
-  const getCampaign = (week: Date) =>
+  const initialLeft = width + 16;
+
+  const [left, setLeft] = React.useState<number>(initialLeft);
+
+  const getCampaign = (elem: AdvertPlaneOfSummary, week: Date) =>
     elem.occupyingCampaigns.find(
       (x) => new Date(x.week).getTime() === week.getTime(),
     );
 
+  const onScroll = React.useCallback(
+    _.debounce((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      //@ts-ignore
+      setLeft(initialLeft + -event.target.scrollLeft);
+    }, 0),
+    [],
+  );
+
   return (
     <>
-      <tr
-        className={`${
-          onClick && rowHovered && 'cursor-pointer hover:bg-blue-100'
-        }`}
-      >
-        {columns.map((c) => (
-          <td
-            onMouseOver={() => setRowHovered(true)}
-            onMouseOut={() => setRowHovered(false)}
-            onClick={() => {
-              onClick && onClick(elem);
-            }}
-            className={`nth border-b ${c.tdWidthClass}`}
-            key={c.key}
-          >
-            <div
-              className={`${c.tdWidthClass} items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap align-middle`}
-            >
-              {c.renderCell(elem)}
+      <div className="fixed z-30 h-[100vh] w-4 bg-white"></div>
+      <div className="ml-4 mb-4">
+        <div className="relative flex overflow-y-hidden">
+          <div className={`w-[${width}px]`}>
+            <div className={`fixed z-10`}>
+              <div className="h-14 bg-white">
+                {paging && (
+                  <Mui.TablePagination
+                    component="div"
+                    count={paging.totalCount}
+                    page={paging.pageNumber - 1}
+                    onPageChange={(_, pageNumber) =>
+                      paging.setPageNumber(pageNumber + 1)
+                    }
+                    rowsPerPageOptions={[100, 500, 1000]}
+                    rowsPerPage={paging.pageSize}
+                    onRowsPerPageChange={(event) =>
+                      paging.setPageSize(Number(event.target.value))
+                    }
+                    labelDisplayedRows={({ from, to, count }) =>
+                      `${from}-${to} iš ${count}`
+                    }
+                    labelRowsPerPage="Puslapio dydis: "
+                  />
+                )}
+              </div>
+              <div className="z-20 flex h-12 ">
+                {columns.map((c) => (
+                  <div key={c.key} style={{ width: c.rowWidthPx }}>
+                    <div
+                      className={`z-20 flex h-12 items-center justify-center border-r bg-gray-100 text-center text-xs font-bold uppercase text-black`}
+                    >
+                      {c.title}
+                      {c.filter && <TableHeaderFilter {...c.filter} />}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </td>
-        ))}
-        {weeks.map((week) =>
-          getCampaign(week) ? (
-            <td
-              className={`cursor-pointer border text-center text-black ${
-                getCampaign(week)?.id === hoveredCampaignId
-                  ? 'bg-blue-300'
-                  : 'bg-green-200'
-              }`}
-              onMouseOver={() => onCampaignHover(getCampaign(week)?.id)}
-              onMouseOut={() => onCampaignHover(undefined)}
-              onClick={() => onCampaignClick(getCampaign(week)?.id)}
+            <div className="relative mt-[120px] bg-white">
+              {data.map((elem) => (
+                <div
+                  className="flex cursor-pointer hover:bg-blue-100"
+                  key={elem.id}
+                >
+                  {columns.map((c) => (
+                    <div
+                      style={{ width: c.rowWidthPx }}
+                      onClick={() => {
+                        onClick && onClick(elem);
+                      }}
+                      className={`nth h-6 items-center justify-center border-t pl-1 pr-1 text-sm text-gray-700`}
+                      key={c.key}
+                    >
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-center">
+                        {c.renderCell(elem)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="overflow-y-hidden">
+            <div className={`fixed`} style={{ left: left }}>
+              <div className="flex h-14">
+                {weeks.map((week, i) => (
+                  <div
+                    key={week.getTime()}
+                    className={`flex min-w-[120px] items-center justify-center border text-sm font-bold uppercase ${
+                      dateStylingFunctions.getMonthCss(week).strong
+                    }`}
+                  >
+                    <div className="">
+                      {dateStylingFunctions.getMonthText(week, i)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex h-12">
+                {weeks.map((week) => (
+                  <div
+                    key={week.getTime()}
+                    className={`min-w-[120px] border pl-2 text-center ${
+                      dateStylingFunctions.getMonthCss(week).weak
+                    }`}
+                  >
+                    <div className="font-bold">
+                      {dateFunctions.formatWeekShort(week)}
+                    </div>
+                    <div className="text-sm">
+                      {dateFunctions.formatWeekPeriodMonths(
+                        week,
+                        dateFns.addWeeks(week, 1),
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className={`overflow-x-hidden" fixed mt-[80px] overflow-y-hidden`}
+              style={{
+                maxWidth: `calc(100vw - ${initialLeft}px)`,
+              }}
+              onScroll={(e) => onScroll(e)}
             >
-              {getCampaign(week)?.name}
-            </td>
-          ) : (
-            <td className="bg-gray-50 hover:bg-gray-200"></td>
-          ),
-        )}
-      </tr>
+              <div style={{ width: weeks.length * 120 }}>&nbsp;</div>
+            </div>
+            <div>
+              <div
+                className={`mt-[120px] overflow-hidden`}
+                style={{
+                  marginLeft: left - initialLeft,
+                }}
+              >
+                {data.map((elem) => (
+                  <div className="flex" key={elem.id}>
+                    {weeks.map((week) => (
+                      <div className="h-6 w-[120px]" key={week.getTime()}>
+                        {getCampaign(elem, week) ? (
+                          <div
+                            style={{ width: 120 }}
+                            className={`h-6 w-[120px] cursor-pointer border text-center text-black ${
+                              getCampaign(elem, week)?.id === hoveredCampaignId
+                                ? 'bg-blue-300'
+                                : 'bg-green-200'
+                            }`}
+                            onMouseOver={() =>
+                              onCampaignHover(getCampaign(elem, week)?.id)
+                            }
+                            onMouseOut={() => onCampaignHover(undefined)}
+                            onClick={() =>
+                              onCampaignClick(getCampaign(elem, week)?.id)
+                            }
+                          >
+                            {getCampaign(elem, week)?.name}
+                          </div>
+                        ) : (
+                          <div className="h-6 w-[120px] bg-gray-50 hover:bg-gray-200"></div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

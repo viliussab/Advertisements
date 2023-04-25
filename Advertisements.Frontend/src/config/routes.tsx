@@ -10,6 +10,7 @@ import CampaignsListPage from '../pages/campaigns/campaignsListPage/CampaignsLis
 import CampaignSummaryPage from '../pages/campaigns/campaignSummaryPage/CampaignSummaryPage';
 import CampaignUpdatePage from '../pages/campaigns/campaignUpdatePage/CampaignUpdatePage';
 import CustomersManagePage from '../pages/campaigns/customersManagePage/CustomersManagePage';
+import LoginPage from '../pages/other/loginPage/LoginPage';
 import website_paths from './website_paths';
 
 export type Route = {
@@ -18,9 +19,15 @@ export type Route = {
   layout?: {
     title: string;
   };
+  allowAnonymous?: boolean;
 };
 
 const routes: Array<Route> = [
+  {
+    path: website_paths.auth.login,
+    Page: LoginPage,
+    allowAnonymous: true,
+  },
   {
     path: website_paths.campaigns.main,
     Page: CampaignsListPage,

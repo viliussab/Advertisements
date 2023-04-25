@@ -10,67 +10,70 @@ type Props = {
 
 function Navbar({ title }: Props) {
   return (
-    <Mui.AppBar variant="elevation" color="info" position="static">
-      <div className="flex items-center justify-start gap-2 p-3">
-        <div className="mr-2 h-10">
-          <img className="h-full w-full" src="/logo.png" />
+    <>
+      <div className="h-16"></div>
+      <Mui.AppBar variant="elevation" color="info" position="fixed">
+        <div className="flex items-center justify-start gap-2 p-3">
+          <div className="mr-2 h-10">
+            <img className="h-full w-full" src="/logo.png" />
+          </div>
+          <p className="mr-2 ml-2 text-lg  uppercase italic">{title}</p>
+
+          <Mui.Divider orientation="vertical" flexItem />
+
+          <NavbarRouteButton
+            renderCell={() => <>Objektai</>}
+            routes={[
+              {
+                path: website_paths.objects.create,
+                title: 'Kurti objektą',
+                Icon: Icons.Add,
+              },
+              {
+                path: website_paths.objects.main,
+                title: 'Objektų sąrašas',
+                Icon: Icons.List,
+              },
+              {
+                path: website_paths.objects.map,
+                title: 'Objektų žemėlapis',
+                Icon: Icons.Map,
+              },
+            ]}
+          />
+          <NavbarRouteButton
+            renderCell={() => <>Kampanijos</>}
+            routes={[
+              {
+                path: website_paths.campaigns.create,
+                title: 'Kurti reklamos pasiūlymą',
+                Icon: Icons.Add,
+              },
+              {
+                path: website_paths.campaigns.main,
+                title: 'Kampanijų sąrašas',
+                Icon: Icons.List,
+              },
+              {
+                path: website_paths.campaigns.weekly_overview,
+                title: 'Kampanijų suvestinė',
+                Icon: Icons.TableRows,
+              },
+              {
+                path: website_paths.adverts.weekly_occupancy,
+                title: 'Savaitinis registras',
+                Icon: Icons.LocationOn,
+              },
+              {
+                path: website_paths.customers.main,
+                title: 'Valdyti klientus',
+                Icon: Icons.People,
+              },
+            ]}
+          />
         </div>
-        <p className="mr-2 ml-2 text-lg  uppercase italic">{title}</p>
-
-        <Mui.Divider orientation="vertical" flexItem />
-
-        <NavbarRouteButton
-          renderCell={() => <>Objektai</>}
-          routes={[
-            {
-              path: website_paths.objects.create,
-              title: 'Kurti objektą',
-              Icon: Icons.Add,
-            },
-            {
-              path: website_paths.objects.main,
-              title: 'Objektų sąrašas',
-              Icon: Icons.List,
-            },
-            {
-              path: website_paths.objects.map,
-              title: 'Objektų žemėlapis',
-              Icon: Icons.Map,
-            },
-          ]}
-        />
-        <NavbarRouteButton
-          renderCell={() => <>Kampanijos</>}
-          routes={[
-            {
-              path: website_paths.campaigns.create,
-              title: 'Kurti reklamos pasiūlymą',
-              Icon: Icons.Add,
-            },
-            {
-              path: website_paths.campaigns.main,
-              title: 'Kampanijų sąrašas',
-              Icon: Icons.List,
-            },
-            {
-              path: website_paths.campaigns.weekly_overview,
-              title: 'Kampanijų suvestinė',
-              Icon: Icons.TableRows,
-            },
-            {
-              path: website_paths.adverts.weekly_occupancy,
-              title: 'Savaitinis registras',
-              Icon: Icons.LocationOn,
-            },
-            {
-              path: website_paths.customers.main,
-              title: 'Valdyti klientus',
-              Icon: Icons.People,
-            },
-          ]}
-        />
-      </div>
-    </Mui.AppBar>
+      </Mui.AppBar>
+    </>
   );
 }
 

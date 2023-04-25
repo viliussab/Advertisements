@@ -14,6 +14,7 @@ import {
   Legend,
   Chart as ChartJs,
 } from 'chart.js';
+import AuthenticationProvider from './providers/AuthenticationProvider';
 
 function App() {
   const queryClient = new QueryClient();
@@ -34,8 +35,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MuiThemeProvider>
-        <ToastContainer />
-        <PagesProvider />
+        <AuthenticationProvider>
+          <ToastContainer />
+          <PagesProvider />
+        </AuthenticationProvider>
       </MuiThemeProvider>
     </QueryClientProvider>
   );
