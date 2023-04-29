@@ -193,7 +193,7 @@ function Plane(props: PlaneProps) {
               resetSelectedObjectId();
             }}
           >
-            Panaiktinti <Icons.Delete sx={{ ml: 1 }} />
+            Panaikinti <Icons.Delete sx={{ ml: 1 }} />
           </Mui.Button>
           <Mui.Button
             onClick={() => {
