@@ -2,6 +2,7 @@ using Commands.Handlers.Campaigns.ConfirmCampaign;
 using Commands.Handlers.Campaigns.CreateCampaign;
 using Commands.Handlers.Campaigns.CreateCustomer;
 using Commands.Handlers.Campaigns.UpdateCampaign;
+using Commands.Handlers.Campaigns.UpdateCampaignPlane;
 using Commands.Handlers.Campaigns.UpdateCampaignPlanes;
 using Commands.Handlers.Campaigns.UpdateCustomer;
 using Commands.Responses;
@@ -53,9 +54,20 @@ public class CampaignCommandsController : BasedController
     
     [HttpPatch("campaign/{id:guid}/planes")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateCampaignAdverts([FromRoute] Guid id, [FromBody] UpdateCampaignPlanesCommand command)
+    public async Task<IActionResult> ReplaceCampaignAdverts([FromRoute] Guid id, [FromBody] UpdateCampaignPlanesCommand command)
     {
         command.Id = id;
+        await Mediator.Send(command);
+        
+        return NoContent();
+    }
+    
+    [HttpPatch("campaign/{campaignId:guid}/plane/{planeId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpsertCampaignPlane([FromRoute] Guid campaignId, [FromRoute] Guid planeId, [FromBody] UpsertCampaignPlaneCommand command)
+    {
+        command.CampaignId = campaignId;
+        command.PlaneId = planeId;
         await Mediator.Send(command);
         
         return NoContent();

@@ -131,6 +131,7 @@ public class JwtService : IJwtService
 	{
 		var refreshToken = await _context
 			.Set<UserRefreshToken>()
+			.Include(x => x.User)
 			.FirstOrDefaultAsync(x => x.Id == jwtDto.RefreshTokenId);
 		if (refreshToken is null)
 		{

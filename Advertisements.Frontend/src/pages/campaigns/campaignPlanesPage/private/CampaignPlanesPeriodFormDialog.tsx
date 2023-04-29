@@ -5,6 +5,7 @@ import {
   updateCampaignPlaneSchema,
 } from '../../../../api/commands/schema.updateCampaignPlane';
 import Campaign from '../../../../api/responses/type.Campaign';
+import CampaignOption from '../../../../api/responses/type.CampaignOption';
 import Form from '../../../../components/public/Form';
 import FormInput from '../../../../components/public/input/form';
 import Mui from '../../../../config/imports/Mui';
@@ -14,13 +15,25 @@ import { SelectedPlaneToEdit } from './type.CampaignPlanesPage';
 
 type Props = {
   editPlane: SelectedPlaneToEdit | undefined;
-  resetSelectedId: () => void;
-  campaign: Campaign;
+  resetSelected: () => void;
+  campaign: CampaignOption;
+  dateBoundaries?: {
+    from: Date;
+    to: Date;
+  };
+  isSubmitting: boolean;
   onSubmit: (values: UpdateCampaignPlane) => void;
 };
 
 function CampaignPlanesPeriodFormDialog(props: Props) {
-  const { campaign, onSubmit, editPlane, resetSelectedId } = props;
+  const {
+    campaign,
+    onSubmit,
+    isSubmitting,
+    editPlane,
+    resetSelected: resetSelected,
+    dateBoundaries,
+  } = props;
 
   if (!editPlane) {
     return <></>;
@@ -40,13 +53,12 @@ function CampaignPlanesPeriodFormDialog(props: Props) {
   const formValues = form.watch();
 
   return (
-    <Mui.Dialog open={!!editPlane} onClose={resetSelectedId} maxWidth={false}>
+    <Mui.Dialog open={!!editPlane} onClose={resetSelected} maxWidth={false}>
       <Form form={form} onSubmit={onSubmit}>
         <div className="space-y-3 bg-gray-50 p-4">
-          <div className="text-lg ">
-            <span>{`Pasirinkti `}</span>
-            <span className="font-bold">{editPlane.name}</span>
-            <span>{` periodą`}</span>
+          <div className="">
+            <div className="text-lg font-bold">{editPlane.name} </div>
+            <div className="">Kampanijai {campaign.name} </div>
           </div>
           <FormInput.DatePicker
             form={form}
@@ -59,8 +71,8 @@ function CampaignPlanesPeriodFormDialog(props: Props) {
               }
             }}
             datePickerProps={{
-              minDate: new Date(campaign.start),
-              maxDate: new Date(campaign.end),
+              minDate: dateBoundaries?.from || new Date(campaign.start),
+              maxDate: dateBoundaries?.to || new Date(campaign.end),
               disabled: !formValues.weekFrom,
               shouldDisableDate: (date) =>
                 new Date(campaign.start).getDay() !== date.getDay(),
@@ -74,13 +86,13 @@ function CampaignPlanesPeriodFormDialog(props: Props) {
             datePickerProps={{
               minDate: formValues.weekFrom,
               disabled: !formValues.weekFrom,
-              maxDate: new Date(campaign.end),
+              maxDate: dateBoundaries?.to || new Date(campaign.end),
               shouldDisableDate: (date) =>
                 new Date(campaign.start).getDay() !== date.getDay(),
             }}
           />
           <div className="flex justify-center">
-            <FormInput.SubmitButton isSubmitting={false}>
+            <FormInput.SubmitButton isSubmitting={isSubmitting}>
               Tvirtinti
             </FormInput.SubmitButton>
           </div>

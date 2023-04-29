@@ -10,6 +10,8 @@ public class CampaignOverview : CampaignFields
     
     public int SelectedPlaneAmount { get; set; }
     
+    public double WeeklyPrice { get; set; }
+    
     public CustomerFields Customer { get; set; }
     
     public List<CampaignPlaneFields> CampaignPlanes { get; set; }

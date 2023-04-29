@@ -5,4 +5,4 @@ export const loginSchema = zod.object({
   password: zod.string(),
 });
 
-export type Login = zod.TypeOf<typeof loginSchema>;
+export type LoginCommand = zod.TypeOf<typeof loginSchema>;

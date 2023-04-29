@@ -17,4 +17,6 @@ public class PlaneWithWeeks : GetPlanesPagedPlane
 public class PlaneWeekCampaign : CampaignFields
 {
     public DateTime Week { get; set; }
+    
+    public List<CampaignPlaneFields> CampaignPlanes { get; set; }
 }

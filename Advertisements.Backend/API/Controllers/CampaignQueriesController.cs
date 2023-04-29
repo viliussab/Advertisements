@@ -38,6 +38,15 @@ public class CampaignQueriesController : BasedController
         return Ok(campaigns);
     }
     
+    [HttpGet("campaign/options")]
+    [ProducesResponseType(typeof(IEnumerable<CampaignOption>), 200)]
+    public async Task<IActionResult> GetCampaignOptions()
+    {
+        var campaignOptions = await Mediator.Send(new GetCampaignsOptionsQuery());
+        
+        return Ok(campaignOptions);
+    }
+    
     [HttpGet("campaign")]
     [ProducesResponseType(typeof(PageResponse<CampaignOverview>), 200)]
     public async Task<IActionResult> GetCampaigns([FromQuery] GetCampaignsQuery query)

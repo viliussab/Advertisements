@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import advertQueries from '../../../api/calls/advertQueries';
 import filterOptions from '../../../api/filterOptions/filterOptions';
 import objectOptions from '../../../api/filterOptions/objectOptions';
@@ -8,10 +8,7 @@ import { AdvertPlaneOfSummary } from '../../../api/responses/type.PlaneSummary';
 import PlanePremiumIcon from '../../../components/private/advert/PlanePremiumIcon';
 import CampaignInfoDialog from '../../../components/private/campaign/CampaignInfoDialog';
 import Filters from '../../../components/public/input/filter';
-import {
-  ColumnConfig,
-  TableProps,
-} from '../../../components/public/table/Table';
+import { ColumnConfig } from '../../../components/public/table/Table';
 import TableHeaderFilter from '../../../components/public/table/TableHeaderFilter';
 import dateFns from '../../../config/imports/dateFns';
 import Icons from '../../../config/imports/Icons';
@@ -21,9 +18,25 @@ import dateStylingFunctions from '../../../functions/dateStylingFunctions';
 import optionsFunctions from '../../../functions/optionsFunctions';
 import ObjectMapDetailsDialog from '../objectMapPage/private/ObjectMapDetailsDialog';
 import _ from 'lodash';
+import campaignQueries from '../../../api/calls/campaignQueries';
+import CampaignOption from '../../../api/responses/type.CampaignOption';
+import CampaignPlanesPeriodFormDialog from '../../campaigns/campaignPlanesPage/private/CampaignPlanesPeriodFormDialog';
+import Campaign from '../../../api/responses/type.Campaign';
+import { SelectedPlaneToEdit } from '../../campaigns/campaignPlanesPage/private/type.CampaignPlanesPage';
+import campaignMutations from '../../../api/calls/campaignMutations';
+import { toast } from 'react-toastify';
 
 type PlaneColumnConfig = ColumnConfig<AdvertPlaneOfSummary> & {
   rowWidthPx: number;
+};
+
+type PeriodFormEdit = {
+  campaign: CampaignOption;
+  editPlane: SelectedPlaneToEdit;
+  dateBoundaries: {
+    from: Date;
+    to: Date;
+  };
 };
 
 function WeeklyRegistryPage() {
@@ -37,12 +50,21 @@ function WeeklyRegistryPage() {
   });
   const [objectId, setObjectId] = React.useState<string>();
 
-  const [hoveredCampaignId, setHoveredCampaignId] = React.useState<string>();
   const [selectedCampaignId, setSelectedCampaignId] = React.useState<string>();
+  const [openEditDialog, setOpenEditDialog] = React.useState(false);
+  const [selectedCampaignEditId, setSelectedCampaignEditId] =
+    React.useState<string>();
+  const [periodFormValues, setPeriodFormValues] =
+    React.useState<PeriodFormEdit>();
 
   const registryQuery = useQuery({
     queryKey: [advertQueries.weeklySummary.key, query],
     queryFn: () => advertQueries.weeklySummary.fn(query),
+  });
+
+  const campaignOptionsQuery = useQuery({
+    queryKey: [campaignQueries.campaignOptions.key],
+    queryFn: campaignQueries.campaignOptions.fn,
   });
 
   const areasQuery = useQuery({
@@ -50,7 +72,20 @@ function WeeklyRegistryPage() {
     queryFn: advertQueries.areas.fn,
   });
 
+  const upsertCampaignPlaneMutation = useMutation({
+    mutationKey: campaignMutations.campaignPlaneUpsert.key,
+    mutationFn: campaignMutations.campaignPlaneUpsert.fn,
+    onSuccess() {
+      toast.success('Priskirta plokštuma kampanijai');
+      setPeriodFormValues(undefined);
+      registryQuery.refetch();
+    },
+  });
+
   const regions = areasQuery.data?.flatMap((a) => a.regions) || [];
+  const selectedEdit = campaignOptionsQuery.data?.find(
+    (x) => x.id === selectedCampaignEditId,
+  );
 
   const columns: PlaneColumnConfig[] = [
     {
@@ -181,7 +216,7 @@ function WeeklyRegistryPage() {
     <div>
       <div className="white fixed top-16 z-10 h-[88px] w-full bg-white"></div>
       <div className="z-20 m-4 mb-16 flex justify-center gap-4 bg-white">
-        <div className="fixed z-20 flex-1 bg-white">
+        <div className="fixed z-20 flex flex-1 justify-center gap-2 bg-white">
           <Filters.DatePicker
             label="Data nuo"
             onChange={(val) => {
@@ -195,11 +230,62 @@ function WeeklyRegistryPage() {
                 date.getDay(),
             }}
           />
+          {selectedEdit ? (
+            <>
+              <Mui.Button
+                color="info"
+                onClick={() => setSelectedCampaignEditId(undefined)}
+              >
+                {`Anuliuoti ${selectedEdit.name} redagavimą`}
+              </Mui.Button>
+            </>
+          ) : (
+            <Mui.Button onClick={() => setOpenEditDialog(true)}>
+              Redaguoti kampaniją
+            </Mui.Button>
+          )}
         </div>
+        <Mui.Dialog
+          open={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+        >
+          <div className="w-48 p-4">
+            <Filters.Select
+              label="Kampanija"
+              value={selectedCampaignEditId}
+              options={
+                campaignOptionsQuery.data?.map((x) => ({
+                  key: x.id,
+                  display: x.name,
+                })) || []
+              }
+              onChange={async (key) => {
+                setSelectedCampaignEditId(key);
+
+                if (key) {
+                  new Promise(() =>
+                    setTimeout(() => {
+                      setOpenEditDialog(false);
+                      const option = (campaignOptionsQuery?.data || []).find(
+                        (x) => x.id === key,
+                      );
+                      if (option) {
+                        setQuery((prev) => ({
+                          ...prev,
+                          from: dateFns.subWeeks(new Date(option.start), 1),
+                        }));
+                      }
+                    }, 200),
+                  );
+                }
+              }}
+            />
+          </div>
+        </Mui.Dialog>
       </div>
       <RegistryTable
-        hoveredCampaignId={hoveredCampaignId}
-        onCampaignHover={(id) => setHoveredCampaignId(id)}
+        setPeriodFormValues={setPeriodFormValues}
+        editCampaign={selectedEdit}
         onCampaignClick={(id) => setSelectedCampaignId(id)}
         columns={columns}
         data={registryQuery.data?.items || []}
@@ -233,15 +319,29 @@ function WeeklyRegistryPage() {
       <CampaignInfoDialog
         selectedCampaignId={selectedCampaignId}
         resetSelectedId={() => {
-          setHoveredCampaignId(undefined);
           setSelectedCampaignId(undefined);
         }}
       />
+      {periodFormValues && (
+        <CampaignPlanesPeriodFormDialog
+          isSubmitting={upsertCampaignPlaneMutation.isLoading}
+          campaign={periodFormValues.campaign}
+          editPlane={periodFormValues.editPlane}
+          dateBoundaries={periodFormValues.dateBoundaries}
+          onSubmit={(val) => {
+            upsertCampaignPlaneMutation.mutateAsync(val);
+          }}
+          resetSelected={() => setPeriodFormValues(undefined)}
+        />
+      )}
     </div>
   );
 }
 
 type RegistryTableProps = {
+  setPeriodFormValues: React.Dispatch<
+    React.SetStateAction<PeriodFormEdit | undefined>
+  >;
   columns: PlaneColumnConfig[];
   data: AdvertPlaneOfSummary[];
   onClick?: (elem: AdvertPlaneOfSummary) => void;
@@ -259,27 +359,24 @@ type RegistryTableProps = {
     setPageSize: (pageSize: number) => void;
   };
   weeks: Date[];
-  hoveredCampaignId: string | undefined;
-  onCampaignHover: (id: string | undefined) => void;
+  editCampaign: CampaignOption | undefined;
   onCampaignClick: (id: string | undefined) => void;
 };
 
 function RegistryTable(props: RegistryTableProps) {
   const {
+    setPeriodFormValues,
     columns,
     data,
     paging,
     onClick,
     weeks,
-    hoveredCampaignId,
     onCampaignClick,
-    onCampaignHover,
+    editCampaign,
   } = props;
 
   const width = columns.reduce((sum, col) => sum + col.rowWidthPx, 0);
-
   const initialLeft = width + 16;
-
   const [left, setLeft] = React.useState<number>(initialLeft);
 
   const getCampaign = (elem: AdvertPlaneOfSummary, week: Date) =>
@@ -291,9 +388,95 @@ function RegistryTable(props: RegistryTableProps) {
     _.debounce((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
       //@ts-ignore
       setLeft(initialLeft + -event.target.scrollLeft);
-    }, 0),
+    }, 10),
     [],
   );
+
+  const launchCampaignWeeksEdit = (
+    plane: AdvertPlaneOfSummary,
+    option: CampaignOption,
+    week: Date,
+  ) => {
+    const obstructors = plane.occupyingCampaigns
+      .filter((x) => x.id !== option.id)
+      .flatMap((x) => x.campaignPlanes);
+
+    const obstructingStart = obstructors
+      .filter(
+        (x) =>
+          new Date(x.weekTo).getTime() <= week.getTime() &&
+          new Date(x.weekTo).getTime() >= new Date(option.start).getTime(),
+      )
+      .map((x) => new Date(x.weekTo));
+
+    const from = obstructingStart.length
+      ? dateFns.addWeeks(dateFns.max(obstructingStart), 1)
+      : new Date(option.start);
+
+    const obstructingEnd = obstructors
+      .filter(
+        (x) =>
+          new Date(x.weekFrom).getTime() >= week.getTime() &&
+          new Date(x.weekFrom).getTime() <= new Date(option.end).getTime(),
+      )
+      .map((x) => new Date(x.weekFrom));
+
+    const to = obstructingEnd.length
+      ? dateFns.subWeeks(dateFns.min(obstructingEnd), 1)
+      : new Date(option.end);
+
+    setPeriodFormValues({
+      campaign: option,
+      dateBoundaries: {
+        from,
+        to,
+      },
+      editPlane: {
+        name: `${plane.object.name} ${plane.partialName}`,
+        planeId: plane.id,
+        values: {
+          campaignId: option.id,
+          planeId: plane.id,
+          weekFrom: from,
+          weekTo: to,
+        },
+      },
+    });
+  };
+
+  const isEditValidWeek = (week: Date) => {
+    return (
+      editCampaign &&
+      dateFunctions.isBetweenCampaign(
+        week,
+        new Date(editCampaign.start),
+        new Date(editCampaign.end),
+      )
+    );
+  };
+
+  const isEditCampaign = (week: Date, campaign: Campaign) => {
+    return isEditValidWeek(week) && campaign.id === editCampaign?.id;
+  };
+
+  const getEmptyCellClassNames = (week: Date) => {
+    if (!editCampaign) {
+      return 'bg-gray-100';
+    }
+
+    if (isEditValidWeek(week)) {
+      return 'cursor-pointer bg-gray-100 hover:bg-green-200';
+    }
+
+    return 'bg-gray-200';
+  };
+
+  const getFilledCellClassNames = (week: Date, campaign: Campaign) => {
+    if (!editCampaign || isEditCampaign(week, campaign)) {
+      return 'bg-green-200  hover:bg-green-300';
+    }
+    return 'bg-red-200 hover:bg-red-300';
+  };
 
   return (
     <>
@@ -413,30 +596,38 @@ function RegistryTable(props: RegistryTableProps) {
                   marginLeft: left - initialLeft,
                 }}
               >
-                {data.map((elem) => (
-                  <div className="flex" key={elem.id}>
+                {data.map((plane) => (
+                  <div className="flex" key={plane.id}>
                     {weeks.map((week) => (
                       <div className="h-6 w-[120px]" key={week.getTime()}>
-                        {getCampaign(elem, week) ? (
+                        {getCampaign(plane, week) ? (
                           <div
                             style={{ width: 120 }}
-                            className={`h-6 w-[120px] cursor-pointer border text-center text-black ${
-                              getCampaign(elem, week)?.id === hoveredCampaignId
-                                ? 'bg-blue-300'
-                                : 'bg-green-200'
-                            }`}
-                            onMouseOver={() =>
-                              onCampaignHover(getCampaign(elem, week)?.id)
-                            }
-                            onMouseOut={() => onCampaignHover(undefined)}
+                            className={`h-6 w-[120px] cursor-pointer border text-center text-black ${getFilledCellClassNames(
+                              week,
+                              getCampaign(plane, week)!,
+                            )}`}
                             onClick={() =>
-                              onCampaignClick(getCampaign(elem, week)?.id)
+                              onCampaignClick(getCampaign(plane, week)?.id)
                             }
                           >
-                            {getCampaign(elem, week)?.name}
+                            {getCampaign(plane, week)?.name}
                           </div>
                         ) : (
-                          <div className="h-6 w-[120px] bg-gray-50 hover:bg-gray-200"></div>
+                          <div
+                            onClick={() => {
+                              if (isEditValidWeek(week)) {
+                                launchCampaignWeeksEdit(
+                                  plane,
+                                  editCampaign!,
+                                  week,
+                                );
+                              }
+                            }}
+                            className={`h-6 w-[120px] ${getEmptyCellClassNames(
+                              week,
+                            )}`}
+                          ></div>
                         )}
                       </div>
                     ))}

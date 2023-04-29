@@ -72,6 +72,7 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
 
         var dto = campaignOrDefault.Adapt<PlaneWeekCampaign>();
         dto.Week = date;
+        dto.CampaignPlanes = dto.CampaignPlanes.Where(x => x.PlaneId == plane.Id).ToList();
 
         return dto;
     }

@@ -22,6 +22,13 @@ const getCampaignDay = (date: Date) => {
   return result;
 };
 
+const isBetweenCampaign = (week: Date, start: Date, end: Date) => {
+  return (
+    week.getTime() >= start.getTime() &&
+    dateFns.subDays(week, 6).getTime() <= end.getTime()
+  );
+};
+
 const getCurrentCampaignDay = () => {
   const lastDayOfWeek = dateFns.lastDayOfWeek(new Date(), {
     weekStartsOn: constants.week_starts_on as weekDay,
@@ -90,6 +97,7 @@ const dateFunctions = {
   getCampaignDay,
   format: format,
   toDateOnly,
+  isBetweenCampaign,
   formatWeekPeriodMonths,
   getCurrentCampaignDay,
   formatWeekPeriodShort,

@@ -28,6 +28,7 @@ const mutateAsync = async <TRequest>({
   httpMethod,
 }: mutateProps<TRequest>) => {
   const response = await axios(url, {
+    withCredentials: true,
     method: httpMethod,
     data: body,
   });
@@ -53,9 +54,12 @@ const endpoints = {
     logout: `${apiUrl}/logout`,
   },
   campaign: {
+    options: `${apiUrl}/campaign/options`,
     download_campaign_offer: `${apiUrl}/campaign/downloadOffer`,
-    buildCampaignPlaneEndpoint: (id: string) =>
+    buildCampaignPlanesEndpoint: (id: string) =>
       `${apiUrl}/campaign/${id}/planes`,
+    buildUpsertCampaignPlaneEndpoint: (campaignId: string, planeId: string) =>
+      `${apiUrl}/campaign/${campaignId}/plane/${planeId}`,
     buildCampaignConfirmEndpoint: (id: string) =>
       `${apiUrl}/campaign/${id}/confirm`,
     summary: `${apiUrl}/campaign/summary`,

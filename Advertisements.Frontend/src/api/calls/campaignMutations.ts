@@ -1,5 +1,6 @@
 import { CampaignCreateUpdate } from '../commands/schema.createUpdateCampaign';
 import { CustomerCreateUpdate } from '../commands/schema.createUpdateCustomer';
+import { UpdateCampaignPlane } from '../commands/schema.updateCampaignPlane';
 import CampaignPlaneUpdate from '../commands/type.CampaignPlaneUpdate';
 import api from './api';
 
@@ -41,8 +42,21 @@ const updateCampaignPlanesAsync = async ({
   campaignPlanes,
 }: updateCampaignPlanesAsyncProps) => {
   const response = await api.mutateAsync({
-    url: api.endpoints.campaign.buildCampaignPlaneEndpoint(id),
+    url: api.endpoints.campaign.buildCampaignPlanesEndpoint(id),
     body: { campaignPlanes },
+    httpMethod: 'patch',
+  });
+
+  return response;
+};
+
+const upsertCampaignPlaneAsync = async (values: UpdateCampaignPlane) => {
+  const response = await api.mutateAsync({
+    url: api.endpoints.campaign.buildUpsertCampaignPlaneEndpoint(
+      values.campaignId,
+      values.planeId,
+    ),
+    body: values,
     httpMethod: 'patch',
   });
 
@@ -96,6 +110,10 @@ const campaignMutations = {
   campaignPlanesUpdate: {
     fn: updateCampaignPlanesAsync,
     key: 'campaign_planes_update',
+  },
+  campaignPlaneUpsert: {
+    fn: upsertCampaignPlaneAsync,
+    key: 'campaign_plane_update',
   },
   campaignConfirm: {
     fn: confirmCampaignAsync,

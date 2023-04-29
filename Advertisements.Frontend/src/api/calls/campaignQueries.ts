@@ -1,5 +1,6 @@
 import CampaignsQuery from '../queries/type.CampaignsQuery';
 import CampaignSummaryQuery from '../queries/type.CampaignSummaryQuery';
+import CampaignOption from '../responses/type.CampaignOption';
 import CampaignOverview from '../responses/type.CampaignOverview';
 import CampaignSummaryWeek from '../responses/type.CampaignSummaryWeek';
 import Customer from '../responses/type.Customer';
@@ -40,6 +41,14 @@ const getCampaignSummaryAsync = async (query: CampaignSummaryQuery) => {
   return response.data as CampaignSummaryWeek[];
 };
 
+const getCampaignOptionsAsync = async () => {
+  const response = await api.queryAsync({
+    url: api.endpoints.campaign.options,
+  });
+
+  return response.data as CampaignOption[];
+};
+
 const campaignQueries = {
   customers: {
     fn: getCustomersAsync,
@@ -56,6 +65,10 @@ const campaignQueries = {
   campaignSummary: {
     fn: getCampaignSummaryAsync,
     key: 'campaign_summary',
+  },
+  campaignOptions: {
+    fn: getCampaignOptionsAsync,
+    key: 'campaign_options',
   },
 };
 

@@ -1,4 +1,3 @@
-import Campaign from './type.Campaign';
 import CampaignOverview from './type.CampaignOverview';
 
 type CampaignSummaryWeek = {

@@ -33,9 +33,9 @@ type ProtectedRouteProps = {
 function ProtectedRoute({ route }: ProtectedRouteProps) {
   const user = React.useContext(UserContext);
 
-  // if (!route.allowAnonymous && !user.isLoggedIn) {
-  //   return <Navigate to={website_paths.auth.login} replace />;
-  // }
+  if (!route.allowAnonymous && !user.isLoggedIn) {
+    return <Navigate to={website_paths.auth.login} replace />;
+  }
 
   return <Layout route={route} />;
 }

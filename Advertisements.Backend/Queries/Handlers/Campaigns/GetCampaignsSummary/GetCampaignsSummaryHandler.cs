@@ -48,22 +48,29 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
                     x.Start <= week.AddDays(6)
                     && x.End >= week)
                 .ToList();
-            var confirmedWeekCampaigns = campaignsOfWeek
-                .Where(x => x.IsFulfilled)
-                .ToList();
-            weeklySummary.ConfirmedTotalPrice = confirmedWeekCampaigns.Sum(GetWeeklyPrice);
-            weeklySummary.ReservedTotalPrice = campaignsOfWeek.Sum(GetWeeklyPrice);
-            weeklySummary.PlanesConfirmedTotalCount = confirmedWeekCampaigns.Sum(x => x.CampaignPlanes.Count);
-            weeklySummary.PlanesReservedTotalCount = campaignsOfWeek.Sum(x => x.CampaignPlanes.Count);
+            
 
             weeklySummary.Campaigns = campaignsOfWeek.Select(c =>
             {
                 var details = CampaignFunctions.BuildPriceDetailsCampaign(c);
                 var dto = details.Adapt<CampaignOverview>();
+                
+                dto.WeeklyPrice = GetWeeklyPrice(c, details, week);
                 dto.Customer = c.Customer.Adapt<CustomerFields>();
+                dto.CampaignPlanes = c.CampaignPlanes.Adapt<List<CampaignPlaneFields>>();
 
                 return dto;
             }).ToList();
+
+            weeklySummary.ConfirmedTotalPrice = weeklySummary.Campaigns
+                .Where(x => x.IsFulfilled)
+                .Sum(x => x.WeeklyPrice);
+            weeklySummary.PlanesConfirmedTotalCount = weeklySummary.Campaigns
+                .Where(x => x.IsFulfilled)
+                .Sum(x => x.CampaignPlanes.Count);
+            
+            weeklySummary.ReservedTotalPrice = weeklySummary.Campaigns.Sum(x => x.WeeklyPrice);
+            weeklySummary.PlanesReservedTotalCount = weeklySummary.Campaigns.Sum(x => x.CampaignPlanes.Count);
 
             weeklySummary.PlaneTotalCount = planes
                 .Count(x => x.CreationDate <= week.AddDays(6));
@@ -74,11 +81,22 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
         return weeklyCampaigns;
     }
 
-    private static double GetWeeklyPrice(Campaign campaign)
-    {
-        return campaign.PricePerPlane
-               * (1.0 - campaign.DiscountPercent / 100.0)
-               * campaign.PlaneAmount;
+    private static double GetWeeklyPrice(Campaign campaign, CampaignWithPriceDetails priceDetails,  DateTime week)
+    { 
+        var weekPrice = campaign.PricePerPlane
+                        * (1.0 - campaign.DiscountPercent / 100.0)
+                        * campaign.PlaneAmount;
+
+        if (campaign.Start != week)
+        {
+            return weekPrice;
+        }
+
+        var includedPrice = weekPrice
+                            + (priceDetails.Unplanned?.TotalPrice ?? 0)
+                            + (priceDetails.Press?.TotalPrice ?? 0);
+
+        return includedPrice;
     }
 
     private static IEnumerable<DateTime> GetWeeksBetween(DateTime from, DateTime to)

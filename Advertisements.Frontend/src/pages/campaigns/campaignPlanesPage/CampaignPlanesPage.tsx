@@ -275,6 +275,7 @@ function CampaignPlanesPage() {
         onPlaneSelect={(planeId) => setSelectedPlane(planeId)}
       />
       <CampaignPlanesPeriodFormDialog
+        isSubmitting={false}
         editPlane={selectedPlane}
         campaign={campaign}
         onSubmit={(values) => {
@@ -290,7 +291,7 @@ function CampaignPlanesPage() {
 
           setSelectedPlane(undefined);
         }}
-        resetSelectedId={() => setSelectedPlane(undefined)}
+        resetSelected={() => setSelectedPlane(undefined)}
       />
       <CampaignPlanesBarGraphDialog
         campaign={campaign}

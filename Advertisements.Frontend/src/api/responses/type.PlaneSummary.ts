@@ -1,5 +1,7 @@
 import AdvertPlaneOverview from './type.AdvertPlaneOverview';
 import Campaign from './type.Campaign';
+import CampaignOverview from './type.CampaignOverview';
+import CampaignPlane from './type.CampaignPlane';
 import PageResponse from './type.PageResponse';
 
 type PlaneSummary = PageResponse<AdvertPlaneOfSummary> & {
@@ -11,6 +13,7 @@ export type AdvertPlaneOfSummary = AdvertPlaneOverview & {
 };
 
 type PlaneWeekCampaign = Campaign & {
+  campaignPlanes: CampaignPlane[];
   week: string;
 };
 

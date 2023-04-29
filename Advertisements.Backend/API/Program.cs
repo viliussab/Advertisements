@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using API.Middlewares;
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
 using Core.Models;
@@ -83,18 +84,18 @@ builder.Services.AddAuthentication(x =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+app.UseMiddleware<JwtCookieMiddleware>();
+
     app.UseCors(options =>
         options.SetIsOriginAllowed(_ => true)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
+            .WithExposedHeaders("Access-Control-Allow-Origin")
             .WithExposedHeaders("Content-Disposition"));
-}
+
 
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

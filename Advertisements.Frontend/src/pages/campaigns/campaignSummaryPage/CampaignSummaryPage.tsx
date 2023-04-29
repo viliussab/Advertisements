@@ -215,7 +215,9 @@ function CampaignSummaryPage() {
                                 </td>
                                 <td className="mr-2 w-24 text-right">
                                   <div className="mr-4">
-                                    {summary.campaigns[i].totalNoVat.toFixed(1)}
+                                    {summary.campaigns[i].weeklyPrice.toFixed(
+                                      1,
+                                    )}
                                     €
                                   </div>
                                 </td>
