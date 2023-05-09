@@ -45,7 +45,7 @@ function WeeklyRegistryPage() {
 
   const [query, setQuery] = React.useState<WeeklyRegistryQuery>({
     pageNumber: 1,
-    pageSize: 1000,
+    pageSize: 100,
     from: thisYearFirstWeek,
   });
   const [objectId, setObjectId] = React.useState<string>();
@@ -76,9 +76,9 @@ function WeeklyRegistryPage() {
     mutationKey: campaignMutations.campaignPlaneUpsert.key,
     mutationFn: campaignMutations.campaignPlaneUpsert.fn,
     onSuccess() {
+      registryQuery.refetch();
       toast.success('Priskirta plokštuma kampanijai');
       setPeriodFormValues(undefined);
-      registryQuery.refetch();
     },
   });
 
@@ -317,6 +317,9 @@ function WeeklyRegistryPage() {
         resetSelectedId={() => setObjectId(undefined)}
       />
       <CampaignInfoDialog
+        onConfirm={() => {
+          registryQuery.refetch();
+        }}
         selectedCampaignId={selectedCampaignId}
         resetSelectedId={() => {
           setSelectedCampaignId(undefined);
@@ -329,7 +332,10 @@ function WeeklyRegistryPage() {
           editPlane={periodFormValues.editPlane}
           dateBoundaries={periodFormValues.dateBoundaries}
           onSubmit={(val) => {
-            upsertCampaignPlaneMutation.mutateAsync(val);
+            upsertCampaignPlaneMutation.mutateAsync({
+              ...val,
+              campaignId: periodFormValues.campaign.id,
+            });
           }}
           resetSelected={() => setPeriodFormValues(undefined)}
         />
@@ -472,16 +478,25 @@ function RegistryTable(props: RegistryTableProps) {
   };
 
   const getFilledCellClassNames = (week: Date, campaign: Campaign) => {
-    if (!editCampaign || isEditCampaign(week, campaign)) {
+    if (editCampaign && isEditCampaign(week, campaign)) {
       return 'bg-green-200  hover:bg-green-300';
     }
-    return 'bg-red-200 hover:bg-red-300';
+
+    if (editCampaign && !isEditCampaign(week, campaign)) {
+      return 'bg-red-200 hover:bg-red-300';
+    }
+
+    if (campaign.isFulfilled) {
+      return 'bg-green-200  hover:bg-green-300';
+    }
+
+    return 'bg-gray-300 hover:bg-blue-300';
   };
 
   return (
     <>
       <div className="fixed z-30 h-[100vh] w-4 bg-white"></div>
-      <div className="ml-4 mb-4">
+      <div className="mb-4 ml-4">
         <div className="relative flex overflow-y-hidden">
           <div className={`w-[${width}px]`}>
             <div className={`fixed z-10`}>

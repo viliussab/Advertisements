@@ -86,7 +86,7 @@ public static class CampaignFunctions
     {
         var press = new CampaignPress
         {
-            UnitCount = (int)(campaign.PlaneAmount * Constants.PressPrintRatio)
+            UnitCount = (int)Math.Round(campaign.PlaneAmount * Constants.PressPrintRatio, 0)
         };
         press.TotalPrice = press.UnitCount * press.UnitPrice;
 

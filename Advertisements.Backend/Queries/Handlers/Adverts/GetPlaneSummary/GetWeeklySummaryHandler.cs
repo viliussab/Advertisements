@@ -37,7 +37,7 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
             .Include(x => x.Object.Area)
             .Include(x => x.PlaneCampaigns)
                 .ThenInclude(x => x.Campaign)
-            .OrderByDescending(x => x.PlaneCampaigns.Count)
+            .OrderBy(x => x.Object.SerialCode)
             .ToPageAsync(request, cancellationToken);
         
         var weekDates = GetWeeksBetween(request.From, request.To).ToList();

@@ -72,8 +72,7 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
             weeklySummary.ReservedTotalPrice = weeklySummary.Campaigns.Sum(x => x.WeeklyPrice);
             weeklySummary.PlanesReservedTotalCount = weeklySummary.Campaigns.Sum(x => x.CampaignPlanes.Count);
 
-            weeklySummary.PlaneTotalCount = planes
-                .Count(x => x.CreationDate <= week.AddDays(6));
+            weeklySummary.PlaneTotalCount = planes.Count;
 
             return weeklySummary;
         });

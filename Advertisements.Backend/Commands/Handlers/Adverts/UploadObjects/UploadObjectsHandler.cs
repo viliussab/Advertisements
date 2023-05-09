@@ -36,7 +36,7 @@ public class UploadObjectsHandler : BasedHandler<
             {
                 PartialName = x.PartialName,
                 IsPermitted = x.License is not null,
-                PermissionExpiryDate = x.License,
+                PermissionExpiryDate = x.License.Value.ToUniversalTime(),
                 IsPremium = x.IsPremium,
             }).ToList();
             
@@ -53,6 +53,7 @@ public class UploadObjectsHandler : BasedHandler<
                 Latitude = objectRow.Latitude!.Value,
                 Illuminated = objectRow.Illuminated!.Value,
                 Planes = planes,
+                Region = objectRow.Region
             };
 
             await _context.AddAsync(@object, cancellationToken);
@@ -84,6 +85,8 @@ public class UploadObjectsHandler : BasedHandler<
         public DateTime? License { get; set; }
         
         public bool IsPremium { get; set; }
+        
+        public string Region { get; set; }
     }
     
     private List<ObjectWorksheetRow> ParseRows(IXLWorksheet worksheet)
@@ -102,6 +105,7 @@ public class UploadObjectsHandler : BasedHandler<
             PartialName = row.Cell(8).GetString(),
             License = row.Cell(9).IsEmpty() ? null :  row.Cell(9).GetDateTime(),
             IsPremium = row.Cell(10).GetBoolean(),
+            Region = row.Cell(11).GetString(),
         }).ToList();
         
         return data;

@@ -139,6 +139,7 @@ function CampaignsListPage() {
         buildTrClassName={(e) => (e.isFulfilled ? 'bg-green-100' : '')}
       />
       <CampaignInfoDialog
+        onConfirm={() => campaignsQuery.refetch()}
         selectedCampaignId={selectedCampaignId}
         resetSelectedId={() => {
           setSelectedCampaignId(undefined);

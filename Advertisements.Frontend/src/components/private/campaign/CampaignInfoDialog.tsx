@@ -11,11 +11,12 @@ import campaignPlanesFunctions from '../../../pages/campaigns/campaignPlanesPage
 type Props = {
   selectedCampaignId: string | undefined;
   resetSelectedId: () => void;
+  onConfirm: () => void;
 };
 
 const CampaignInfoDialog = (props: Props) => {
   const navigate = useNavigate();
-  const { selectedCampaignId, resetSelectedId } = props;
+  const { selectedCampaignId, resetSelectedId, onConfirm } = props;
 
   const campaignQuery = useQuery({
     queryKey: campaignQueries.campaign.key,
@@ -31,6 +32,8 @@ const CampaignInfoDialog = (props: Props) => {
     mutationFn: campaignMutations.campaignConfirm.fn,
     onSuccess() {
       toast.success('Kampanija patvirtinta');
+      resetSelectedId();
+      onConfirm();
     },
   });
 

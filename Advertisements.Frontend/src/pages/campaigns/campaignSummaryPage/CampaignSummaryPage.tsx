@@ -41,7 +41,7 @@ function CampaignSummaryPage() {
     return rows.map((row, i) => (
       <tr className={i % 2 === 0 ? 'bg-blue-100' : 'bg-blue-50'}>
         <th
-          className={`absolute z-10 w-32 py-1 px-2 text-center text-sm uppercase ${
+          className={`absolute z-10 w-32 px-2 py-1 text-center text-sm uppercase ${
             i % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'
           } `}
         >
@@ -116,7 +116,7 @@ function CampaignSummaryPage() {
           }}
         />
       </div>
-      <div className="mr-4 ml-4 overflow-x-scroll">
+      <div className="ml-4 mr-4 overflow-x-scroll">
         {!summaryQuery.isLoading && (
           <table className="table-fixed">
             <thead className="">
@@ -126,7 +126,7 @@ function CampaignSummaryPage() {
               </tr>
               <tr>
                 <th
-                  className={`absolute z-10 w-32 py-1 px-2 text-center text-sm uppercase ${'bg-gray-300'}`}
+                  className={`absolute z-10 w-32 px-2 py-1 text-center text-sm uppercase ${'bg-gray-300'}`}
                 >
                   Menėsis
                 </th>
@@ -146,7 +146,7 @@ function CampaignSummaryPage() {
               </tr>
               <tr>
                 <th
-                  className={` absolute z-10 w-32 py-1 px-2 pt-3 pb-[0.70rem] text-center text-sm uppercase ${'bg-gray-200'}`}
+                  className={` absolute z-10 w-32 px-2 py-1 pb-[0.70rem] pt-3 text-center text-sm uppercase ${'bg-gray-200'}`}
                 >
                   Savaitė
                 </th>
@@ -239,6 +239,7 @@ function CampaignSummaryPage() {
         )}
       </div>
       <CampaignInfoDialog
+        onConfirm={() => summaryQuery.refetch()}
         selectedCampaignId={selectedCampaignId}
         resetSelectedId={() => {
           setHoveredCampaignId(undefined);
