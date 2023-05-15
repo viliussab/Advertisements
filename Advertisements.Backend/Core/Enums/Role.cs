@@ -2,5 +2,6 @@ namespace Core.Enums;
 
 public enum Role
 {
-    Admin
+    Admin,
+    Basic,
 }

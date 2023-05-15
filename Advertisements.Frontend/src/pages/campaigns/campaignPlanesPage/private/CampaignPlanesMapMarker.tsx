@@ -70,7 +70,7 @@ const CampaignPlanesMapMarker = ({
               </div>
               <div className="mt-2 flex justify-center">
                 {object.featuredPhoto && (
-                  <div className="grid h-32 w-48 bg-gray-100">
+                  <div className="h-32 w-48 bg-gray-100">
                     <ObjectMapPhoto image={object.featuredPhoto} />
                   </div>
                 )}
@@ -82,7 +82,7 @@ const CampaignPlanesMapMarker = ({
                     onObjectSelect(object.id);
                   }}
                 >
-                  Peržiūrėti <Icons.Visibility />
+                  Pasirinkti <Icons.Visibility />
                 </Mui.Button>
               </div>
             </div>

@@ -86,7 +86,7 @@ function CampaignCreatePage() {
             <FormInput.SubmitButton
               isSubmitting={campaignCreateCommand.isLoading}
             >
-              Atnaujinti
+              Kurti
             </FormInput.SubmitButton>
           </div>
         </Form>

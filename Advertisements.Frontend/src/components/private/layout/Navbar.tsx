@@ -35,7 +35,7 @@ function Navbar({ title }: Props) {
                 },
                 {
                   path: website_paths.objects.main,
-                  title: 'Objektų sąrašas',
+                  title: 'Plokštumų sąrašas',
                   Icon: Icons.List,
                 },
                 {

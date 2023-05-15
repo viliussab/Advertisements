@@ -60,7 +60,7 @@ const routes: Array<Route> = [
     path: website_paths.objects.main,
     Page: ObjectsListPage,
     layout: {
-      title: 'Objektų sąrašas',
+      title: 'Plokštumų sąrašas',
     },
   },
   {
