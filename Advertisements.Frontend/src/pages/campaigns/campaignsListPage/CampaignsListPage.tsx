@@ -43,7 +43,7 @@ function CampaignsListPage() {
   const [selectedCampaignId, setSelectedCampaignId] = React.useState<string>();
 
   if (!customersQuery.isFetched && !campaignsQuery.isFetched) {
-    return <>Loading...</>;
+    return <></>;
   }
 
   const columns: ColumnConfig<CampaignOverview>[] = [

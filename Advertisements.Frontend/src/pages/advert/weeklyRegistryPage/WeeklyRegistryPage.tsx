@@ -40,13 +40,12 @@ type PeriodFormEdit = {
 };
 
 function WeeklyRegistryPage() {
-  const thisYear = new Date(new Date().getFullYear(), 0, 1);
-  const thisYearFirstWeek = dateFunctions.getCampaignDay(thisYear);
+  const start = dateFunctions.getCurrentCampaignDay();
 
   const [query, setQuery] = React.useState<WeeklyRegistryQuery>({
     pageNumber: 1,
-    pageSize: 100,
-    from: thisYearFirstWeek,
+    pageSize: 1000,
+    from: start,
   });
   const [objectId, setObjectId] = React.useState<string>();
 
@@ -111,7 +110,7 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, name: undefined }));
         },
       },
-      rowWidthPx: 128,
+      rowWidthPx: 200,
     },
     {
       title: 'Adresas',
@@ -132,7 +131,7 @@ function WeeklyRegistryPage() {
           setQuery((prev) => ({ ...prev, address: undefined }));
         },
       },
-      rowWidthPx: 96,
+      rowWidthPx: 150,
     },
     {
       title: 'Pusė',
@@ -218,7 +217,7 @@ function WeeklyRegistryPage() {
       <div className="z-20 m-4 mb-16 flex justify-center gap-4 bg-white">
         <div className="fixed z-20 flex flex-1 justify-center gap-2 bg-white">
           <Filters.DatePicker
-            label="Data nuo"
+            label="Savaitė nuo"
             onChange={(val) => {
               if (val) setQuery((prev) => ({ ...prev, from: val }));
             }}
@@ -289,22 +288,6 @@ function WeeklyRegistryPage() {
         onCampaignClick={(id) => setSelectedCampaignId(id)}
         columns={columns}
         data={registryQuery.data?.items || []}
-        paging={{
-          pageSize: query.pageSize,
-          pageNumber: query.pageNumber,
-          totalCount: registryQuery.data?.totalCount || 0,
-          setPageNumber: (pageNumber) =>
-            setQuery((prev) => ({
-              ...prev,
-              pageNumber,
-            })),
-          setPageSize(pageSize) {
-            setQuery((prev) => ({
-              ...prev,
-              pageSize,
-            }));
-          },
-        }}
         keySelector={(x) => x.id}
         weeks={(registryQuery.data?.weeks || []).map((x) => new Date(x))}
         onClick={(x) => {
@@ -618,7 +601,7 @@ function RegistryTable(props: RegistryTableProps) {
                         {getCampaign(plane, week) ? (
                           <div
                             style={{ width: 120 }}
-                            className={`h-6 w-[120px] cursor-pointer border text-center text-black ${getFilledCellClassNames(
+                            className={`flex h-6 w-[120px] cursor-pointer items-center justify-center border text-center text-xs text-black ${getFilledCellClassNames(
                               week,
                               getCampaign(plane, week)!,
                             )}`}

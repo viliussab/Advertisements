@@ -6,18 +6,15 @@ import Campaign from '../../../api/responses/type.Campaign';
 import CampaignSummaryWeek from '../../../api/responses/type.CampaignSummaryWeek';
 import CampaignInfoDialog from '../../../components/private/campaign/CampaignInfoDialog';
 import Filters from '../../../components/public/input/filter';
-import constants from '../../../config/constants';
 import dateFns from '../../../config/imports/dateFns';
-import dateFunctions, { weekDay } from '../../../functions/dateFunctions';
+import dateFunctions from '../../../functions/dateFunctions';
 import dateStylingFunctions from '../../../functions/dateStylingFunctions';
 
 function CampaignSummaryPage() {
-  const thisYear = new Date(new Date().getFullYear(), 0, 1);
-
-  const thisYearFirstWeek = dateFunctions.getCampaignDay(thisYear);
+  const start = dateFunctions.getCurrentCampaignDay();
 
   const [query, setQuery] = React.useState<CampaignSummaryQuery>({
-    from: thisYearFirstWeek,
+    from: start,
   });
 
   const [hoveredCampaignId, setHoveredCampaignId] = React.useState<string>();
@@ -104,7 +101,7 @@ function CampaignSummaryPage() {
     <div>
       <div className="sticky m-4 flex justify-center gap-4">
         <Filters.DatePicker
-          label="Data nuo"
+          label="Savaitė nuo"
           onChange={(val) => {
             if (val) setQuery((prev) => ({ ...prev, from: val }));
           }}
@@ -202,7 +199,7 @@ function CampaignSummaryPage() {
                             <table>
                               <tr className="">
                                 <td colSpan={2}>
-                                  <div className="block w-32 overflow-hidden text-ellipsis whitespace-nowrap text-center uppercase">
+                                  <div className="block w-32 overflow-hidden text-ellipsis whitespace-nowrap text-center text-sm font-bold">
                                     {summary.campaigns[i].name}
                                   </div>
                                 </td>

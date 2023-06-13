@@ -62,7 +62,7 @@ function CampaignPlanesPeriodFormDialog(props: Props) {
           </div>
           <FormInput.DatePicker
             form={form}
-            label="Data nuo"
+            label="Savaitė nuo"
             fieldName="weekFrom"
             includeWeekNumber="regular"
             onChangeSuccess={(value) => {
@@ -80,7 +80,7 @@ function CampaignPlanesPeriodFormDialog(props: Props) {
           />
           <FormInput.DatePicker
             form={form}
-            label="Data iki"
+            label="Savaitė iki"
             includeWeekNumber="end"
             fieldName="weekTo"
             datePickerProps={{

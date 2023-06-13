@@ -43,7 +43,7 @@ const CustomerCUDialog = ({
           >
             <div className="m-4 mb-0">
               <FormInput.TextField
-                label="Kompanijos pavadinimas"
+                label="Įmonės pavadinimas"
                 form={form}
                 fieldName="name"
                 muiProps={{ required: true }}

@@ -12,7 +12,5 @@ public class GetAreaByNameResponse : AreaFields
         public List<AdvertPlaneFields> Planes { get; set; }
         
         public AdvertTypeFields Type { get; set; }
-        
-        public FileResponse? FeaturedPhoto { get; set; }
     }
 }

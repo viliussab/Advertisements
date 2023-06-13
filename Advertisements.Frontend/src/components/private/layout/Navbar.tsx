@@ -21,7 +21,7 @@ function Navbar({ title }: Props) {
             <div className="mr-2 h-10">
               <img className="h-full w-full" src="/logo.png" />
             </div>
-            <p className="mr-2 ml-2 text-lg  uppercase italic">{title}</p>
+            <p className="ml-2 mr-2 text-lg  uppercase italic">{title}</p>
 
             <Mui.Divider orientation="vertical" flexItem />
 
@@ -126,13 +126,15 @@ function NavbarRouteButton({ renderCell, routes }: NavbarRoutesButtonProps) {
               color="info"
               onClick={() => {
                 setMenuAnchor(null);
-                navigate(route.path);
+                // navigate(route.path);
               }}
             >
-              <div className="flex w-full justify-between gap-2">
-                {route.title}
-                <route.Icon />
-              </div>
+              <a href={route.path} className="w-full">
+                <div className="flex w-full justify-between gap-2">
+                  {route.title}
+                  <route.Icon />
+                </div>
+              </a>
             </Mui.Button>
           ))}
         </div>

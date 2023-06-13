@@ -44,7 +44,7 @@ function CampaignCreateUpdateFields(props: Props) {
           {!start && update ? null : (
             <FormInput.DatePicker
               form={form}
-              label="Data nuo imtinai"
+              label="Savaitė nuo imtinai"
               fieldName="start"
               includeWeekNumber="regular"
               onChangeSuccess={(value) =>
@@ -55,7 +55,7 @@ function CampaignCreateUpdateFields(props: Props) {
           {!end && update ? null : (
             <FormInput.DatePicker
               form={form}
-              label="Data iki imtinai"
+              label="Savaitė iki imtinai"
               includeWeekNumber="end"
               fieldName="end"
               datePickerProps={{

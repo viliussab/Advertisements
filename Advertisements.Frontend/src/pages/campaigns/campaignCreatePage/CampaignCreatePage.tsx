@@ -57,7 +57,7 @@ function CampaignCreatePage() {
   });
 
   if (customersQuery.isLoading) {
-    return <>Loading...</>;
+    return <></>;
   }
 
   return (

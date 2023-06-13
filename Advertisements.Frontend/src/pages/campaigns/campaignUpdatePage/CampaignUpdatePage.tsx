@@ -75,7 +75,7 @@ function CampaignUpdatePage() {
   });
 
   if (customersQuery.isLoading && campaignQuery.isLoading) {
-    return <>Loading...</>;
+    return <></>;
   }
 
   return (
