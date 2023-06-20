@@ -1,5 +1,5 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Customers;
 using Mapster;
 using MediatR;
 
@@ -16,7 +16,7 @@ public class UpdateCustomerHandler : IRequestHandler<UpdateCustomerCommand>
     
     public async Task Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = request.Adapt<Customer>();
+        var customer = request.Adapt<CustomerTable>();
 
          _context.Update(customer);
         await _context.SaveChangesAsync(cancellationToken);

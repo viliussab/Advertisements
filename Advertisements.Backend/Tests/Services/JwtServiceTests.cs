@@ -1,9 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Core.Database;
-using Core.Enums;
-using Core.Interfaces;
-using Core.Models;
+using Core.Tables.Entities.Users;
+using Core.Tables.Enums;
+using Core.Vendor;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -16,7 +16,7 @@ namespace Tests.Services;
 public class JwtServiceTests
 {
 	private JwtService _jwtService;
-	private UserManager<User> _userManager;
+	private UserManager<UserTable> _userManager;
 	private AdvertContext _dbContext;
 	private IDateProvider _dateProvider;
 	private IOptionsMonitor<JwtServiceSettings> _settings;
@@ -47,7 +47,7 @@ public class JwtServiceTests
 	public void BuildRefreshToken_ShouldReturnRefreshToken_WhichIsNotInvalidated()
 	{
 		// Arrange
-		var user = new User { Id = Guid.NewGuid().ToString() };
+		var user = new UserTable { Id = Guid.NewGuid().ToString() };
 
 		// Act
 		var refreshToken = _jwtService.BuildRefreshToken(user);
@@ -60,7 +60,7 @@ public class JwtServiceTests
 	public void BuildRefreshToken_ShouldReturnRefreshToken_WhichHasNotExpired()
 	{
 		// Arrange
-		var user = new User { Id = Guid.NewGuid().ToString() };
+		var user = new UserTable { Id = Guid.NewGuid().ToString() };
 
 		// Act
 		var refreshToken = _jwtService.BuildRefreshToken(user);
@@ -73,7 +73,7 @@ public class JwtServiceTests
 	public void BuildJwt_ShouldReturnValidAccessToken()
 	{
 		// Arrange
-		var user = new User
+		var user = new UserTable
 		{
 			Id = Guid.NewGuid().ToString(),
 			Role = Role.Admin
@@ -306,9 +306,9 @@ public class JwtServiceTests
 		return securityToken.Claims.ToList();
 	}
 
-	private async Task<User> SeedUserAsync()
+	private async Task<UserTable> SeedUserAsync()
 	{
-		var user = new User
+		var user = new UserTable
 		{
 			UserName = "admin@reklamosarka.com",
 			Email = "admin@reklamosarka.com",

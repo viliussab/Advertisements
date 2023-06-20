@@ -1,4 +1,4 @@
-namespace Queries.Handlers.Campaigns.GetCampaigns;
+namespace Queries.Handlers.Campaigns.GetCampaignOptions;
 
 public class CampaignOption
 {

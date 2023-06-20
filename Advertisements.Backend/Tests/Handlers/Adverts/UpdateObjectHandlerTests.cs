@@ -2,7 +2,8 @@
 using Commands.Requests;
 using Core.Database;
 using Core.EnumsRequest;
-using Core.Models;
+using Core.Tables.Entities.Area;
+using Core.Tables.Entities.Planes;
 using Tests.Abstractions;
 
 namespace Tests.Handlers.Adverts;
@@ -38,7 +39,7 @@ public class UpdateObjectHandlerTests
 
         // Act
         await _handler.Handle(command, CancellationToken.None);
-        var result = _dbContext.Set<AdvertObject>().First();
+        var result = _dbContext.Set<LocationTable>().First();
 		
         // Assert
         result.Address.Should().Be("4");
@@ -56,7 +57,7 @@ public class UpdateObjectHandlerTests
 
         // Act
         var answer = await _handler.Handle(command, CancellationToken.None);
-        var result = _dbContext.Set<AdvertPlane>().First();
+        var result = _dbContext.Set<PlaneTable>().First();
 		
         // Assert
         result.PartialName.Should().Be("4");
@@ -79,7 +80,7 @@ public class UpdateObjectHandlerTests
 
         // Act
         await _handler.Handle(command, CancellationToken.None);
-        var result = _dbContext.Set<AdvertPlane>().ToList();
+        var result = _dbContext.Set<PlaneTable>().ToList();
 		
         // Assert
         result.Count.Should().Be(command.Planes.Count);
@@ -96,7 +97,7 @@ public class UpdateObjectHandlerTests
         command.Planes = new List<UpdateObjectCommand.UpdatePlane>() { plane };
         // Act
         await _handler.Handle(command, CancellationToken.None);
-        var result = _dbContext.Set<AdvertPlane>().FirstOrDefault();
+        var result = _dbContext.Set<PlaneTable>().FirstOrDefault();
 		
         // Assert
         result.Should().BeNull();
@@ -144,23 +145,23 @@ public class UpdateObjectHandlerTests
         result.Should().BeNull();
     }
 
-    private UpdateObjectCommand BuildCommandBase(AdvertObject advertObject)
+    private UpdateObjectCommand BuildCommandBase(LocationTable locationTable)
     {
-        var plane = advertObject.Planes.First();
+        var plane = locationTable.Planes.First();
         var photo = plane.Photos.First();
 
         return new UpdateObjectCommand
         {
-            Id = advertObject.Id,
-            SerialCode = advertObject.SerialCode,
-            AreaId = advertObject.AreaId,
-            TypeId = advertObject.TypeId,
-            Name = advertObject.Name,
-            Address = advertObject.Address,
-            Region = advertObject.Region,
-            Longitude = advertObject.Longitude,
-            Latitude = advertObject.Latitude,
-            Illuminated = advertObject.Illuminated,
+            Id = locationTable.Id,
+            SerialCode = locationTable.SerialCode,
+            AreaId = locationTable.AreaId,
+            TypeId = locationTable.TypeId,
+            Name = locationTable.Name,
+            Address = locationTable.Address,
+            Region = locationTable.Region,
+            Longitude = locationTable.Longitude,
+            Latitude = locationTable.Latitude,
+            Illuminated = locationTable.Illuminated,
             Planes = new List<UpdateObjectCommand.UpdatePlane>()
             {
                 new UpdateObjectCommand.UpdatePlane
@@ -187,12 +188,12 @@ public class UpdateObjectHandlerTests
         };
     }
     
-    private async Task<AdvertObject> SeedObjectAsync()
+    private async Task<LocationTable> SeedObjectAsync()
     {
         var areaId = new Guid();
         var typeId = new Guid();
         
-        var advertObject = new AdvertObject
+        var advertObject = new LocationTable
         {
             AreaId = areaId,
             Area = new Area
@@ -205,7 +206,7 @@ public class UpdateObjectHandlerTests
                 Name = "City",
                 Regions = new []{ "Region"}
             },
-            Type = new AdvertType
+            TypeTable = new PlaneTypeTable
             {
                 Name = "Type",
                 Id = typeId,
@@ -217,9 +218,9 @@ public class UpdateObjectHandlerTests
             Illuminated = true,
             Longitude = 0.5,
             Latitude = 0.5,
-            Planes = new List<AdvertPlane>
+            Planes = new List<PlaneTable>
             {
-                new AdvertPlane
+                new PlaneTable
                 {
                     Id = default,
                     ObjectId = default,

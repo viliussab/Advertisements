@@ -1,5 +1,3 @@
-using Core.Models;
-
 namespace Queries.Responses.Prototypes;
 
 public class FileResponse

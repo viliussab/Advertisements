@@ -1,6 +1,6 @@
 using Commands.Responses;
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ public class UpdateCampaignPlanesHandler : IRequestHandler<UpdateCampaignPlanesC
     
     public async Task Handle(UpdateCampaignPlanesCommand request, CancellationToken cancellationToken)
     {
-        var deleteCps = await _context.Set<CampaignPlane>()
+        var deleteCps = await _context.Set<CampaignPlaneTable>()
             .Where(x => x.CampaignId == request.Id)
             .ToListAsync(cancellationToken);
         
@@ -26,7 +26,7 @@ public class UpdateCampaignPlanesHandler : IRequestHandler<UpdateCampaignPlanesC
 
         var addCps = request.CampaignPlanes.Select(cp =>
         {
-            var x = cp.Adapt<CampaignPlane>();
+            var x = cp.Adapt<CampaignPlaneTable>();
             x.CampaignId = request.Id;
 
             return x;

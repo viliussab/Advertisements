@@ -1,6 +1,6 @@
 using Commands.Responses;
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
 
@@ -21,7 +21,7 @@ public class UpdateCampaignHandler : BasedHandler<
     public override async Task<GuidSuccess> Handle(UpdateCampaignCommand request, CancellationToken cancellationToken)
     {
         var campaign = await _context
-            .Set<Campaign>()
+            .Set<CampaignTable>()
             .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
         campaign.CustomerId = request.CustomerId;

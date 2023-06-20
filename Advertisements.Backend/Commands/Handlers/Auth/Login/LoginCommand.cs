@@ -1,4 +1,4 @@
-using Core.Components;
+using Core.Objects.Others;
 using MediatR;
 
 namespace Commands.Handlers.Auth.Login;

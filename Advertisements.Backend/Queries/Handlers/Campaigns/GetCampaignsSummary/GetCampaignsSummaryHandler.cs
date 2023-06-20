@@ -1,11 +1,14 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
+using Core.Tables.Entities.Planes;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Queries.Functions;
 using Queries.Responses;
 using Queries.Responses.Prototypes;
+using CampaignPlane = Core.Objects.Models.Campaigns.CampaignPlane;
+using Customer = Core.Objects.Models.Customers.Customer;
 
 namespace Queries.Handlers.Campaigns.GetCampaignsSummary;
 
@@ -21,16 +24,16 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
     public async Task<IEnumerable<GetCampaignsSummaryWeeklyResponse>> Handle(GetCampaignsSummaryQuery request, CancellationToken cancellationToken)
     {
         var campaigns = await _context
-            .Set<Campaign>()
+            .Set<CampaignTable>()
             .Where(x =>
                 x.Start >= request.From && x.Start <= request.To
                 || x.End >= request.From && x.End <= request.To)
             .Include(x => x.CampaignPlanes)
-            .Include(x => x.Customer)
+            .Include(x => x.CustomerTable)
             .ToListAsync(cancellationToken: cancellationToken);
 
         var planes = await _context
-            .Set<AdvertPlane>()
+            .Set<PlaneTable>()
             .Where(x =>
                 x.CreationDate <= request.To)
             .ToListAsync(cancellationToken: cancellationToken);
@@ -56,8 +59,8 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
                 var dto = details.Adapt<CampaignOverview>();
                 
                 dto.WeeklyPrice = GetWeeklyPrice(c, details, week);
-                dto.Customer = c.Customer.Adapt<CustomerFields>();
-                dto.CampaignPlanes = c.CampaignPlanes.Adapt<List<CampaignPlaneFields>>();
+                dto.Customer = c.CustomerTable.Adapt<Customer>();
+                dto.CampaignPlanes = c.CampaignPlanes.Adapt<List<CampaignPlane>>();
 
                 return dto;
             }).ToList();
@@ -80,13 +83,13 @@ public class GetCampaignsSummaryHandler : IRequestHandler<GetCampaignsSummaryQue
         return weeklyCampaigns;
     }
 
-    private static double GetWeeklyPrice(Campaign campaign, CampaignWithPriceDetails priceDetails,  DateTime week)
+    private static double GetWeeklyPrice(CampaignTable campaignTable, CampaignWithPriceDetails priceDetails,  DateTime week)
     { 
-        var weekPrice = campaign.PricePerPlane
-                        * (1.0 - campaign.DiscountPercent / 100.0)
-                        * campaign.PlaneAmount;
+        var weekPrice = campaignTable.PricePerPlane
+                        * (1.0 - campaignTable.DiscountPercent / 100.0)
+                        * campaignTable.PlaneAmount;
 
-        if (campaign.Start != week)
+        if (campaignTable.Start != week)
         {
             return weekPrice;
         }

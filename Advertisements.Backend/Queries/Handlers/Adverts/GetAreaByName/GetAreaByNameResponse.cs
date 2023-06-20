@@ -1,16 +1,18 @@
-using Core.Models;
+using Core.Objects.Models.Plane;
 using Queries.Responses.Prototypes;
+using Area = Core.Objects.Models.Areas.Area;
+using Location = Core.Objects.Models.Plane.Location;
 
 namespace Queries.Handlers.Adverts.GetAreaByName;
 
-public class GetAreaByNameResponse : AreaFields
+public class GetAreaByNameResponse : Core.Objects.Models.Areas.Area
 {
     public List<ObjectResponse> Objects { get; set; }
 
-    public class ObjectResponse : AdvertObjectFields
+    public class ObjectResponse : Core.Objects.Models.Plane.Location
     {
-        public List<AdvertPlaneFields> Planes { get; set; }
+        public List<Plane> Planes { get; set; }
         
-        public AdvertTypeFields Type { get; set; }
+        public PlaneType Type { get; set; }
     }
 }

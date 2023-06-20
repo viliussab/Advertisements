@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using API.Middlewares;
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Users;
 using Infrastructure;
 using Infrastructure.Seeding;
 using Infrastructure.Services;
@@ -110,7 +110,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Advertiseme
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetService<AdvertContext>()!;
-    var userManager = scope.ServiceProvider.GetService<UserManager<User>>()!;
+    var userManager = scope.ServiceProvider.GetService<UserManager<UserTable>>()!;
     await Seeder.Seed(context, userManager);
 }
 

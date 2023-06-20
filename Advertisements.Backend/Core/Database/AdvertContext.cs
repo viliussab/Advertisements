@@ -1,14 +1,15 @@
 using Core.Database.Configurations;
-using Core.Interfaces;
-using Core.Models;
-using Core.Enums;
+using Core.Tables.Entities.Planes;
+using Core.Tables.Entities.Users;
+using Core.Tables.Interfaces;
+using Core.Vendor;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Database;
 
-public class AdvertContext : IdentityDbContext<User>
+public class AdvertContext : IdentityDbContext<UserTable>
 {
     private readonly IDateProvider _dateProvider;
 
@@ -21,7 +22,7 @@ public class AdvertContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AdvertObjectConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(LocationConfiguration).Assembly);
     }
 
     private static ValueConverter GetEnumConverter<T>()

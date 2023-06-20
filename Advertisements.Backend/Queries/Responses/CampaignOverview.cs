@@ -1,8 +1,10 @@
+using Core.Objects.Models.Campaigns;
+using Core.Objects.Models.Customers;
 using Queries.Responses.Prototypes;
 
 namespace Queries.Responses;
 
-public class CampaignOverview : CampaignFields
+public class CampaignOverview : Campaign
 {
     public int WeekCount { get; set; }
     
@@ -12,7 +14,7 @@ public class CampaignOverview : CampaignFields
     
     public double WeeklyPrice { get; set; }
     
-    public CustomerFields Customer { get; set; }
+    public Customer Customer { get; set; }
     
-    public List<CampaignPlaneFields> CampaignPlanes { get; set; }
+    public List<CampaignPlane> CampaignPlanes { get; set; }
 }

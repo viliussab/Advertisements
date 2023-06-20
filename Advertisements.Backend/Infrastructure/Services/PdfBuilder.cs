@@ -1,4 +1,4 @@
-using Core.Interfaces;
+using Core.Vendor;
 using SelectPdf;
 namespace Infrastructure.Services;
 

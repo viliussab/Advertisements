@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using Core.Tables.Entities.Campaigns;
 using Queries.Functions;
 
 namespace Tests.Functions;
@@ -118,9 +118,9 @@ public class CampaignFunctionsTests
         expectedPrices.Should().BeEquivalentTo(calculatedPrices);
     }
 
-    public Campaign BuildCampaign()
+    public CampaignTable BuildCampaign()
     {
-        return new Campaign
+        return new CampaignTable
         {
             Id = default,
             CustomerId = default,

@@ -1,5 +1,5 @@
 using Core.Errors;
-using Core.Models;
+using Core.Objects.Models.Plane;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Adverts.GetAreaByName;
 using Queries.Handlers.Adverts.GetAreas;
@@ -8,13 +8,14 @@ using Queries.Handlers.Adverts.GetPlanesPaged;
 using Queries.Handlers.Adverts.GetPlaneSummary;
 using Queries.Handlers.Adverts.GetTypes;
 using Queries.Responses.Prototypes;
+using Area = Core.Objects.Models.Areas.Area;
 
 namespace API.Controllers;
 
 public class AdvertQueriesController : BasedController
 {
     [HttpGet("area")]
-    [ProducesResponseType(typeof(IEnumerable<AreaFields>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<Area>), 200)]
     public async Task<IActionResult> GetAreas()
     {
         var areas = await Mediator.Send(new GetAreasQuery());
@@ -23,7 +24,7 @@ public class AdvertQueriesController : BasedController
     }
 
     [HttpGet("type")]
-    [ProducesResponseType(typeof(IEnumerable<AdvertTypeFields>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<PlaneType>), 200)]
     public async Task<IActionResult> GetTypes()
     {
         var types = await Mediator.Send(new GetTypesQuery());

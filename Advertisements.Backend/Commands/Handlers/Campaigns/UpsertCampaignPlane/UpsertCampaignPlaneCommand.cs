@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Commands.Handlers.Campaigns.UpdateCampaignPlane;
+namespace Commands.Handlers.Campaigns.UpsertCampaignPlane;
 
 public class UpsertCampaignPlaneCommand : IRequest
 {

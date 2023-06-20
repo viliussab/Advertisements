@@ -1,4 +1,4 @@
-using Core.Enums;
+using Core.Tables.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 

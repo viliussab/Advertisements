@@ -1,6 +1,6 @@
 ﻿using Core.Database;
-using Core.Interfaces;
-using Core.Models;
+using Core.Tables.Entities.Area;
+using Core.Vendor;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Abstractions;

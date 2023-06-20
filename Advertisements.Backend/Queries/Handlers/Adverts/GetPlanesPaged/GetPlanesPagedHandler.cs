@@ -1,5 +1,5 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Planes;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Queries.Extensions;
@@ -21,7 +21,7 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
     
     public override async Task<PageResponse<GetPlanesPagedPlane>> Handle(GetPlanesPagedQuery request, CancellationToken cancellationToken)
     {
-        var queryable = _context.Set<AdvertPlane>()
+        var queryable = _context.Set<PlaneTable>()
             .Where(plane => request.Name == null
                             || EF.Functions.ILike( plane.Object.Name + " " + plane.PartialName, $"%{request.Name}%"))
             .Where(plane => request.Address == null
@@ -39,7 +39,7 @@ public class GetPlanesPagedHandler : BasedHandler<GetPlanesPagedQuery, PageRespo
  
         var pagedPlanes = await queryable
             .Include(x => x.Object)
-            .Include(x => x.Object.Type)
+            .Include(x => x.Object.TypeTable)
             .Include(x => x.Object.Area)
             .ToPageAsync(request, cancellationToken);
 

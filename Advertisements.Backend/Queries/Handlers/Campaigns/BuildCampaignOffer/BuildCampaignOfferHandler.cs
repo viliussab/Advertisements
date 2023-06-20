@@ -1,6 +1,6 @@
 using Core.Database;
-using Core.Interfaces;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
+using Core.Vendor;
 using Microsoft.EntityFrameworkCore;
 using Queries.Functions;
 using Queries.Prototypes;
@@ -22,8 +22,8 @@ public class BuildCampaignOfferHandler : BasedHandler<BuildCampaignOfferQuery, D
     public override async Task<DownloadFile> Handle(BuildCampaignOfferQuery request, CancellationToken cancellationToken)
     {
         var campaign = await _context
-            .Set<Campaign>()
-            .Include(x => x.Customer)
+            .Set<CampaignTable>()
+            .Include(x => x.CustomerTable)
             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         var campaignDetailed = CampaignFunctions.BuildPriceDetailsCampaign(campaign);
@@ -31,7 +31,7 @@ public class BuildCampaignOfferHandler : BasedHandler<BuildCampaignOfferQuery, D
         var factory = new BuildCampaignOfferTemplateFactory();
 
         var html = factory.InitialTemplate;
-        html = factory.InjectCustomerRepresentative(html, campaign.Customer, campaign.Name);
+        html = factory.InjectCustomerRepresentative(html, campaign.CustomerTable, campaign.Name);
         html = factory.InjectTableRows(html, campaignDetailed);
         html = factory.InjectDemoCompanyRepresentative(html);
         html = factory.InjectTotalSums(html, campaignDetailed);

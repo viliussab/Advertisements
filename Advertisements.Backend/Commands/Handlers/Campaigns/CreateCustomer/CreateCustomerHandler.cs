@@ -1,5 +1,5 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Customers;
 using Mapster;
 using MediatR;
 
@@ -16,7 +16,7 @@ public class CreateCustomerHandler : IRequestHandler<CreateCustomerCommand>
     
     public async Task Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = request.Adapt<Customer>();
+        var customer = request.Adapt<CustomerTable>();
 
         await _context.AddAsync(customer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

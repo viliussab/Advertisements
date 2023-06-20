@@ -1,4 +1,4 @@
-using Core.Components;
+using Core.Objects.Others;
 
 namespace API.Extensions;
 

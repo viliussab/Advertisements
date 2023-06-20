@@ -1,7 +1,7 @@
-using Core.Components;
 using Core.Database;
-using Core.Interfaces;
-using Core.Models;
+using Core.Objects.Others;
+using Core.Tables.Entities.Users;
+using Core.Vendor;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,14 +9,14 @@ namespace Commands.Handlers.Auth.Login;
 
 public class LoginHandler : IRequestHandler<LoginCommand, Jwt>
 {
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<UserTable> _signInManager;
+    private readonly UserManager<UserTable> _userManager;
     private readonly IJwtService _jwtService;
     private readonly AdvertContext _context;
 
     public LoginHandler(
-        SignInManager<User> signInManager,
-        UserManager<User> userManager,
+        SignInManager<UserTable> signInManager,
+        UserManager<UserTable> userManager,
         IJwtService jwtService,
         AdvertContext context)
     {

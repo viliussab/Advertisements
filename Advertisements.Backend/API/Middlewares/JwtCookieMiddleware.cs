@@ -1,6 +1,6 @@
 using API.Extensions;
-using Core.Components;
-using Core.Interfaces;
+using Core.Objects.Others;
+using Core.Vendor;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 

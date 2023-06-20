@@ -1,7 +1,7 @@
 using API.Attributes;
 using API.Extensions;
 using Commands.Handlers.Auth.Login;
-using Core.Enums;
+using Core.Tables.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Auth.GetUser;
 

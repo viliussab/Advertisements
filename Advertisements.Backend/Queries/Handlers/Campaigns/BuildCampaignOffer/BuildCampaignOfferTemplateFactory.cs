@@ -1,4 +1,4 @@
-using Core.Models;
+using Core.Tables.Entities.Customers;
 using Queries.Extensions;
 using Queries.Functions;
 
@@ -6,18 +6,18 @@ namespace Queries.Handlers.Campaigns.BuildCampaignOffer;
 
 public class BuildCampaignOfferTemplateFactory
 {
-    public string InjectCustomerRepresentative(string html, Customer customer, string campaignTitle)
+    public string InjectCustomerRepresentative(string html, CustomerTable customerTable, string campaignTitle)
     {
         var tableRows = new[]
         {
-            BuildRepresentativeRow("Klientas", customer.Name),
-            BuildRepresentativeRow("Įm. kodas", customer.CompanyCode),
-            BuildRepresentativeRow("PVM kodas", customer.VatCode),
-            BuildRepresentativeRow("Adresas", customer.Address),
+            BuildRepresentativeRow("Klientas", customerTable.Name),
+            BuildRepresentativeRow("Įm. kodas", customerTable.CompanyCode),
+            BuildRepresentativeRow("PVM kodas", customerTable.VatCode),
+            BuildRepresentativeRow("Adresas", customerTable.Address),
             BuildRepresentativeRow("Kampanija", campaignTitle),
-            BuildRepresentativeRow("Kontaktinis asmuo", customer.ContactPerson),
-            BuildRepresentativeRow("Telefonas", customer.Phone),
-            BuildRepresentativeRow("El. paštas", customer.Email),
+            BuildRepresentativeRow("Kontaktinis asmuo", customerTable.ContactPerson),
+            BuildRepresentativeRow("Telefonas", customerTable.Phone),
+            BuildRepresentativeRow("El. paštas", customerTable.Email),
         };
 
         var template = BuildRepresentativeTable(tableRows);

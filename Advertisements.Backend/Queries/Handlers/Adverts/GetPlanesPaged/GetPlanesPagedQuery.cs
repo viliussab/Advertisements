@@ -1,4 +1,3 @@
-using Core.Models;
 using MediatR;
 using Queries.Handlers.Adverts.GetAreas;
 using Queries.Prototypes;

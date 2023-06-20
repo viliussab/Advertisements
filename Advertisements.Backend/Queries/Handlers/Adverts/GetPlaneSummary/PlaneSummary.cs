@@ -1,3 +1,4 @@
+using Core.Objects.Models.Campaigns;
 using Queries.Handlers.Adverts.GetPlanesPaged;
 using Queries.Responses.Prototypes;
 
@@ -14,9 +15,9 @@ public class PlaneWithWeeks : GetPlanesPagedPlane
     
 }
 
-public class PlaneWeekCampaign : CampaignFields
+public class PlaneWeekCampaign : Campaign
 {
     public DateTime Week { get; set; }
     
-    public List<CampaignPlaneFields> CampaignPlanes { get; set; }
+    public List<CampaignPlane> CampaignPlanes { get; set; }
 }

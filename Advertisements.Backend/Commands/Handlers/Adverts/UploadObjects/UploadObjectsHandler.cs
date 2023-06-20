@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Area;
+using Core.Tables.Entities.Planes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Queries.Prototypes;
@@ -27,12 +28,12 @@ public class UploadObjectsHandler : BasedHandler<
         var rows = ParseRows(sheet);
         var objectGroups = rows.GroupBy(x => x.SerialCode);
 
-        var types = await _context.Set<AdvertType>().ToListAsync(cancellationToken: cancellationToken);
+        var types = await _context.Set<PlaneTypeTable>().ToListAsync(cancellationToken: cancellationToken);
         var areas = await _context.Set<Area>().ToListAsync(cancellationToken: cancellationToken);
 
         foreach (var objectGroup in objectGroups)
         {
-            var planes = objectGroup.Select(x => new AdvertPlane
+            var planes = objectGroup.Select(x => new PlaneTable
             {
                 PartialName = x.PartialName,
                 IsPermitted = x.License is not null,
@@ -42,7 +43,7 @@ public class UploadObjectsHandler : BasedHandler<
             
             var objectRow = objectGroup.First();
 
-            var @object = new AdvertObject
+            var @object = new LocationTable
             {
                 SerialCode = objectRow.SerialCode,
                 Name = objectRow.Name!,

@@ -1,6 +1,6 @@
 using Commands.Responses;
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Mapster;
 using Queries.Prototypes;
 
@@ -20,7 +20,7 @@ public class CreateCampaignHandler : BasedHandler<
 
     public async override Task<GuidSuccess> Handle(CreateCampaignCommand request, CancellationToken cancellationToken)
     {
-        var campaign = request.Adapt<Campaign>();
+        var campaign = request.Adapt<CampaignTable>();
         await _context.AddAsync(campaign, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 

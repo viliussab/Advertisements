@@ -1,8 +1,9 @@
 using Commands.Responses;
 using Core.Database;
 using Core.Errors;
-using Core.Models;
 using Core.Successes;
+using Core.Tables.Entities.Area;
+using Core.Tables.Entities.Planes;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
@@ -39,7 +40,7 @@ public class CreateObjectHandler : BasedHandler<
         CreateObjectCommand request,
         CancellationToken cancellationToken)
     {
-        var advertObject = new AdvertObject
+        var advertObject = new LocationTable
         {
             SerialCode = request.SerialCode,
             AreaId = request.AreaId,
@@ -50,7 +51,7 @@ public class CreateObjectHandler : BasedHandler<
             Illuminated = request.Illuminated,
             Longitude = request.Longitude,
             Latitude = request.Latitude,
-            Planes = request.Planes.Select(planeRequest => new AdvertPlane
+            Planes = request.Planes.Select(planeRequest => new PlaneTable
             {
                 PartialName = planeRequest.PartialName,
                 IsPermitted = planeRequest.IsPermitted,
@@ -65,7 +66,7 @@ public class CreateObjectHandler : BasedHandler<
             }).ToList()
         };
 
-        await _context.Set<AdvertObject>().AddAsync(advertObject, cancellationToken);
+        await _context.Set<LocationTable>().AddAsync(advertObject, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new GuidSuccess(advertObject.Id);
@@ -87,12 +88,12 @@ public class CreateObjectHandler : BasedHandler<
                 "region does not belong to an area"));
         }
 
-        var type = await _context.Set<AdvertType>()
+        var type = await _context.Set<PlaneTypeTable>()
             .FirstOrDefaultAsync(x => x.Id == request.TypeId, cancellationToken);
     
         if (type is null)
         {
-            validationErrors.Add(new ValidationError(typeof(AdvertType).ToString(), $"{typeof(AdvertType)} does not exist"));
+            validationErrors.Add(new ValidationError(typeof(PlaneTypeTable).ToString(), $"{typeof(PlaneTypeTable)} does not exist"));
         }
 
         var validatorErrors = await Validator.ValidatorRequestAsync(request);

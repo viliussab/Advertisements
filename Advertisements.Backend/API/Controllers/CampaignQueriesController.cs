@@ -1,7 +1,10 @@
 using Core.Errors;
+using Core.Objects.Models.Campaigns;
+using Core.Objects.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Queries.Handlers.Campaigns.BuildCampaignOffer;
 using Queries.Handlers.Campaigns.GetCampaignById;
+using Queries.Handlers.Campaigns.GetCampaignOptions;
 using Queries.Handlers.Campaigns.GetCampaigns;
 using Queries.Handlers.Campaigns.GetCampaignsSummary;
 using Queries.Handlers.Campaigns.GetCustomers;
@@ -13,7 +16,7 @@ namespace API.Controllers;
 public class CampaignQueriesController : BasedController
 {
     [HttpGet("campaign/{id:guid}")]
-    [ProducesResponseType(typeof(CampaignFields), 200)]
+    [ProducesResponseType(typeof(Campaign), 200)]
     [ProducesResponseType(typeof(NotFoundError),404)]
     public async Task<IActionResult> GetCampaign([FromRoute] Guid id)
     {
@@ -57,7 +60,7 @@ public class CampaignQueriesController : BasedController
     }
     
     [HttpGet("customer")]
-    [ProducesResponseType(typeof(IEnumerable<CustomerFields>), 200)]
+    [ProducesResponseType(typeof(IEnumerable<Customer>), 200)]
     public async Task<IActionResult> GetCustomers()
     {
         var customers = await Mediator.Send(new GetCustomersQuery());

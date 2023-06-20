@@ -1,12 +1,12 @@
-using Core.Models;
+using Core.Tables.Entities.Planes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Core.Database.Configurations;
 
-public class AdvertTypeConfiguration : IEntityTypeConfiguration<AdvertType>
+public class AdvertTypeConfiguration : IEntityTypeConfiguration<PlaneTypeTable>
 {
-    public void Configure(EntityTypeBuilder<AdvertType> builder)
+    public void Configure(EntityTypeBuilder<PlaneTypeTable> builder)
     {
         builder.HasKey(x => x.Id);
     }

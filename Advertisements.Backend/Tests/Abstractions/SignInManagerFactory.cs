@@ -1,5 +1,5 @@
 ﻿using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,12 +7,12 @@ namespace Tests.Abstractions;
 
 public class SignInManagerFactory
 {
-	public static SignInManager<User> CreateMock(AdvertContext context)
+	public static SignInManager<UserTable> CreateMock(AdvertContext context)
 	{
-		var mock = Substitute.For<SignInManager<User>>(
+		var mock = Substitute.For<SignInManager<UserTable>>(
 			UserManagerFactory.Create(context),
 			Substitute.For<IHttpContextAccessor>(),
-			Substitute.For<IUserClaimsPrincipalFactory<User>>(),
+			Substitute.For<IUserClaimsPrincipalFactory<UserTable>>(),
 			null,
 			null,
 			null,

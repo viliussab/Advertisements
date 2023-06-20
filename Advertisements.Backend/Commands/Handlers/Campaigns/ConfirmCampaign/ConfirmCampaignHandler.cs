@@ -1,6 +1,6 @@
 using Core.Database;
 using Core.Errors;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
@@ -18,7 +18,7 @@ public class ConfirmCampaignHandler : IRequestHandler<ConfirmCampaignCommand, On
     
     public async Task<OneOf<ConflictError, Unit>> Handle(ConfirmCampaignCommand request, CancellationToken cancellationToken)
     {
-        var campaign = await _context.Set<Campaign>()
+        var campaign = await _context.Set<CampaignTable>()
             .Include(x => x.CampaignPlanes)
             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
@@ -44,7 +44,7 @@ public class ConfirmCampaignHandler : IRequestHandler<ConfirmCampaignCommand, On
         return Unit.Value;
     }
 
-    private static bool IsInPlane(CampaignPlane cp, DateTime week)
+    private static bool IsInPlane(CampaignPlaneTable cp, DateTime week)
     {
         return cp.WeekFrom <= week && cp.WeekTo >= week;
     }

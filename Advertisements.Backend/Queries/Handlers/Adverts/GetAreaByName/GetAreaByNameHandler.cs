@@ -1,11 +1,11 @@
 using Core.Database;
 using Core.Errors;
-using Core.Models;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
 using Queries.Responses.Prototypes;
+using Area = Core.Tables.Entities.Area.Area;
 
 namespace Queries.Handlers.Adverts.GetAreaByName;
 
@@ -25,7 +25,7 @@ public class GetAreaByNameHandler : BasedHandler<GetAreaByNameQuery, OneOf<NotFo
             .Include(x => x.Objects)
                 .ThenInclude(x => x.Planes)
             .Include(x => x.Objects)
-                .ThenInclude(x => x.Type)
+                .ThenInclude(x => x.TypeTable)
             .FirstOrDefaultAsync(x => x.Name == request.Name, cancellationToken: cancellationToken);
 
         if (area is null)

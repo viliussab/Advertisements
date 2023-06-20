@@ -1,26 +1,12 @@
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Mapster;
 using Queries.Responses.Prototypes;
+using Campaign = Core.Objects.Models.Campaigns.Campaign;
 
 namespace Queries.Functions;
 
-public class CampaignUnplanned
-{
-    public double UnitPrice { get; set; } = Constants.UnplannedUnitPrice;
-    
-    public double TotalPrice { get; set; }
-}
 
-public class CampaignPress
-{
-    public int UnitCount { get; set; }
-
-    public double UnitPrice { get; set; } = Constants.PressUnitPrice;
-    
-    public double TotalPrice { get; set; }
-}
-
-public class CampaignWithPriceDetails : CampaignFields 
+public class CampaignWithPriceDetails : Core.Objects.Models.Campaigns.Campaign 
 {
     public int WeekCount { get; set; }
     
@@ -45,31 +31,31 @@ public class CampaignWithPriceDetails : CampaignFields
 
 public static class CampaignFunctions
 {
-    private static int CalculateWeekCount(CampaignFields campaign)
+    private static int CalculateWeekCount(Campaign campaign)
     {
         var timeDifference = campaign.End - campaign.Start;
 
         return (int)Math.Ceiling(timeDifference.TotalDays / 7) + 1;
     }
 
-    public static CampaignWithPriceDetails BuildPriceDetailsCampaign(Campaign campaign)
+    public static CampaignWithPriceDetails BuildPriceDetailsCampaign(CampaignTable campaignTable)
     {
-        var c = campaign.Adapt<CampaignWithPriceDetails>();
+        var c = campaignTable.Adapt<CampaignWithPriceDetails>();
 
         c.WeekCount = CalculateWeekCount(c);
         c.WeekPeriod = $"w" +
-                       $"{DateFunctions.GetWeekNumber(campaign.Start)}" +
+                       $"{DateFunctions.GetWeekNumber(campaignTable.Start)}" +
                        $"-" +
-                       $"{DateFunctions.GetWeekNumber(campaign.End)}";
+                       $"{DateFunctions.GetWeekNumber(campaignTable.End)}";
         c.PlaneUnitPriceDiscounted = c.PricePerPlane * (1.0 - c.DiscountPercent / 100.0);
         c.PlanesTotalPrice = c.PricePerPlane * c.WeekCount * c.PlaneAmount;
         c.PlanesTotalPriceDiscounted = c.PlaneUnitPriceDiscounted * c.WeekCount * c.PlaneAmount;
 
-        c.Unplanned = campaign.Start.DayOfWeek == Constants.WeekStartDay
+        c.Unplanned = campaignTable.Start.DayOfWeek == Constants.WeekStartDay
             ? null
             : BuildUnplanned(c);
         
-        c.Press = campaign.RequiresPrinting
+        c.Press = campaignTable.RequiresPrinting
             ? BuildPress(c)
             : null;
 
@@ -93,13 +79,5 @@ public static class CampaignFunctions
         return press;
     }
     
-    private static CampaignUnplanned BuildUnplanned(CampaignWithPriceDetails campaign)
-    {
-        var press = new CampaignUnplanned
-        {
-            TotalPrice = Constants.UnplannedUnitPrice * campaign.PlaneAmount
-        };
 
-        return press;
-    }
 }

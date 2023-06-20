@@ -1,6 +1,6 @@
 using Core.Database;
 using Core.Errors;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +24,14 @@ public class GetCampaignByIdHandler : BasedHandler<GetCampaignByIdQuery, OneOf<N
     public override async Task<OneOf<NotFoundError, CampaignOverview>> Handle(GetCampaignByIdQuery request, CancellationToken cancellationToken)
     {
         var campaign = await _context
-            .Set<Campaign>()
+            .Set<CampaignTable>()
             .Include(x => x.CampaignPlanes)
-            .Include(x => x.Customer)
+            .Include(x => x.CustomerTable)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (campaign is null)
         {
-            return new NotFoundError(request.Id, typeof(Campaign));
+            return new NotFoundError(request.Id, typeof(CampaignTable));
         }
         
         var campaignDetailed = CampaignFunctions.BuildPriceDetailsCampaign(campaign);

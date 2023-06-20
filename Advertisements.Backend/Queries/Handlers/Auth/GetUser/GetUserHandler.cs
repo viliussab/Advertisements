@@ -1,4 +1,4 @@
-using Core.Models;
+using Core.Tables.Entities.Users;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -7,9 +7,9 @@ namespace Queries.Handlers.Auth.GetUser;
 
 public class GetUserHandler : IRequestHandler<GetUserQuery, UserResponse>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<UserTable> _userManager;
 
-    public GetUserHandler(UserManager<User> userManager)
+    public GetUserHandler(UserManager<UserTable> userManager)
     {
         _userManager = userManager;
     }

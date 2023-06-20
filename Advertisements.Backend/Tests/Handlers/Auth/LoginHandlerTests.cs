@@ -1,21 +1,21 @@
 ﻿using Commands.Handlers.Auth.Login;
-using Core.Components;
 using Core.Database;
-using Core.Interfaces;
-using Core.Models;
+using Core.Objects.Others;
+using Core.Tables.Entities.Users;
+using Core.Vendor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Tests.Abstractions;
 
-namespace Tests.Handlers;
+namespace Tests.Handlers.Auth;
 
 [TestFixture]
 public class LoginHandlerTests
 {
     private LoginHandler _handler;
-	private SignInManager<User> _signInManager;
+	private SignInManager<UserTable> _signInManager;
 	private AdvertContext _dbContext;
-	private UserManager<User> _userManager;
+	private UserManager<UserTable> _userManager;
 	private IJwtService _jwtService;
 
 	[SetUp]
@@ -79,23 +79,23 @@ public class LoginHandlerTests
 		_signInManager.PasswordSignInAsync(user, command.Password, false, false)
 			.Returns(SignInResult.Success);
 		
-		var refreshToken = new UserRefreshToken { User = user, ExpirationDate = DateTime.Now, IsInvalidated = false };
-		_jwtService.BuildRefreshToken(Arg.Any<User>())
+		var refreshToken = new UserRefreshTokenTable { UserTable = user, ExpirationDate = DateTime.Now, IsInvalidated = false };
+		_jwtService.BuildRefreshToken(Arg.Any<UserTable>())
 			.Returns(refreshToken);
-		_jwtService.BuildJwt(Arg.Any<UserRefreshToken>())
+		_jwtService.BuildJwt(Arg.Any<UserRefreshTokenTable>())
 			.Returns(new Jwt { AccessToken = "accessToken", RefreshTokenId = Guid.NewGuid() });
 
 		// Act
 		await _handler.Handle(command, CancellationToken.None);
-		var savedRefreshToken = await _dbContext.Set<UserRefreshToken>().FirstOrDefaultAsync();
+		var savedRefreshToken = await _dbContext.Set<UserRefreshTokenTable>().FirstOrDefaultAsync();
 		
 		// Assert
 		savedRefreshToken.Should().NotBeNull();
 	}
 	
-	private async Task<User> SeedUserAsync()
+	private async Task<UserTable> SeedUserAsync()
 	{
-		var user = new User
+		var user = new UserTable
 		{
 			Email = "demo@gmail.com",
 			UserName = "demo@gmail.com",

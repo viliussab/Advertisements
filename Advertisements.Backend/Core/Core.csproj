@@ -8,8 +8,7 @@
 
     <ItemGroup>
       <Folder Include="Database\" />
-      <Folder Include="Enums\" />
-      <Folder Include="ErrorMessages" />
+      <Folder Include="Objects\Models\Other" />
     </ItemGroup>
 
     <ItemGroup>

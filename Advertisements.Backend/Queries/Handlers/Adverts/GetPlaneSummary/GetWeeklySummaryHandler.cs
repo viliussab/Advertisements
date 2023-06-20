@@ -1,5 +1,5 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Planes;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +19,7 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
     
     public async Task<PlaneSummary> Handle(GetWeeklySummaryQuery request, CancellationToken cancellationToken)
     {
-        var queryable = _context.Set<AdvertPlane>()
+        var queryable = _context.Set<PlaneTable>()
             .Where(plane => request.Name == null
                             || EF.Functions.ILike(plane.Object.Name + " " + plane.PartialName, $"%{request.Name}%"))
             .Where(plane => request.Address == null
@@ -33,10 +33,10 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
  
         var pagedPlanes = await queryable
             .Include(x => x.Object)
-            .Include(x => x.Object.Type)
+            .Include(x => x.Object.TypeTable)
             .Include(x => x.Object.Area)
             .Include(x => x.PlaneCampaigns)
-                .ThenInclude(x => x.Campaign)
+                .ThenInclude(x => x.CampaignTable)
             .OrderBy(x => x.Object.CreationDate)
             .ToPageAsync(request, cancellationToken);
         
@@ -58,12 +58,12 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
         return dto;
     }
 
-    private static PlaneWeekCampaign? GetWeekForPlaneOrDefault(DateTime date, AdvertPlane plane)
+    private static PlaneWeekCampaign? GetWeekForPlaneOrDefault(DateTime date, PlaneTable planeTable)
     {
-        var campaignOrDefault = plane
+        var campaignOrDefault = planeTable
             .PlaneCampaigns
             .FirstOrDefault(cp => cp.WeekFrom <= date && cp.WeekTo >= date)
-            ?.Campaign;
+            ?.CampaignTable;
 
         if (campaignOrDefault is null)
         {
@@ -72,7 +72,7 @@ public class GetWeeklySummaryHandler : IRequestHandler<GetWeeklySummaryQuery, Pl
 
         var dto = campaignOrDefault.Adapt<PlaneWeekCampaign>();
         dto.Week = date;
-        dto.CampaignPlanes = dto.CampaignPlanes.Where(x => x.PlaneId == plane.Id).ToList();
+        dto.CampaignPlanes = dto.CampaignPlanes.Where(x => x.PlaneId == planeTable.Id).ToList();
 
         return dto;
     }

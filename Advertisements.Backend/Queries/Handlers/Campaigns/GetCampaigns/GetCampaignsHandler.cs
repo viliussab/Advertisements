@@ -1,5 +1,5 @@
 using Core.Database;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Queries.Extensions;
@@ -22,9 +22,9 @@ public class GetCampaignsHandler : BasedHandler<GetCampaignsQuery, PageResponse<
     public override async Task<PageResponse<CampaignOverview>> Handle(GetCampaignsQuery request, CancellationToken cancellationToken)
     {
         var campaignPage = await _context
-            .Set<Campaign>()
+            .Set<CampaignTable>()
             .OrderByDescending(x => x.ModificationDate)
-            .Include(x => x.Customer)
+            .Include(x => x.CustomerTable)
             .Include(x => x.CampaignPlanes)
             .ToPageAsync(request, cancellationToken);
 

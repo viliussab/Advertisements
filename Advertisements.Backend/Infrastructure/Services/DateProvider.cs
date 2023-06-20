@@ -1,4 +1,4 @@
-using Core.Interfaces;
+using Core.Vendor;
 
 namespace Infrastructure.Services;
 

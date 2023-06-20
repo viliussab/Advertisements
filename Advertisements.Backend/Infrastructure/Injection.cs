@@ -1,7 +1,8 @@
 using Commands.Handlers.Adverts.CreateObject;
 using Core.Database;
-using Core.Interfaces;
-using Core.Models;
+using Core.Tables.Entities.Campaigns;
+using Core.Tables.Entities.Users;
+using Core.Vendor;
 using FluentValidation;
 using Infrastructure.Services;
 using Mapster;
@@ -29,7 +30,7 @@ public static class Injection
 	private static void AddInfrastructureInterfaces(this IServiceCollection services)
 	{ 
 		TypeAdapterConfig.GlobalSettings
-			.NewConfig<Campaign, CampaignWithPriceDetails>()
+			.NewConfig<CampaignTable, CampaignWithPriceDetails>()
 			.PreserveReference(true);
 			
 		TypeAdapterConfig.GlobalSettings.Scan(typeof(StorageFileMapProfile).Assembly);
@@ -50,7 +51,7 @@ public static class Injection
 	private static void AddAuthentication(this IServiceCollection services)
 	{
 		services
-			.AddIdentity<User, IdentityRole>()
+			.AddIdentity<UserTable, IdentityRole>()
 			.AddEntityFrameworkStores<AdvertContext>()
 			.AddDefaultTokenProviders();
 		services.Configure<IdentityOptions>(options =>

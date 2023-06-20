@@ -1,17 +1,20 @@
 using Core.Database;
-using Core.Enums;
-using Core.Models;
+using Core.Tables.Entities.Area;
+using Core.Tables.Entities.Customers;
+using Core.Tables.Entities.Planes;
+using Core.Tables.Entities.Users;
+using Core.Tables.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Seeding;
 
 public static class Seeder
 {
-    public static async Task Seed(AdvertContext context, UserManager<User> userManager)
+    public static async Task Seed(AdvertContext context, UserManager<UserTable> userManager)
     {
         if (!userManager.Users.Any())
         {
-            var user = new User
+            var user = new UserTable
             {
                 UserName = "admin@reklamosarka.com",
                 Email = "admin@reklamosarka.com",
@@ -46,22 +49,22 @@ public static class Seeder
             });
         }
 
-        if (!context.Set<AdvertType>().Any())
+        if (!context.Set<PlaneTypeTable>().Any())
         {
-            context.Add(new AdvertType()
+            context.Add(new PlaneTypeTable()
             {
                  Name = "Stotelė",
             });
             
-            context.Add(new AdvertType()
+            context.Add(new PlaneTypeTable()
             {
                 Name = "Vitrina",
             });
         }
         
-        if (!context.Set<Customer>().Any())
+        if (!context.Set<CustomerTable>().Any())
         {
-            context.Add(new Customer
+            context.Add(new CustomerTable
             {
                 Name = "Reklamos Arka",
                 CompanyCode = "303211411",

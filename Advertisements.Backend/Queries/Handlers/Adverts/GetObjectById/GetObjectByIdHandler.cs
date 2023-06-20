@@ -1,6 +1,6 @@
 using Core.Database;
 using Core.Errors;
-using Core.Models;
+using Core.Tables.Entities.Planes;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
@@ -19,14 +19,14 @@ public class GetObjectByIdHandler : BasedHandler<GetObjectByIdQuery, OneOf<GetOb
 
     public override async Task<OneOf<GetObjectByIdObject, NotFoundError>> Handle(GetObjectByIdQuery request, CancellationToken cancellationToken)
     {
-        var advertObject = await _context.Set<AdvertObject>()
+        var advertObject = await _context.Set<LocationTable>()
                 .Include(x => x.Planes)
                     .ThenInclude(x => x.Photos)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (advertObject is null)
         {
-            return new NotFoundError(request.Id, typeof(AdvertObject));
+            return new NotFoundError(request.Id, typeof(LocationTable));
         }
 
         var dto = advertObject.Adapt<GetObjectByIdObject>();

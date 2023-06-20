@@ -3,8 +3,9 @@ using Commands.Responses;
 using Core.Database;
 using Core.EnumsRequest;
 using Core.Errors;
-using Core.Models;
 using Core.Successes;
+using Core.Tables.Entities.Area;
+using Core.Tables.Entities.Planes;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Queries.Prototypes;
@@ -55,7 +56,7 @@ public class UpdateObjectHandler : BasedHandler<
         UpdateObjectCommand request,
         CancellationToken cancellationToken)
     {
-        var currentObject = await _context.Set<AdvertObject>()
+        var currentObject = await _context.Set<LocationTable>()
             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         currentObject.SerialCode = request.SerialCode;
@@ -93,7 +94,7 @@ public class UpdateObjectHandler : BasedHandler<
 
         async Task CreatePlaneAsync()
         {
-            var plane = new AdvertPlane
+            var plane = new PlaneTable
             {
                 ObjectId = objectId,
                 PartialName = request.PartialName,
@@ -112,7 +113,7 @@ public class UpdateObjectHandler : BasedHandler<
 
         async Task DeletePlaneAsync()
         {
-            var plane = await _context.Set<AdvertPlane>()
+            var plane = await _context.Set<PlaneTable>()
                 .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
             _context.Remove(plane);
         }
@@ -131,7 +132,7 @@ public class UpdateObjectHandler : BasedHandler<
         UpdateObjectCommand.UpdatePlane request,
         CancellationToken cancellationToken)
     {
-        var plane = await _context.Set<AdvertPlane>()
+        var plane = await _context.Set<PlaneTable>()
             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         plane.PartialName = request.PartialName;
@@ -200,12 +201,12 @@ public class UpdateObjectHandler : BasedHandler<
                 "region does not belong to an area"));
         }
 
-        var type = await _context.Set<AdvertType>()
+        var type = await _context.Set<PlaneTypeTable>()
             .FirstOrDefaultAsync(x => x.Id == request.TypeId, cancellationToken);
     
         if (type is null)
         {
-            validationErrors.Add(new ValidationError(typeof(AdvertType).ToString(), $"{typeof(AdvertType)} does not exist"));
+            validationErrors.Add(new ValidationError(typeof(PlaneTypeTable).ToString(), $"{typeof(PlaneTypeTable)} does not exist"));
         }
 
         var validatorErrors = await Validator.ValidatorRequestAsync(request);
