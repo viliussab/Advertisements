@@ -1,10 +1,8 @@
-using Core.Database.Configurations;
-using Core.Interfaces;
+using Core.Database.Tables;
 using Core.Models;
-using Core.Enums;
+using Core.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Database;
 
@@ -24,16 +22,6 @@ public class AdvertContext : IdentityDbContext<User>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AdvertObjectConfiguration).Assembly);
     }
 
-    private static ValueConverter GetEnumConverter<T>()
-        where T : Enum
-    {
-        var converter = new ValueConverter<T, string>(
-            value => value.ToString(),
-            value => (T)Enum.Parse(typeof(T), value));
-
-        return converter;
-    }
-    
     public override int SaveChanges()
     {
         AdjustEntityDateFields();

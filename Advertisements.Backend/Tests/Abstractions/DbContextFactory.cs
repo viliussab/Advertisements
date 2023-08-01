@@ -1,5 +1,4 @@
 using Core.Database;
-using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.Abstractions;
